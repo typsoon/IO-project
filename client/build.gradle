@@ -1,8 +1,18 @@
 plugins {
-    id 'application'
+  // TODO: Change this to not be java-library
+    id 'java-library'
+    // id 'java'
 }
 
-application {
-  mainClass = 'Program'
+dependencies {
+    implementation project(":core")
+    api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+    // implementaion "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 }
+
+sourceSets.main.resources.srcDirs = ["../assets"]
+
 
