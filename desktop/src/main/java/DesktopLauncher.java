@@ -7,14 +7,14 @@ import viewmodel.ViewManagerInjector;
 class GameLauncher extends Game {
   @Override
   public void create() {
-    var viewManager = new ViewManagerInjector(this).getViewManager();
+    final var viewManager = new ViewManagerInjector(this).getViewManager();
     viewManager.start();
   }
 }
 
 public class DesktopLauncher {
-  public static void main(String[] arg) {
-    Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+  public static void main(final String[] arg) {
+    final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
     config.setForegroundFPS(60);
     config.setTitle("IO Game");
     // config.setWindowedMode(800, 720);

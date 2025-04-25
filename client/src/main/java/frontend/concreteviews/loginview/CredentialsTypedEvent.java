@@ -7,7 +7,7 @@ import network.Credentials;
 public class CredentialsTypedEvent extends Event {
   private final Credentials credentials;
 
-  public CredentialsTypedEvent(Credentials credentials) {
+  public CredentialsTypedEvent(final Credentials credentials) {
     this.credentials = credentials;
   }
 

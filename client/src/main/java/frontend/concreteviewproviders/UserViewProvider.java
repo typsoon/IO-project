@@ -10,24 +10,27 @@ import viewmodel.RequestHandler;
 public class UserViewProvider implements AbstractViewProvider {
   private final Game game;
 
-  public UserViewProvider(Game game) {
+  public UserViewProvider(final Game game) {
     this.game = game;
   }
 
   @Override
-  public AbstractView createConfigurationView(RequestHandler requestHandler, ClientSocketWrapper clientSocketWrapper) {
+  public AbstractView createConfigurationView(final RequestHandler requestHandler,
+      final ClientSocketWrapper clientSocketWrapper) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'createConfigurationView'");
   }
 
   @Override
-  public AbstractView createGameplayView(RequestHandler requestHandler, ClientSocketWrapper clientSocketWrapper) {
+  public AbstractView createGameplayView(final RequestHandler requestHandler,
+      final ClientSocketWrapper clientSocketWrapper) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'createGameplayView'");
   }
 
   @Override
-  public AbstractView createGameplayStatsView(RequestHandler requestHandler, ClientSocketWrapper clientSocketWrapper) {
+  public AbstractView createGameplayStatsView(final RequestHandler requestHandler,
+      final ClientSocketWrapper clientSocketWrapper) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'createGameplayStatsView'");
   }

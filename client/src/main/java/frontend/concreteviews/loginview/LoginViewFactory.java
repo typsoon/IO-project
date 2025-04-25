@@ -9,12 +9,12 @@ import viewmodel.RequestHandler;
 public class LoginViewFactory implements AbstractLoginViewFactory {
   private final Game game;
 
-  public LoginViewFactory(Game game) {
+  public LoginViewFactory(final Game game) {
     this.game = game;
   }
 
-  public AbstractView getLoginView(RequestHandler requestHandler) {
-    var loginViewInputAdapter = new LoginViewInputAdapter(requestHandler);
+  public AbstractView getLoginView(final RequestHandler requestHandler) {
+    final var loginViewInputAdapter = new LoginViewInputAdapter(requestHandler);
     return new LoginView(game, loginViewInputAdapter);
   }
 

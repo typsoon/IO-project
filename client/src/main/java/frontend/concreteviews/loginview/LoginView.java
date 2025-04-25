@@ -42,7 +42,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
 
   private OrthographicCamera gameCamera;
 
-  LoginView(Game game, EventListener loginViewEventListener) {
+  LoginView(final Game game, final EventListener loginViewEventListener) {
     this.game = game;
     this.loginViewEventListener = loginViewEventListener;
   }
@@ -60,45 +60,45 @@ public class LoginView extends ScreenAdapter implements AbstractView {
 
     atlas = new TextureAtlas(Gdx.files.internal("LoginView.atlas"));
     skin = new Skin(atlas);
-    Table table = new Table(skin);
+    final Table table = new Table(skin);
 
     // TODO: Move strings to config
     generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Harrington_SHAREWARE.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 50;
     // parameter.color.set(sunflower);
 
     font = generator.generateFont(parameter);
 
-    Texture texture = font.getRegion().getTexture();
+    final Texture texture = font.getRegion().getTexture();
     texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-    TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+    final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
     textButtonStyle.font = font;
     textButtonStyle.up = skin.getDrawable("buttonBackground");
     textButtonStyle.pressedOffsetX = 1;
     textButtonStyle.pressedOffsetY = -1;
 
-    TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
+    final TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
     textFieldStyle.messageFont = font;
     textFieldStyle.font = font;
     textFieldStyle.fontColor = font.getColor();
     textFieldStyle.background = skin.getDrawable("buttonBackground");
 
-    var usernameField = new TextField("", textFieldStyle);
+    final var usernameField = new TextField("", textFieldStyle);
     usernameField.setAlignment(Align.center);
     usernameField.setMessageText("Username");
 
-    var passwordField = new TextField("", textFieldStyle);
+    final var passwordField = new TextField("", textFieldStyle);
     passwordField.setAlignment(Align.center);
     passwordField.setMessageText("Password");
     passwordField.setPasswordMode(true);
 
-    Button loginButton = new TextButton("Log in", textButtonStyle);
+    final Button loginButton = new TextButton("Log in", textButtonStyle);
 
     stage.addListener(new InputListener() {
       @Override
-      public boolean keyDown(InputEvent event, int keycode) {
+      public boolean keyDown(final InputEvent event, final int keycode) {
         if (keycode == Input.Keys.ENTER) {
 
         }
@@ -109,24 +109,25 @@ public class LoginView extends ScreenAdapter implements AbstractView {
 
     loginButton.addListener(new InputListener() {
       @Override
-      public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+      public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+          final int button) {
         // TODO: remove dependency on network module
-        var credentials = new Credentials(usernameField.getText(), passwordField.getText());
+        final var credentials = new Credentials(usernameField.getText(), passwordField.getText());
         loginButton.fire(new CredentialsTypedEvent(credentials));
         return true;
       }
     });
 
-    Button buttonExit = new TextButton("Exit", textButtonStyle);
+    final Button buttonExit = new TextButton("Exit", textButtonStyle);
     buttonExit.addListener(new ClickListener() {
-      public void clicked(InputEvent event, float x, float y) {
+      public void clicked(final InputEvent event, final float x, final float y) {
         // FIXME: this should not end with nonzero exit code
         Gdx.app.exit();
       }
     });
 
-    Label.LabelStyle headingStyle = new Label.LabelStyle(font, Color.WHITE);
-    Label heading = new Label(loginScreenHeading, headingStyle);
+    final Label.LabelStyle headingStyle = new Label.LabelStyle(font, Color.WHITE);
+    final Label heading = new Label(loginScreenHeading, headingStyle);
     heading.setFontScale(1.5f);
     heading.setAlignment(10);
 
@@ -152,7 +153,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
   }
 
   @Override
-  public void render(float delta) {
+  public void render(final float delta) {
     ScreenUtils.clear(0, 0, 0, 0);
     // ScreenUtils.clear(255, 255, 255, 0);
 
@@ -162,7 +163,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
   }
 
   @Override
-  public void resize(int width, int height) {
+  public void resize(final int width, final int height) {
     stage.getViewport().update(width, height, false);
   }
 

@@ -12,13 +12,13 @@ public class LoginViewInputAdapter implements EventListener {
   // TODO: maybe remove logging from here
   private final Logger logger = Logger.getLogger("LoginViewInputAdapter");
 
-  public LoginViewInputAdapter(RequestHandler requestHandler) {
+  public LoginViewInputAdapter(final RequestHandler requestHandler) {
     this.requestHandler = requestHandler;
   }
 
   @Override
-  public boolean handle(Event event) {
-    if (event instanceof CredentialsTypedEvent credentialsTypedEvent) {
+  public boolean handle(final Event event) {
+    if (event instanceof final CredentialsTypedEvent credentialsTypedEvent) {
       logger.info(() -> String.format("Received credentials: %s", credentialsTypedEvent.getCredentials()));
 
       return true;

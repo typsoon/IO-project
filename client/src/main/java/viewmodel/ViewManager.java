@@ -17,16 +17,16 @@ public class ViewManager implements RequestHandler {
   }
 
   public void start() {
-    var loginView = loginViewFactory.getLoginView(this);
+    final var loginView = loginViewFactory.getLoginView(this);
     loginView.display();
   }
 
   @Override
-  public void handleRequest(AbstractRequest<?> request) {
+  public void handleRequest(final AbstractRequest<?> request) {
     switch (request) {
-      case MoveToConfigurationRequest moveToConfigurationRequest -> {
-        var clientSocketWrapper = moveToConfigurationRequest.getPayload();
-        var configurationView = userViewProvider.createConfigurationView(this, clientSocketWrapper);
+      case final MoveToConfigurationRequest moveToConfigurationRequest -> {
+        final var clientSocketWrapper = moveToConfigurationRequest.getPayload();
+        final var configurationView = userViewProvider.createConfigurationView(this, clientSocketWrapper);
         configurationView.display();
       }
       default -> {

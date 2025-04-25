@@ -9,14 +9,14 @@ import frontend.concreteviewproviders.UserViewProvider;
 public class ViewManagerInjector {
   private final Game game;
 
-  public ViewManagerInjector(Game game) {
+  public ViewManagerInjector(final Game game) {
     this.game = game;
   }
 
   public ViewManager getViewManager() {
-    var loginViewFactory = new LoginViewFactory(game);
-    var userViewProvider = new UserViewProvider(game);
-    var adminViewProvider = new AdminViewProvider(game);
+    final var loginViewFactory = new LoginViewFactory(game);
+    final var userViewProvider = new UserViewProvider(game);
+    final var adminViewProvider = new AdminViewProvider(game);
 
     return new ViewManager(userViewProvider, adminViewProvider, loginViewFactory);
   }
