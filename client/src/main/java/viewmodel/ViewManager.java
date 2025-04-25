@@ -1,7 +1,7 @@
 package viewmodel;
 
-import frontend.requests.AbstractRequest;
-import frontend.requests.MoveToConfigurationRequest;
+import viewmodel.requests.AbstractRequest;
+import viewmodel.requests.MoveToConfigurationRequest;
 
 public class ViewManager implements RequestHandler {
   private final AbstractViewProvider userViewProvider;

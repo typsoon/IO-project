@@ -1,6 +1,6 @@
 package viewmodel;
 
-import frontend.requests.AbstractRequest;
+import viewmodel.requests.AbstractRequest;
 
 public interface RequestHandler {
   void handleRequest(AbstractRequest<?> request);
