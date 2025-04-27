@@ -1,0 +1,20 @@
+plugins {
+    id 'application'
+}
+
+dependencies {    
+  implementation project(":core")
+}
+
+application {
+  mainClass = 'Server'
+}
+
+jar {
+    from project(':core').sourceSets.main.output
+    manifest {
+        attributes(
+            'Main-Class': 'Server'  // Replace with your fully qualified main class name
+        )
+    }
+}
