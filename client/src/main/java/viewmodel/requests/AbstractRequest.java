@@ -1,13 +1,16 @@
 package viewmodel.requests;
 
-public abstract class AbstractRequest<T> {
-  private final T payload;
+import network.ConnectionData;
 
-  protected AbstractRequest(final T payload) {
-    this.payload = payload;
+public abstract class AbstractRequest {
+  private final ConnectionData connectionData;
+
+  protected AbstractRequest(ConnectionData connectionData) {
+    this.connectionData = connectionData;
   }
 
-  public final T getPayload() {
-    return payload;
+  public ConnectionData getConnectionData() {
+    return connectionData;
   }
+
 }

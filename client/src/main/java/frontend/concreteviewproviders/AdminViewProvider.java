@@ -2,7 +2,7 @@ package frontend.concreteviewproviders;
 
 import com.badlogic.gdx.Game;
 
-import network.ClientSocketWrapper;
+import network.socketwrappers.sendertypes.ConfigurationStateSender;
 import viewmodel.AbstractView;
 import viewmodel.AbstractViewProvider;
 import viewmodel.RequestHandler;
@@ -15,23 +15,10 @@ public class AdminViewProvider implements AbstractViewProvider {
   }
 
   @Override
-  public AbstractView createConfigurationView(final RequestHandler requestHandler,
-      final ClientSocketWrapper clientSocketWrapper) {
+  public AbstractView createConfigurationView(RequestHandler requestHandler,
+      ConfigurationStateSender configurationSocket) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'createConfigurationView'");
   }
 
-  @Override
-  public AbstractView createGameplayView(final RequestHandler requestHandler,
-      final ClientSocketWrapper clientSocketWrapper) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'createGameplayView'");
-  }
-
-  @Override
-  public AbstractView createGameplayStatsView(final RequestHandler requestHandler,
-      final ClientSocketWrapper clientSocketWrapper) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'createGameplayStatsView'");
-  }
 }

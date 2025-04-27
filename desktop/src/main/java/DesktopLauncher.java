@@ -18,7 +18,7 @@ public class DesktopLauncher {
     config.setForegroundFPS(60);
     config.setTitle("IO Game");
     // config.setWindowedMode(800, 720);
-    // TODO: remove magic strings
+    // TODO: remove magic numbers and strings
     config.setWindowedMode(720, 720);
     new Lwjgl3Application(new GameLauncher(), config);
   }

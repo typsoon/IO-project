@@ -1,4 +1,4 @@
-package frontend.concreteviews.loginview;
+package frontend.concreteviews.serverlookupview;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -24,12 +24,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import network.Credentials;
+import network.ConnectionData;
 import viewmodel.AbstractView;
 
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-public class LoginView extends ScreenAdapter implements AbstractView {
+public class ServerLookupView extends ScreenAdapter implements AbstractView {
   private final Game game;
   private final EventListener loginViewEventListener;
 
@@ -42,7 +42,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
 
   private OrthographicCamera gameCamera;
 
-  LoginView(final Game game, final EventListener loginViewEventListener) {
+  ServerLookupView(final Game game, final EventListener loginViewEventListener) {
     this.game = game;
     this.loginViewEventListener = loginViewEventListener;
   }
@@ -85,14 +85,13 @@ public class LoginView extends ScreenAdapter implements AbstractView {
     textFieldStyle.fontColor = font.getColor();
     textFieldStyle.background = skin.getDrawable("buttonBackground");
 
-    final var usernameField = new TextField("", textFieldStyle);
-    usernameField.setAlignment(Align.center);
-    usernameField.setMessageText("Username");
+    final var hostnameField = new TextField("", textFieldStyle);
+    hostnameField.setAlignment(Align.center);
+    hostnameField.setMessageText("Host");
 
-    final var passwordField = new TextField("", textFieldStyle);
-    passwordField.setAlignment(Align.center);
-    passwordField.setMessageText("Password");
-    passwordField.setPasswordMode(true);
+    final var portField = new TextField("", textFieldStyle);
+    portField.setAlignment(Align.center);
+    portField.setMessageText("Port");
 
     final Button loginButton = new TextButton("Log in", textButtonStyle);
 
@@ -112,8 +111,8 @@ public class LoginView extends ScreenAdapter implements AbstractView {
       public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
           final int button) {
         // TODO: remove dependency on network module
-        final var credentials = new Credentials(usernameField.getText(), passwordField.getText());
-        loginButton.fire(new CredentialsTypedEvent(credentials));
+        final var credentials = new ConnectionData(hostnameField.getText(), Integer.parseInt(portField.getText()));
+        loginButton.fire(new ServerDataTypedEvent(credentials));
         return true;
       }
     });
@@ -133,11 +132,11 @@ public class LoginView extends ScreenAdapter implements AbstractView {
     table.add(heading);
     table.getCell(heading).spaceBottom(80);
     table.row();
-    table.add(usernameField);
-    table.getCell(usernameField).spaceBottom(40).width(300);
+    table.add(hostnameField);
+    table.getCell(hostnameField).spaceBottom(40).width(300);
     table.row();
-    table.add(passwordField);
-    table.getCell(passwordField).spaceBottom(40).width(300);
+    table.add(portField);
+    table.getCell(portField).spaceBottom(40).width(300);
     table.row();
     table.add(loginButton);
     table.getCell(loginButton).spaceBottom(40);

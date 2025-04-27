@@ -1,11 +1,13 @@
 package viewmodel;
 
-import network.ClientSocketWrapper;
+import network.socketwrappers.sendertypes.ConfigurationStateSender;
 
 public interface AbstractViewProvider {
-  AbstractView createConfigurationView(RequestHandler requestHandler, ClientSocketWrapper clientSocketWrapper);
+  AbstractView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket);
 
-  AbstractView createGameplayView(RequestHandler requestHandler, ClientSocketWrapper clientSocketWrapper);
-
-  AbstractView createGameplayStatsView(RequestHandler requestHandler, ClientSocketWrapper clientSocketWrapper);
+  // AbstractView createGameplayView(RequestHandler requestHandler,
+  // ClientSocketWrapper clientSocketWrapper);
+  //
+  // AbstractView createGameplayStatsView(RequestHandler requestHandler,
+  // ClientSocketWrapper clientSocketWrapper);
 }
