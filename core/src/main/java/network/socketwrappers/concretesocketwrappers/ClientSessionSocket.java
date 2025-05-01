@@ -1,36 +1,40 @@
 package network.socketwrappers.concretesocketwrappers;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import network.messages.ConcreteMessageDecoder;
 import network.messages.Message;
-import network.messages.MessageDecoder;
+import network.messages.decoding.ConcreteMessageDecoder;
+import network.messages.decoding.MessageDecoder;
+import network.messages.utils.DataProducer;
+import network.messages.utils.DataReceiver;
 import network.socketwrappers.DuplexSocket;
 import java.util.logging.Level;
 
 public class ClientSessionSocket implements DuplexSocket {
-  private final Socket socket;
+  private final DataProducer in;
+  private final DataReceiver out;
+
   private final MessageDecoder messageDecoder;
   private Logger logger = Logger.getGlobal();
 
-  public ClientSessionSocket(Socket socket, MessageDecoder messageDecoder) {
+  public ClientSessionSocket(DataProducer in, DataReceiver out, MessageDecoder messageDecoder) {
+    this.in = in;
+    this.out = out;
     this.messageDecoder = messageDecoder;
-    this.socket = socket;
   }
 
-  public ClientSessionSocket(Socket socket) {
-    this(socket, new ConcreteMessageDecoder());
+  public ClientSessionSocket(DataProducer in, DataReceiver out) {
+    this(in, out, new ConcreteMessageDecoder());
   }
 
   @Override
   public Optional<Message> sendMessage(Message message) {
     try {
-      message.encodeAndWrite(socket.getOutputStream());
+      message.encodeAndWrite(out);
     } catch (IOException e) {
-      logger.log(Level.OFF, "An error occured: ", e);
+      logger.log(Level.OFF, String.format("An error occured: %s", e));
     } catch (Exception e) {
       logger.log(Level.SEVERE, "An error occured: ", e);
     }
@@ -40,7 +44,7 @@ public class ClientSessionSocket implements DuplexSocket {
 
   @Override
   public Message receiveMessage() throws IOException {
-    return messageDecoder.decodeMessage(socket.getInputStream());
+    return messageDecoder.decodeMessage(in);
   }
 
 }

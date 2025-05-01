@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import network.ServerSocketWrapper;
+import network.messages.utils.InputStreamDataProducer;
+import network.messages.utils.OutputStreamDataReceiver;
 import network.socketwrappers.DuplexSocket;
 
 public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
@@ -17,11 +19,13 @@ public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
   @Override
   public DuplexSocket acceptClient() throws IOException {
     Socket clientSocket = serverSocket.accept();
-    return new ClientSessionSocket(clientSocket);
+    var producer = new InputStreamDataProducer(clientSocket.getInputStream());
+    var receiver = new OutputStreamDataReceiver(clientSocket.getOutputStream());
+    return new ClientSessionSocket(producer, receiver);
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() throws IOException {
     serverSocket.close();
   }
 }

@@ -1,4 +1,4 @@
 package network;
 
-public record ConnectionData(String host, int port) {
+public record ConnectionData(String host, int port, int udp_port) {
 }

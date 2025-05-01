@@ -1,57 +1,51 @@
 package network.socketwrappers.concretesocketwrappers;
 
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
+import network.messages.utils.DataProducer;
+import network.messages.utils.DataReceiver;
 import network.socketwrappers.sendertypes.LoginStateSender;
 
 import java.io.IOException;
-import java.net.Socket;
 
-import network.messages.MessageDecoder;
-import network.messages.ConcreteMessageDecoder;
+import network.messages.decoding.ConcreteMessageDecoder;
+import network.messages.decoding.MessageDecoder;
 
 //TODO: think whether this should implement auto closeable
 public class ConcreteAuthenticatingSocket implements LoginStateSender {
-  // TODO: think whether this is ok
-  private final Socket socket;
+  private final DataProducer in;
+
+  private final DataReceiver out;
   private final MessageDecoder messageDecoder;
   private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-  public ConcreteAuthenticatingSocket(Socket socket) {
-    this(socket, new ConcreteMessageDecoder());
+  public ConcreteAuthenticatingSocket(DataProducer in, DataReceiver out) {
+    this(in, out, new ConcreteMessageDecoder());
   }
 
-  public ConcreteAuthenticatingSocket(Socket socket, MessageDecoder messageDecoder) {
-    this.socket = socket;
+  public ConcreteAuthenticatingSocket(DataProducer in, DataReceiver out, MessageDecoder messageDecoder) {
+    this.in = in;
+    this.out = out;
     this.messageDecoder = messageDecoder;
   }
 
   @Override
-  public Optional<LogInResponse> sendMessage(LogInQuery message) {
+  public Optional<LogInResponse> sendMessage(LogInQuery message) throws IOException {
     logger.info(String.format("Attempting to log in %s", message));
-    try {
-      message.encodeAndWrite(socket.getOutputStream());
+    message.encodeAndWrite(out);
 
-      var in = socket.getInputStream();
+    // TODO: VERY BIG TODO - think whether doing this read here is ok
+    var msgLen = in.getByte();
+    var answer = messageDecoder.decodeMessage(in);
 
-      var answer = messageDecoder.decodeMessage(in);
-
-      // TODO: this Instanceof fate is probably to be refactored out
-      if (answer instanceof LogInResponse logInResponse) {
-        return Optional.of(logInResponse);
-      } else {
-        throw new IllegalStateException(String.format("This is a bad type of response {0}", answer));
-      }
-
-    } catch (IOException e) {
-      logger.log(Level.OFF, "An error occured: ", e);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, "An error occured: ", e);
+    // TODO: this Instanceof fate is probably to be refactored out
+    if (answer instanceof LogInResponse logInResponse) {
+      return Optional.of(logInResponse);
+    } else {
+      throw new IllegalStateException(String.format("This is a bad type of response %s", answer));
     }
-    return Optional.empty();
   }
 }

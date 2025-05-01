@@ -111,7 +111,9 @@ public class ServerLookupView extends ScreenAdapter implements AbstractView {
       public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
           final int button) {
         // TODO: remove dependency on network module
-        final var credentials = new ConnectionData(hostnameField.getText(), Integer.parseInt(portField.getText()));
+        // Remove this -1 from here
+        final var credentials = new ConnectionData(hostnameField.getText(), Integer.parseInt(portField.getText()),
+            -1);
         loginButton.fire(new ServerDataTypedEvent(credentials));
         return true;
       }

@@ -5,6 +5,8 @@ import java.net.Socket;
 
 import network.AbstractSocketWrapperFactory;
 import network.ConnectionData;
+import network.messages.utils.InputStreamDataProducer;
+import network.messages.utils.OutputStreamDataReceiver;
 import network.socketwrappers.concretesocketwrappers.ConcreteAuthenticatingSocket;
 import network.socketwrappers.sendertypes.ConfigurationStateSender;
 import network.socketwrappers.sendertypes.LoginStateSender;
@@ -20,7 +22,9 @@ public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactor
   @Override
   public LoginStateSender getAuthenticatingSocket(ConnectionData connectionData) throws IOException {
     var socket = socketManager.getConnection(connectionData);
-    return new ConcreteAuthenticatingSocket(socket);
+    var producer = new InputStreamDataProducer(socket.getInputStream());
+    var receiver = new OutputStreamDataReceiver(socket.getOutputStream());
+    return new ConcreteAuthenticatingSocket(producer, receiver);
   }
 
   @Override

@@ -1,9 +1,10 @@
 package network.messages;
 
 import java.io.IOException;
-import java.io.OutputStream;
+
+import network.messages.utils.DataReceiver;
 
 public interface Message {
-  void encodeAndWrite(OutputStream out) throws IOException;
+  void encodeAndWrite(DataReceiver out) throws IOException;
 
 }

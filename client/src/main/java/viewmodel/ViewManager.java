@@ -32,7 +32,8 @@ public class ViewManager implements RequestHandler {
     // TODO: BIG TODO: Import this from config
     var propertiesLoader = new PropertiesLoader();
 
-    ConnectionData connectionData = new ConnectionData(propertiesLoader.hostname, propertiesLoader.port);
+    ConnectionData connectionData = new ConnectionData(propertiesLoader.hostname, propertiesLoader.port,
+        propertiesLoader.udp_port);
     LoginStateSender authenticatingSocket;
 
     // TODO: this is ugly, fix this
@@ -69,6 +70,7 @@ public class ViewManager implements RequestHandler {
 class PropertiesLoader {
   String hostname;
   int port;
+  int udp_port;
 
   PropertiesLoader() {
     var fileName = "ServerAdress.properties";
@@ -79,11 +81,12 @@ class PropertiesLoader {
 
       hostname = properties.getProperty("hostname");
       port = Integer.parseInt(properties.getProperty("port"));
+      udp_port = Integer.parseInt(properties.getProperty("udp_port"));
     } catch (IOException e) {
       hostname = "localhost";
-      port = 8080;
+      port = 4567;
+      udp_port = 4568;
       // throw new RuntimeException(e);
     }
   }
-
 }
