@@ -28,6 +28,8 @@ public class ByteBufferDataProducerTest {
     byteBuf.put(bytesToBeRead);
     byteBuf.put(randomBytes);
 
+    byteBuf.flip();
+
     var readableByteStream = mock(ReadableByteChannel.class);
 
     testedProducer = assertDoesNotThrow(() -> new ByteBufferDataProducer(byteBuf),
