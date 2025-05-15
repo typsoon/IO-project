@@ -10,22 +10,22 @@ import network.messages.utils.OutputStreamDataReceiver;
 import network.socketwrappers.DuplexSocket;
 
 public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
-  private final ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
-  public ConcreteServerSocketWrapper(ServerSocket serverSocket) {
-    this.serverSocket = serverSocket;
-  }
+    public ConcreteServerSocketWrapper(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
 
-  @Override
-  public DuplexSocket acceptClient() throws IOException {
-    Socket clientSocket = serverSocket.accept();
-    var producer = new InputStreamDataProducer(clientSocket.getInputStream());
-    var receiver = new OutputStreamDataReceiver(clientSocket.getOutputStream());
-    return new ClientSessionSocket(producer, receiver);
-  }
+    @Override
+    public DuplexSocket acceptClient() throws IOException {
+        Socket clientSocket = serverSocket.accept();
+        var producer = new InputStreamDataProducer(clientSocket.getInputStream());
+        var receiver = new OutputStreamDataReceiver(clientSocket.getOutputStream());
+        return new ClientSessionSocket(producer, receiver);
+    }
 
-  @Override
-  public void close() throws IOException {
-    serverSocket.close();
-  }
+    @Override
+    public void close() throws IOException {
+        serverSocket.close();
+    }
 }

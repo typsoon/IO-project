@@ -7,30 +7,30 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class InputStreamDataProducer implements DataProducer {
-  private final NoCloseDataInputStream in;
-  private final Charset charset = StandardCharsets.UTF_8;
+    private final NoCloseDataInputStream in;
+    private final Charset charset = StandardCharsets.UTF_8;
 
-  public InputStreamDataProducer(InputStream inputStream) {
-    this.in = new NoCloseDataInputStream(inputStream);
-  }
+    public InputStreamDataProducer(InputStream inputStream) {
+        this.in = new NoCloseDataInputStream(inputStream);
+    }
 
-  @Override
-  public int getInt() throws IOException {
-    return in.readInt();
-  }
+    @Override
+    public int getInt() throws IOException {
+        return in.readInt();
+    }
 
-  @Override
-  public byte getByte() throws IOException {
-    return in.readByte();
-  }
+    @Override
+    public byte getByte() throws IOException {
+        return in.readByte();
+    }
 
-  @Override
-  public String getString() throws IOException {
-    var stringLen = in.readByte();
-    var strBytes = new byte[stringLen];
-    in.readFully(strBytes);
-    return new String(strBytes, charset);
-  }
+    @Override
+    public String getString() throws IOException {
+        var stringLen = in.readByte();
+        var strBytes = new byte[stringLen];
+        in.readFully(strBytes);
+        return new String(strBytes, charset);
+    }
 }
 
 /**
@@ -40,11 +40,11 @@ public class InputStreamDataProducer implements DataProducer {
  * closing the underlying InputStream
  */
 class NoCloseDataInputStream extends DataInputStream {
-  protected NoCloseDataInputStream(InputStream in) {
-    super(in);
-  }
+    protected NoCloseDataInputStream(InputStream in) {
+        super(in);
+    }
 
-  @Override
-  public void close() throws IOException {
-  }
+    @Override
+    public void close() throws IOException {
+    }
 }

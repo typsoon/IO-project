@@ -14,71 +14,73 @@ import network.messages.utils.DataReceiver;
 import network.messages.utils.OutputStreamDataReceiver;
 
 public class LogInResponseTest {
-  private LogInResponse testedResponse;
-  private ByteArrayOutputStream out;
-  private DataReceiver dataReceiver;
+    private LogInResponse testedResponse;
+    private ByteArrayOutputStream out;
+    private DataReceiver dataReceiver;
 
-  @BeforeEach
-  void init() {
-    out = new ByteArrayOutputStream();
-    dataReceiver = new OutputStreamDataReceiver(out);
-  }
+    @BeforeEach
+    void init() {
+        out = new ByteArrayOutputStream();
+        dataReceiver = new OutputStreamDataReceiver(out);
+    }
 
-  @Test
-  void payloadWithoutTokenIsCorrectlyEncoded() throws IOException {
-    testedResponse = new LogInResponse(CorrectlyEncodedPayload.payloadWithToken);
-    testedResponse.encodeAndWrite(dataReceiver);
+    @Test
+    void payloadWithoutTokenIsCorrectlyEncoded() throws IOException {
+        testedResponse = new LogInResponse(CorrectlyEncodedPayload.payloadWithToken);
+        testedResponse.encodeAndWrite(dataReceiver);
 
-    assertArrayEquals(CorrectlyEncodedPayload.encodedPayloadWithToken, out.toByteArray());
-  }
+        assertArrayEquals(CorrectlyEncodedPayload.encodedPayloadWithToken, out.toByteArray());
+    }
 
-  @Test
-  void payloadWithTokenIsCorrectlyEncoded() throws IOException {
-    testedResponse = new LogInResponse(CorrectlyEncodedPayload.noTokenPayload);
-    testedResponse.encodeAndWrite(dataReceiver);
+    @Test
+    void payloadWithTokenIsCorrectlyEncoded() throws IOException {
+        testedResponse = new LogInResponse(CorrectlyEncodedPayload.noTokenPayload);
+        testedResponse.encodeAndWrite(dataReceiver);
 
-    assertArrayEquals(CorrectlyEncodedPayload.encodedNoTokenPayload, out.toByteArray());
-  }
+        assertArrayEquals(CorrectlyEncodedPayload.encodedNoTokenPayload, out.toByteArray());
+    }
 
 }
 
 class CorrectlyEncodedPayload {
-  static final int NO_AUTH_TOKEN_INDICATOR = -1;
-  static final int msgCode = 1;
+    static final int NO_AUTH_TOKEN_INDICATOR = -1;
+    static final int msgCode = 1;
 
-  static final Optional<Integer> payloadWithToken = Optional.of(42);
-  static final byte[] encodedPayloadWithToken;
+    static final Optional<Integer> payloadWithToken = Optional.of(42);
+    static final byte[] encodedPayloadWithToken;
 
-  static {
-    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-    DataOutputStream out = new DataOutputStream(byteOut);
+    static {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(byteOut);
 
-    try {
-      out.write(Byte.BYTES + Integer.BYTES);
-      out.write(msgCode);
-      out.writeInt(payloadWithToken.get());
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
+        try {
+            out.write(Byte.BYTES + Integer.BYTES);
+            out.write(msgCode);
+            out.writeInt(payloadWithToken.get());
+        }
+        catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+        encodedPayloadWithToken = byteOut.toByteArray();
     }
 
-    encodedPayloadWithToken = byteOut.toByteArray();
-  }
+    static final Optional<Integer> noTokenPayload = Optional.empty();
+    static final byte[] encodedNoTokenPayload;
 
-  static final Optional<Integer> noTokenPayload = Optional.empty();
-  static final byte[] encodedNoTokenPayload;
+    static {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(byteOut);
 
-  static {
-    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-    DataOutputStream out = new DataOutputStream(byteOut);
+        try {
+            out.write(Byte.BYTES + Integer.BYTES);
+            out.write(msgCode);
+            out.writeInt(NO_AUTH_TOKEN_INDICATOR);
+        }
+        catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
 
-    try {
-      out.write(Byte.BYTES + Integer.BYTES);
-      out.write(msgCode);
-      out.writeInt(NO_AUTH_TOKEN_INDICATOR);
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
+        encodedNoTokenPayload = byteOut.toByteArray();
     }
-
-    encodedNoTokenPayload = byteOut.toByteArray();
-  }
 }

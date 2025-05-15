@@ -8,8 +8,8 @@ import java.nio.channels.SocketChannel;
 import network.socketwrappers.DuplexSocket;
 
 public interface NIOServerSocketWrapper extends AutoCloseable {
-  SelectionKey register(Selector sel, int ops) throws ClosedChannelException;
+    SelectionKey register(Selector sel, int ops) throws ClosedChannelException;
 
-  DuplexSocket getClientSocket(SocketChannel socketChannel);
+    DuplexSocket getClientSocket(SocketChannel socketChannel);
 
 }

@@ -10,30 +10,30 @@ import network.messages.utils.DataProducer;
 import network.messages.Message;
 
 public class ConcreteMessageDecoder implements MessageDecoder {
-  private static final Logger logger = Logger.getGlobal();
+    private static final Logger logger = Logger.getGlobal();
 
-  @Override
-  public Message decodeMessage(DataProducer dataProducer) throws IOException {
-    // byte messageLen = dataProducer.getByte();
-    int messageCode = dataProducer.getByte();
+    @Override
+    public Message decodeMessage(DataProducer dataProducer) throws IOException {
+        // byte messageLen = dataProducer.getByte();
+        int messageCode = dataProducer.getByte();
 
-    logger.finer(String.format("Received message of code: %s", messageCode));
+        logger.finer(String.format("Received message of code: %s", messageCode));
 
-    switch (messageCode) {
-      case 0 -> {
-        var username = dataProducer.getString();
-        var password = dataProducer.getString();
-        return new LogInQuery(username, password);
-      }
+        switch (messageCode) {
+            case 0 -> {
+                var username = dataProducer.getString();
+                var password = dataProducer.getString();
+                return new LogInQuery(username, password);
+            }
 
-      case 1 -> {
-        int answer = dataProducer.getInt();
-        return new LogInResponse((answer == LogInResponse.NO_AUTH_TOKEN) ? Optional.empty() : Optional.of(answer));
-      }
+            case 1 -> {
+                int answer = dataProducer.getInt();
+                return new LogInResponse((answer == LogInResponse.NO_AUTH_TOKEN) ? Optional.empty() : Optional.of(answer));
+            }
 
-      default -> {
-        throw new IllegalStateException(String.format("Undefined message code: %d", messageCode));
-      }
+            default -> {
+                throw new IllegalStateException(String.format("Undefined message code: %d", messageCode));
+            }
+        }
     }
-  }
 }

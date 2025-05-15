@@ -8,17 +8,16 @@ import viewmodel.AbstractViewProvider;
 import viewmodel.RequestHandler;
 
 public class UserViewProvider implements AbstractViewProvider {
-  private final Game game;
+    private final Game game;
 
-  public UserViewProvider(final Game game) {
-    this.game = game;
-  }
+    public UserViewProvider(final Game game) {
+        this.game = game;
+    }
 
-  @Override
-  public AbstractView createConfigurationView(RequestHandler requestHandler,
-      ConfigurationStateSender configurationSocket) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'createConfigurationView'");
-  }
+    @Override
+    public AbstractView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createConfigurationView'");
+    }
 
 }

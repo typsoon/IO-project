@@ -12,43 +12,43 @@ import network.socketwrappers.sendertypes.ConfigurationStateSender;
 import network.socketwrappers.sendertypes.LoginStateSender;
 
 public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactory {
-  private final SocketManager socketManager;
+    private final SocketManager socketManager;
 
-  private static String illegalStateErrorMessage = """
-      User didn't connect to valid host and authenticate themselves before
-            trying to acquire configuration socket - they didn't call getAuthenticatingSocket with valid ConnectionData prior to calling this method
+    private static String illegalStateErrorMessage = """
+            User didn't connect to valid host and authenticate themselves before
+                  trying to acquire configuration socket - they didn't call getAuthenticatingSocket with valid ConnectionData prior to calling this method
             """;
 
-  @Override
-  public LoginStateSender getAuthenticatingSocket(ConnectionData connectionData) throws IOException {
-    var socket = socketManager.getConnection(connectionData);
-    var producer = new InputStreamDataProducer(socket.getInputStream());
-    var receiver = new OutputStreamDataReceiver(socket.getOutputStream());
-    return new ConcreteAuthenticatingSocket(producer, receiver);
-  }
-
-  @Override
-  public ConfigurationStateSender getConfigurationSocket(ConnectionData connectionData, int authToken) {
-    Socket socket;
-    try {
-      socket = socketManager.getConnection(connectionData);
-    } catch (IOException e) {
-      throw new IllegalStateException(illegalStateErrorMessage,
-          e);
+    @Override
+    public LoginStateSender getAuthenticatingSocket(ConnectionData connectionData) throws IOException {
+        var socket = socketManager.getConnection(connectionData);
+        var producer = new InputStreamDataProducer(socket.getInputStream());
+        var receiver = new OutputStreamDataReceiver(socket.getOutputStream());
+        return new ConcreteAuthenticatingSocket(producer, receiver);
     }
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getConfigurationSocket'");
-  }
 
-  public ConcreteSocketWrapperFactory() {
-    this.socketManager = new ConcreteSocketManager();
-  }
+    @Override
+    public ConfigurationStateSender getConfigurationSocket(ConnectionData connectionData, int authToken) {
+        Socket socket;
+        try {
+            socket = socketManager.getConnection(connectionData);
+        }
+        catch (IOException e) {
+            throw new IllegalStateException(illegalStateErrorMessage,
+                    e);
+        }
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getConfigurationSocket'");
+    }
 
-  /**
-   * @param socketManager
-   *                      Wrote this constructor for testing purposes
-   */
-  ConcreteSocketWrapperFactory(SocketManager socketManager) {
-    this.socketManager = socketManager;
-  }
+    public ConcreteSocketWrapperFactory() {
+        this.socketManager = new ConcreteSocketManager();
+    }
+
+    /**
+     * @param socketManager Wrote this constructor for testing purposes
+     */
+    ConcreteSocketWrapperFactory(SocketManager socketManager) {
+        this.socketManager = socketManager;
+    }
 }

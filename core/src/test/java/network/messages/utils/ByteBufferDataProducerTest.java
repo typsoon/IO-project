@@ -15,103 +15,103 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ByteBufferDataProducerTest {
-  private ByteBufferDataProducer testedProducer;
-  private ByteArrayInputStream in;
+    private ByteBufferDataProducer testedProducer;
+    private ByteArrayInputStream in;
 
-  private void prepareDataTableAndIn(byte[] bytesToBeRead) {
-    var data = new byte[2 * bytesToBeRead.length + 4];
-    var byteBuf = ByteBuffer.wrap(data);
+    private void prepareDataTableAndIn(byte[] bytesToBeRead) {
+        var data = new byte[2 * bytesToBeRead.length + 4];
+        var byteBuf = ByteBuffer.wrap(data);
 
-    var randomBytes = new byte[bytesToBeRead.length + 4];
-    new SecureRandom().nextBytes(randomBytes);
+        var randomBytes = new byte[bytesToBeRead.length + 4];
+        new SecureRandom().nextBytes(randomBytes);
 
-    byteBuf.put(bytesToBeRead);
-    byteBuf.put(randomBytes);
+        byteBuf.put(bytesToBeRead);
+        byteBuf.put(randomBytes);
 
-    byteBuf.flip();
+        byteBuf.flip();
 
-    var readableByteStream = mock(ReadableByteChannel.class);
+        var readableByteStream = mock(ReadableByteChannel.class);
 
-    testedProducer = assertDoesNotThrow(() -> new ByteBufferDataProducer(byteBuf),
-        "Initializing producer shouldn't throw for no reason");
-  }
-
-  @Nested
-  class getByteTests {
-    @BeforeEach
-    void init() {
-      prepareDataTableAndIn(new byte[] { 42 });
+        testedProducer = assertDoesNotThrow(() -> new ByteBufferDataProducer(byteBuf),
+                "Initializing producer shouldn't throw for no reason");
     }
 
-    // @Disabled
-    // @Test
-    // void getByteShouldThrowOnInvalidBuffer() {
-    //
-    // }
-    //
-    @Test
-    void getByteDoesntThrowForNoReason() {
-      assertDoesNotThrow(testedProducer::getByte,
-          "Get byte should not throw without a reason");
+    @Nested
+    class getByteTests {
+        @BeforeEach
+        void init() {
+            prepareDataTableAndIn(new byte[]{42});
+        }
+
+        // @Disabled
+        // @Test
+        // void getByteShouldThrowOnInvalidBuffer() {
+        //
+        // }
+        //
+        @Test
+        void getByteDoesntThrowForNoReason() {
+            assertDoesNotThrow(testedProducer::getByte,
+                    "Get byte should not throw without a reason");
+        }
+
+        @Test
+        void getByteGivesCorrectByte() throws IOException {
+            var decodedByte = testedProducer.getByte();
+            assertEquals(42, decodedByte);
+        }
     }
 
-    @Test
-    void getByteGivesCorrectByte() throws IOException {
-      var decodedByte = testedProducer.getByte();
-      assertEquals(42, decodedByte);
-    }
-  }
+    @Nested
+    class getIntTests {
 
-  @Nested
-  class getIntTests {
+        @BeforeEach
+        void init() {
+            prepareDataTableAndIn(CorrectlyEncodedData.encodedInteger);
+        }
 
-    @BeforeEach
-    void init() {
-      prepareDataTableAndIn(CorrectlyEncodedData.encodedInteger);
-    }
+        // @Disabled
+        // @Test
+        // void getIntShouldThrowOnInvalidBuffer() {
+        //
+        // }
+        //
+        @Test
+        void getIntDoesntThrowForNoReason() {
+            assertDoesNotThrow(testedProducer::getInt,
+                    "Get string should not throw without a reason");
+        }
 
-    // @Disabled
-    // @Test
-    // void getIntShouldThrowOnInvalidBuffer() {
-    //
-    // }
-    //
-    @Test
-    void getIntDoesntThrowForNoReason() {
-      assertDoesNotThrow(testedProducer::getInt,
-          "Get string should not throw without a reason");
-    }
-
-    @Test
-    void getIntGivesCorrectInt() throws IOException {
-      int decodedInt = testedProducer.getInt();
-      assertEquals(CorrectlyEncodedData.integer, decodedInt);
-    }
-  }
-
-  @Nested
-  class getStringTests {
-    @BeforeEach
-    void init() {
-      prepareDataTableAndIn(CorrectlyEncodedData.encodedString);
+        @Test
+        void getIntGivesCorrectInt() throws IOException {
+            int decodedInt = testedProducer.getInt();
+            assertEquals(CorrectlyEncodedData.integer, decodedInt);
+        }
     }
 
-    // @Disabled
-    // @Test
-    // void getStringShouldThrowOnInvalidBuffer() {
-    //
-    // }
-    //
-    @Test
-    void getStringDoesntThrowForNoReason() {
-      assertDoesNotThrow(testedProducer::getString,
-          "Get string should not throw without a reason");
-    }
+    @Nested
+    class getStringTests {
+        @BeforeEach
+        void init() {
+            prepareDataTableAndIn(CorrectlyEncodedData.encodedString);
+        }
 
-    @Test
-    void getStringGivesCorrectString() throws IOException {
-      String decodedString = testedProducer.getString();
-      assertEquals(CorrectlyEncodedData.string, decodedString);
+        // @Disabled
+        // @Test
+        // void getStringShouldThrowOnInvalidBuffer() {
+        //
+        // }
+        //
+        @Test
+        void getStringDoesntThrowForNoReason() {
+            assertDoesNotThrow(testedProducer::getString,
+                    "Get string should not throw without a reason");
+        }
+
+        @Test
+        void getStringGivesCorrectString() throws IOException {
+            String decodedString = testedProducer.getString();
+            assertEquals(CorrectlyEncodedData.string, decodedString);
+        }
     }
-  }
 }

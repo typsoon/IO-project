@@ -30,153 +30,153 @@ import viewmodel.AbstractView;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class LoginView extends ScreenAdapter implements AbstractView {
-  private final Game game;
-  private final EventListener loginViewEventListener;
+    private final Game game;
+    private final EventListener loginViewEventListener;
 
-  private TextureAtlas atlas;
-  private Stage stage;
-  private Skin skin;
-  private BitmapFont font;
+    private TextureAtlas atlas;
+    private Stage stage;
+    private Skin skin;
+    private BitmapFont font;
 
-  private FreeTypeFontGenerator generator;
+    private FreeTypeFontGenerator generator;
 
-  private OrthographicCamera gameCamera;
+    private OrthographicCamera gameCamera;
 
-  LoginView(final Game game, final EventListener loginViewEventListener) {
-    this.game = game;
-    this.loginViewEventListener = loginViewEventListener;
-  }
+    LoginView(final Game game, final EventListener loginViewEventListener) {
+        this.game = game;
+        this.loginViewEventListener = loginViewEventListener;
+    }
 
-  @Override
-  public void show() {
-    final String loginScreenHeading = "IO Game";
-    gameCamera = new OrthographicCamera();
-    gameCamera.setToOrtho(false, 800, 480);
+    @Override
+    public void show() {
+        final String loginScreenHeading = "IO Game";
+        gameCamera = new OrthographicCamera();
+        gameCamera.setToOrtho(false, 800, 480);
 
-    stage = new Stage();
-    stage.addListener(this.loginViewEventListener);
+        stage = new Stage();
+        stage.addListener(this.loginViewEventListener);
 
-    Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(stage);
 
-    atlas = new TextureAtlas(Gdx.files.internal("LoginView.atlas"));
-    skin = new Skin(atlas);
-    final Table table = new Table(skin);
+        atlas = new TextureAtlas(Gdx.files.internal("LoginView.atlas"));
+        skin = new Skin(atlas);
+        final Table table = new Table(skin);
 
-    // TODO: Move strings to config
-    generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Harrington_SHAREWARE.ttf"));
-    final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    parameter.size = 50;
-    // parameter.color.set(sunflower);
+        // TODO: Move strings to config
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Harrington_SHAREWARE.ttf"));
+        final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        // parameter.color.set(sunflower);
 
-    font = generator.generateFont(parameter);
+        font = generator.generateFont(parameter);
 
-    final Texture texture = font.getRegion().getTexture();
-    texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        final Texture texture = font.getRegion().getTexture();
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-    final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-    textButtonStyle.font = font;
-    textButtonStyle.up = skin.getDrawable("buttonBackground");
-    textButtonStyle.pressedOffsetX = 1;
-    textButtonStyle.pressedOffsetY = -1;
+        final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = font;
+        textButtonStyle.up = skin.getDrawable("buttonBackground");
+        textButtonStyle.pressedOffsetX = 1;
+        textButtonStyle.pressedOffsetY = -1;
 
-    final TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
-    textFieldStyle.messageFont = font;
-    textFieldStyle.font = font;
-    textFieldStyle.fontColor = font.getColor();
-    textFieldStyle.background = skin.getDrawable("buttonBackground");
+        final TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
+        textFieldStyle.messageFont = font;
+        textFieldStyle.font = font;
+        textFieldStyle.fontColor = font.getColor();
+        textFieldStyle.background = skin.getDrawable("buttonBackground");
 
-    final var usernameField = new TextField("", textFieldStyle);
-    usernameField.setAlignment(Align.center);
-    usernameField.setMessageText("Username");
+        final var usernameField = new TextField("", textFieldStyle);
+        usernameField.setAlignment(Align.center);
+        usernameField.setMessageText("Username");
 
-    final var passwordField = new TextField("", textFieldStyle);
-    passwordField.setAlignment(Align.center);
-    passwordField.setMessageText("Password");
-    passwordField.setPasswordMode(true);
+        final var passwordField = new TextField("", textFieldStyle);
+        passwordField.setAlignment(Align.center);
+        passwordField.setMessageText("Password");
+        passwordField.setPasswordMode(true);
 
-    final Button loginButton = new TextButton("Log in", textButtonStyle);
+        final Button loginButton = new TextButton("Log in", textButtonStyle);
 
-    stage.addListener(new InputListener() {
-      @Override
-      public boolean keyDown(final InputEvent event, final int keycode) {
-        if (keycode == Input.Keys.ENTER) {
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(final InputEvent event, final int keycode) {
+                if (keycode == Input.Keys.ENTER) {
 
-        }
+                }
 
-        return super.keyDown(event, keycode);
-      }
-    });
+                return super.keyDown(event, keycode);
+            }
+        });
 
-    loginButton.addListener(new InputListener() {
-      @Override
-      public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-          final int button) {
-        // TODO: remove dependency on network module
-        final var credentials = new Credentials(usernameField.getText(), passwordField.getText());
-        loginButton.fire(new CredentialsTypedEvent(credentials));
-        return true;
-      }
-    });
+        loginButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                                     final int button) {
+                // TODO: remove dependency on network module
+                final var credentials = new Credentials(usernameField.getText(), passwordField.getText());
+                loginButton.fire(new CredentialsTypedEvent(credentials));
+                return true;
+            }
+        });
 
-    final Button buttonExit = new TextButton("Exit", textButtonStyle);
-    buttonExit.addListener(new ClickListener() {
-      public void clicked(final InputEvent event, final float x, final float y) {
-        Gdx.app.exit();
-      }
-    });
+        final Button buttonExit = new TextButton("Exit", textButtonStyle);
+        buttonExit.addListener(new ClickListener() {
+            public void clicked(final InputEvent event, final float x, final float y) {
+                Gdx.app.exit();
+            }
+        });
 
-    final Label.LabelStyle headingStyle = new Label.LabelStyle(font, Color.WHITE);
-    final Label heading = new Label(loginScreenHeading, headingStyle);
-    heading.setFontScale(1.5f);
-    heading.setAlignment(10);
+        final Label.LabelStyle headingStyle = new Label.LabelStyle(font, Color.WHITE);
+        final Label heading = new Label(loginScreenHeading, headingStyle);
+        heading.setFontScale(1.5f);
+        heading.setAlignment(10);
 
-    table.add(heading);
-    table.getCell(heading).spaceBottom(80);
-    table.row();
-    table.add(usernameField);
-    table.getCell(usernameField).spaceBottom(40).width(300);
-    table.row();
-    table.add(passwordField);
-    table.getCell(passwordField).spaceBottom(40).width(300);
-    table.row();
-    table.add(loginButton);
-    table.getCell(loginButton).spaceBottom(40);
-    table.row();
-    table.row();
-    table.add(buttonExit);
+        table.add(heading);
+        table.getCell(heading).spaceBottom(80);
+        table.row();
+        table.add(usernameField);
+        table.getCell(usernameField).spaceBottom(40).width(300);
+        table.row();
+        table.add(passwordField);
+        table.getCell(passwordField).spaceBottom(40).width(300);
+        table.row();
+        table.add(loginButton);
+        table.getCell(loginButton).spaceBottom(40);
+        table.row();
+        table.row();
+        table.add(buttonExit);
 
-    // table.debug();
-    table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        // table.debug();
+        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-    stage.addActor(table);
-  }
+        stage.addActor(table);
+    }
 
-  @Override
-  public void render(final float delta) {
-    ScreenUtils.clear(0, 0, 0, 0);
-    // ScreenUtils.clear(255, 255, 255, 0);
+    @Override
+    public void render(final float delta) {
+        ScreenUtils.clear(0, 0, 0, 0);
+        // ScreenUtils.clear(255, 255, 255, 0);
 
-    stage.act(delta);
+        stage.act(delta);
 
-    stage.draw();
-  }
+        stage.draw();
+    }
 
-  @Override
-  public void resize(final int width, final int height) {
-    stage.getViewport().update(width, height, false);
-  }
+    @Override
+    public void resize(final int width, final int height) {
+        stage.getViewport().update(width, height, false);
+    }
 
-  @Override
-  public void dispose() {
-    atlas.dispose();
-    skin.dispose();
-    stage.dispose();
-    font.dispose();
-    generator.dispose();
-  }
+    @Override
+    public void dispose() {
+        atlas.dispose();
+        skin.dispose();
+        stage.dispose();
+        font.dispose();
+        generator.dispose();
+    }
 
-  @Override
-  public void display() {
-    game.setScreen(this);
-  }
+    @Override
+    public void display() {
+        game.setScreen(this);
+    }
 }
