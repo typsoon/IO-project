@@ -21,13 +21,8 @@ public class ConcreteMessageDecoder implements MessageDecoder {
 
     switch (messageCode) {
       case 0 -> {
-
-        byte usernameLen, passwordLen;
-        // TODO: remove this in the future
         var username = dataProducer.getString();
-
         var password = dataProducer.getString();
-
         return new LogInQuery(username, password);
       }
 
