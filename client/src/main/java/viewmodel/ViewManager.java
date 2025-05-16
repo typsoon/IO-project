@@ -76,7 +76,7 @@ class PropertiesLoader {
     int udp_port;
 
     PropertiesLoader() {
-        var fileName = "ServerAdress.properties";
+        var fileName = "ServerAddress.properties";
         Properties properties = new Properties();
         try (
                 InputStream input = Gdx.files.internal(fileName).read()) {
