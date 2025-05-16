@@ -1,5 +1,6 @@
 package lobby;
 
+import user.DummyPlayerDataFactory;
 import user.UserHandle;
 
 import java.util.ArrayList;
@@ -31,6 +32,6 @@ public class LobbyBuilder {
         if (members.size() < lobbySize) {
             throw new IllegalStateException("Not enough players to build a lobby");
         }
-        return new Lobby(members);
+        return new Lobby(members, new DummyPlayerDataFactory()); // TODO: fix
     }
 }
