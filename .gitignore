@@ -4,4 +4,4 @@ build
 .*
 !.gitignore
 bin/
-ServerAdress.properties
+ServerAddress.properties

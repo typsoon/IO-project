@@ -3,12 +3,13 @@ package network.messages.utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
+
+import network.messages.MessagesConfig;
 
 public class ByteBufferDataProducer implements DataProducer {
     private final ByteBuffer byteBuffer;
-    private final static Charset charset = StandardCharsets.UTF_8;
+    private final static Charset charset = MessagesConfig.msgCharset;
 
     public ByteBufferDataProducer(ByteBuffer byteBuffer) throws IOException {
         this.byteBuffer = byteBuffer;
@@ -23,7 +24,8 @@ public class ByteBufferDataProducer implements DataProducer {
     @Override
     public byte getByte() throws IOException {
         Logger.getGlobal().info(
-                "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(), byteBuffer.capacity(), byteBuffer.limit()));
+                "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(), byteBuffer.capacity(),
+                        byteBuffer.limit()));
         return byteBuffer.get();
     }
 

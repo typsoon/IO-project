@@ -4,11 +4,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
+import network.messages.MessagesConfig;
 
 public class OutputStreamDataReceiver implements DataReceiver {
     private final NoCloseDataOutputStream out;
-    private static final Charset charset = StandardCharsets.UTF_8;
+    private static final Charset charset = MessagesConfig.msgCharset;
 
     public OutputStreamDataReceiver(OutputStream outputStream) {
         this.out = new NoCloseDataOutputStream(outputStream);

@@ -1,10 +1,11 @@
 package network.messages.configurationstate;
 
-import jdk.jshell.spi.ExecutionControl;
 import network.messages.Message;
 import network.messages.utils.DataReceiver;
 
 import java.io.IOException;
+
+import javax.swing.Action;
 
 public class CreateRoomMessage implements Message {
     private static final byte id = 10;
@@ -21,5 +22,11 @@ public class CreateRoomMessage implements Message {
     @Override
     public void encodeAndWrite(DataReceiver out) throws IOException {
         throw new IllegalAccessError();
+    }
+
+    @Override
+    public Action getAction() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
     }
 }

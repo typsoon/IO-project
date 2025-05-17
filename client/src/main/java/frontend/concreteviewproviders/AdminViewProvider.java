@@ -15,9 +15,9 @@ public class AdminViewProvider implements AbstractViewProvider {
     }
 
     @Override
-    public AbstractView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket) {
+    public AbstractView createConfigurationView(RequestHandler requestHandler,
+            ConfigurationStateSender configurationSocket) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createConfigurationView'");
     }
-
 }

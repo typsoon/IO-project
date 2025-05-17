@@ -3,22 +3,16 @@ package network.messages.loginstate;
 import java.io.IOException;
 
 import network.messages.Message;
+import network.messages.MessagesConfig;
 import network.messages.utils.DataReceiver;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
+import javax.swing.Action;
 
 public record LogInQuery(String username, String password) implements Message {
     // TODO: import charset from config
-    private static Charset charset = StandardCharsets.UTF_8;
-
-    private byte[] getStrBytes(String s) throws IOException {
-        var bytes = s.getBytes(charset);
-        if (bytes.length > Byte.MAX_VALUE) {
-            throw new IOException("String too long");
-        }
-        return bytes;
-    }
+    private static Charset charset = MessagesConfig.msgCharset;
 
     @Override
     public void encodeAndWrite(DataReceiver out) throws IOException {
@@ -34,5 +28,11 @@ public record LogInQuery(String username, String password) implements Message {
 
         out.putString(username);
         out.putString(password);
+    }
+
+    @Override
+    public Action getAction() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
     }
 }

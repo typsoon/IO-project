@@ -4,11 +4,12 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
+import network.messages.MessagesConfig;
 
 public class InputStreamDataProducer implements DataProducer {
     private final NoCloseDataInputStream in;
-    private final Charset charset = StandardCharsets.UTF_8;
+    private final Charset charset = MessagesConfig.msgCharset;
 
     public InputStreamDataProducer(InputStream inputStream) {
         this.in = new NoCloseDataInputStream(inputStream);

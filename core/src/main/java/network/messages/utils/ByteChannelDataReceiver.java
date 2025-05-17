@@ -6,8 +6,10 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import network.messages.MessagesConfig;
+
 public class ByteChannelDataReceiver implements DataReceiver {
-    private static final Charset charset = StandardCharsets.UTF_8;
+    private static final Charset charset = MessagesConfig.msgCharset;
     private final WritableByteChannel out;
 
     public ByteChannelDataReceiver(WritableByteChannel out) {

@@ -1,4 +1,4 @@
 package game;
 
-public record Action() {
+public interface Action {
 }
