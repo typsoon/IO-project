@@ -1,26 +1,31 @@
 package lobby;
 
+import game.Action;
+import game.ActionReceiver;
 import game.PlayerConnector;
 import game.PlayerData;
-import game.engine.PlayerConfig;
-import jdk.jshell.spi.ExecutionControl;
-import user.PlayerDataFactory;
+import game.session.GameSessionManager;
 import user.UserHandle;
 
-import java.util.List;
+import java.util.Collection;
 
-public class Lobby {
-    private final List<UserHandle> members;
-    private final PlayerDataFactory playerDataFactory;
+public class Lobby implements ActionReceiver {
+    private final Collection<UserHandle> members;
+    private final GameSessionManager sessionManager;
 
-    public Lobby(List<UserHandle> members, PlayerDataFactory playerDataFactory) {
+    public Lobby(Collection<UserHandle> members, GameSessionManager sessionManager) {
         this.members = members;
-        this.playerDataFactory = playerDataFactory;
+        this.sessionManager = sessionManager;
     }
 
-    public List<PlayerData> getPlayerData() {
+    public Collection<PlayerData> getPlayerData() {
         return members.stream()
-                .map(playerDataFactory::getPlayerData)
+                .map(UserHandle::getPlayerData)
                 .toList();
+    }
+
+    @Override
+    public void sendAction(PlayerConnector player, Action action) {
+        sessionManager.sendAction(player, action);
     }
 }

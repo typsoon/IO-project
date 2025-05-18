@@ -1,37 +1,31 @@
 package lobby;
 
-import user.DummyPlayerDataFactory;
+import game.session.GameSessionFactory;
 import user.UserHandle;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class LobbyBuilder {
     private final int lobbySize;
-    private List<UserHandle> members;
+    private final Collection<UserHandle> members = new ArrayList<>();
 
     public LobbyBuilder(int lobbySize) {
         this.lobbySize = lobbySize;
-        this.members = new ArrayList<>();
     }
 
-    public int capacityLeft() {
-        return lobbySize - members.size();
-    }
+    public int lobbySize() { return lobbySize; }
 
-    public void addPlayer(UserHandle member) {
-        if (members.size() < lobbySize) {
-            members.add(member);
-        }
-        else {
-            throw new IllegalStateException("Lobby is full");
-        }
-    }
+    public int capacityLeft() { return lobbySize - members.size(); }
+
+    public boolean full() { return members.size() == lobbySize; }
+
+    public void addPlayer(UserHandle member) { members.add(member); }
 
     public Lobby build() {
         if (members.size() < lobbySize) {
             throw new IllegalStateException("Not enough players to build a lobby");
         }
-        return new Lobby(members, new DummyPlayerDataFactory()); // TODO: fix
+        return LobbyFactory.createLobby(members);
     }
 }
