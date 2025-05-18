@@ -5,6 +5,8 @@ import game.engine.Event;
 import game.engine.GameEngine;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class GameSessionManager implements ActionReceiver {
     private GameEngine gameEngine;
@@ -13,9 +15,20 @@ public class GameSessionManager implements ActionReceiver {
 
     private final Queue<Event> eventQueue = new LinkedList<>();
 
+    private static final int CYCLE_TIME = 15625; // milliseconds 64 ticks in second
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
     @Override
     public void sendAction(PlayerConnector player, Action action) {
         eventQueue.add(new Event(playerGameStateSenders.get(player),action));
+    }
+
+    public void startGameLoop(){
+        scheduler.scheduleAtFixedRate(this::cycle, 0, CYCLE_TIME, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+
+    public void stopGameLoop(){
+        scheduler.shutdown();
     }
 
     private void cycle(){
@@ -45,6 +58,5 @@ public class GameSessionManager implements ActionReceiver {
             playerGameStateSenders.put(player.connector(), gameState -> playerGameStateQueues.get(player.connector()).add(gameState));
         }
     }
-
 
 }
