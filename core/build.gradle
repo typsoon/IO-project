@@ -3,3 +3,7 @@
 //     // id 'java'
 //     // id 'java-library'
 // }
+dependencies {
+    implementation project(":messagetraitschecker")
+    annotationProcessor project(':messagetraitschecker') // Register the processor
+}

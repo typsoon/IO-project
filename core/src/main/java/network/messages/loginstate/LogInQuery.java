@@ -8,23 +8,29 @@ import network.messages.utils.DataReceiver;
 
 import java.nio.charset.Charset;
 
-import javax.swing.Action;
+import game.Action;
 
-public record LogInQuery(String username, String password) implements Message {
+public final class LogInQuery extends Message {
     // TODO: import charset from config
+    public static final byte id = 0;
     private static Charset charset = MessagesConfig.msgCharset;
+    private final String username, password;
+
+    public LogInQuery(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     @Override
     public void encodeAndWrite(DataReceiver out) throws IOException {
-        var usernameBytes = username().getBytes(charset);
-        var passwordBytes = password().getBytes(charset);
+        var usernameBytes = username.getBytes(charset);
+        var passwordBytes = password.getBytes(charset);
 
         byte messageSize = (byte) (Byte.BYTES + 2 * Byte.BYTES + usernameBytes.length + passwordBytes.length);
 
         out.putByte(messageSize);
 
-        // TODO: change this 0 later
-        out.putByte((byte) 0);
+        out.putByte(id);
 
         out.putString(username);
         out.putString(password);
@@ -34,5 +40,17 @@ public record LogInQuery(String username, String password) implements Message {
     public Action getAction() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAction'");
+    }
+
+    public static Charset getCharset() {
+        return charset;
+    }
+
+    public String username() {
+        return username;
+    }
+
+    public String password() {
+        return password;
     }
 }

@@ -88,8 +88,7 @@ public class ClientSession implements Session {
                 response.encodeAndWrite(new ByteChannelDataReceiver(channel));
                 succesfullySent.add(response);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             pendingResponses.removeAll(succesfullySent);
             logger.severe(
                     String.format("An error occured while sending. Error: %s, Unsent messages: %s", pendingResponses));
@@ -124,8 +123,7 @@ public class ClientSession implements Session {
 
             if (readRes == 0) {
                 break;
-            }
-            else if (readRes == -1) {
+            } else if (readRes == -1) {
                 // TODO: Close session
                 shouldSend = CONNECTION_ENDED;
                 break;

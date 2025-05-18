@@ -5,10 +5,10 @@ import network.messages.utils.DataReceiver;
 
 import java.io.IOException;
 
-import javax.swing.Action;
+import game.Action;
 
-public class CreateRoomMessage implements Message {
-    private static final byte id = 10;
+public final class CreateRoomMessage extends Message {
+    public static final byte id = 10;
 
     public static record Payload(String roomName, String password) {
     }
