@@ -1,4 +1,4 @@
 package game;
 
-public record GameState() {
+public interface GameState {
 }
