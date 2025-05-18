@@ -3,9 +3,9 @@ package room;
 import user.UserHandle;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-public record Room(String name, List<UserHandle> members, Admin admin) {
+public record Room(String name, Collection<UserHandle> members, Admin admin) {
 
     public Room(String name, UserHandle adminHandle) {
         this(name, new ArrayList<>(), new Admin(adminHandle));
@@ -35,7 +35,7 @@ public record Room(String name, List<UserHandle> members, Admin admin) {
                 return;
             }
             if (admin.admin().equals(member)) {
-                admin.changeAdmin(members().get(0));
+                admin.changeAdmin(members.iterator().next());
             }
         }
     }

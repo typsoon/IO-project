@@ -3,19 +3,30 @@ package network.messages.loginstate;
 import java.io.IOException;
 import java.util.Optional;
 
-import javax.swing.Action;
+import game.Action;
 
 import network.messages.Message;
 import network.messages.utils.DataReceiver;
 
-public record LogInResponse(Optional<Integer> authTokenOptional) implements Message {
+public final class LogInResponse extends Message {
     public static int NO_AUTH_TOKEN = -1;
+    public static final byte id = 1;
+
+    public LogInResponse(Optional<Integer> authTokenOptional) {
+        this.authTokenOptional = authTokenOptional;
+    }
+
+    private final Optional<Integer> authTokenOptional;
+
+    public final Optional<Integer> authTokenOptional() {
+        return authTokenOptional;
+    }
 
     @Override
     public void encodeAndWrite(DataReceiver out) throws IOException {
         byte msgSize = Byte.BYTES + Integer.BYTES;
         out.putByte(msgSize);
-        out.putByte((byte) 1);
+        out.putByte(id);
         out.putInt(authTokenOptional.orElse(NO_AUTH_TOKEN));
     }
 

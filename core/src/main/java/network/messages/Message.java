@@ -2,12 +2,14 @@ package network.messages;
 
 import java.io.IOException;
 
-import javax.swing.Action;
-
+import game.Action;
 import network.messages.utils.DataReceiver;
 
-public interface Message {
-    void encodeAndWrite(DataReceiver out) throws IOException;
+import messagetraits.MessageTraits;
 
-    Action getAction();
+@MessageTraits
+public abstract class Message {
+    public abstract void encodeAndWrite(DataReceiver out) throws IOException;
+
+    public abstract Action getAction();
 }
