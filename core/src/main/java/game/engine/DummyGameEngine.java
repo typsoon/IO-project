@@ -7,4 +7,8 @@ public class DummyGameEngine implements GameEngine {
     public void PerformCycle(Collection<Event> events) {
         // Dummy implementation: do nothing
     }
+
+    protected DummyGameEngine(Collection<EnginePlayerData> players) {
+        // Dummy implementation: do nothing
+    }
 }
