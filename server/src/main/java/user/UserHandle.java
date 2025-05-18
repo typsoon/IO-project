@@ -1,14 +1,14 @@
 package user;
 
+import game.ActionReceiver;
 import game.PlayerConnector;
 import game.PlayerData;
 import game.engine.PlayerConfig;
-import lobby.Lobby;
 
 public interface UserHandle {
     UserRoomHandler getUserRoomHandler();
 
-    void setLobby(Lobby lobby);
+    void gameStarted(ActionReceiver lobby);
 
     PlayerConfig getPlayerConfig();
 

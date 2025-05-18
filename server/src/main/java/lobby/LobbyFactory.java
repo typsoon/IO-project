@@ -13,7 +13,7 @@ public class LobbyFactory {
                 .toList());
         Lobby lobby = new Lobby(players, sessionManager);
         for (UserHandle player : players) {
-            player.setLobby(lobby);
+            player.gameStarted(lobby);
         }
 
         return lobby;
