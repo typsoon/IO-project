@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 
 import network.messages.MessagesConfig;
 
-public class OutputStreamDataReceiver implements DataReceiver {
+public class OutputStreamDataReceiver implements DataConsumer {
     private final NoCloseDataOutputStream out;
     private static final Charset charset = MessagesConfig.msgCharset;
 

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import network.messages.Message;
 import network.messages.MessagesConfig;
-import network.messages.utils.DataReceiver;
+import network.messages.utils.DataConsumer;
 
 import java.nio.charset.Charset;
 
@@ -22,7 +22,7 @@ public final class LogInQuery extends Message {
     }
 
     @Override
-    public void encodeAndWrite(DataReceiver out) throws IOException {
+    public void encodeAndWrite(DataConsumer out) throws IOException {
         var usernameBytes = username.getBytes(charset);
         var passwordBytes = password.getBytes(charset);
 

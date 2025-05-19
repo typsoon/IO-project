@@ -1,7 +1,7 @@
 package network.messages.configurationstate;
 
 import network.messages.Message;
-import network.messages.utils.DataReceiver;
+import network.messages.utils.DataConsumer;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public final class CreateRoomMessage extends Message {
     }
 
     @Override
-    public void encodeAndWrite(DataReceiver out) throws IOException {
+    public void encodeAndWrite(DataConsumer out) throws IOException {
         throw new IllegalAccessError();
     }
 

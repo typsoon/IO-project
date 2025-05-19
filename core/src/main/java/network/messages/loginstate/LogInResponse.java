@@ -6,7 +6,7 @@ import java.util.Optional;
 import game.Action;
 
 import network.messages.Message;
-import network.messages.utils.DataReceiver;
+import network.messages.utils.DataConsumer;
 
 public final class LogInResponse extends Message {
     public static int NO_AUTH_TOKEN = -1;
@@ -23,7 +23,7 @@ public final class LogInResponse extends Message {
     }
 
     @Override
-    public void encodeAndWrite(DataReceiver out) throws IOException {
+    public void encodeAndWrite(DataConsumer out) throws IOException {
         byte msgSize = Byte.BYTES + Integer.BYTES;
         out.putByte(msgSize);
         out.putByte(id);
