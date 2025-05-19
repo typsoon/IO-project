@@ -21,6 +21,9 @@ If a class is annotated with ``AutoMessageTraits`` indirectly then:
 - It should be abstract
 - It should have one template argument which is a ``record``
 
+Template parameters given to class annotated with `AutoMessageTraits` should be
+unique among subclasses.
+
 A concrete subclass will be generated and added to correct data structures that can
 be accessed the following way:
 
