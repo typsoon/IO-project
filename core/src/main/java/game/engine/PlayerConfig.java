@@ -1,4 +1,7 @@
 package game.engine;
 
-public record PlayerConfig() {
-}
+import game.engine.components.GeometryConfigID;
+
+public record PlayerConfig(
+        GeometryConfigID geometryConfigID
+){}

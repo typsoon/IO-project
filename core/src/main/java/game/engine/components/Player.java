@@ -4,9 +4,9 @@ import game.engine.PlayerConfig;
 
 public class Player implements Entity {
 
+    private final GeometryRepresentation geometryRepresentation;
 
-
-    public Player(PlayerConfig config) {
-
+    public Player(PlayerConfig config, GeometryRepresentation geometryRepresentation) {
+        this.geometryRepresentation = geometryRepresentation;
     }
 }
