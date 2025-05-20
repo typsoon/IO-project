@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
 import network.messages.utils.DataProducer;
-import network.messages.utils.DataReceiver;
+import network.messages.utils.DataConsumer;
 import network.socketwrappers.sendertypes.LoginStateSender;
 
 import java.io.IOException;
@@ -18,15 +18,15 @@ import network.messages.decoding.MessageDecoder;
 public class ConcreteAuthenticatingSocket implements LoginStateSender {
     private final DataProducer in;
 
-    private final DataReceiver out;
+    private final DataConsumer out;
     private final MessageDecoder messageDecoder;
     private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public ConcreteAuthenticatingSocket(DataProducer in, DataReceiver out) {
+    public ConcreteAuthenticatingSocket(DataProducer in, DataConsumer out) {
         this(in, out, new ConcreteMessageDecoder());
     }
 
-    public ConcreteAuthenticatingSocket(DataProducer in, DataReceiver out, MessageDecoder messageDecoder) {
+    public ConcreteAuthenticatingSocket(DataProducer in, DataConsumer out, MessageDecoder messageDecoder) {
         this.in = in;
         this.out = out;
         this.messageDecoder = messageDecoder;
@@ -44,8 +44,7 @@ public class ConcreteAuthenticatingSocket implements LoginStateSender {
         // TODO: this Instanceof fate is probably to be refactored out
         if (answer instanceof LogInResponse logInResponse) {
             return Optional.of(logInResponse);
-        }
-        else {
+        } else {
             throw new IllegalStateException(String.format("This is a bad type of response %s", answer));
         }
     }

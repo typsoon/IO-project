@@ -1,0 +1,88 @@
+package codegen;
+
+import static codegen.CodegenConfig.decodeFromRecordMethodName;
+import static codegen.CodegenConfig.decodeFromRecordParName;
+import static codegen.CodegenConfig.typeToTypeData;
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
+
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.ParameterSpec;
+
+public class ProducerGenerator {
+    public MethodSpec getProduceMethod(Iterable<FieldSpec> fieldSpecs, String producerQualifiedName,
+            TypeElement messageTypeMirror) {
+        StringJoiner args = new StringJoiner(", ");
+        List<Object> formatArgs = new ArrayList<>();
+        formatArgs.add(String.format(CodegenConfig.generatedClassNameFormat, messageTypeMirror.getSimpleName()));
+
+        var producerPar = ParameterSpec
+                .builder(ClassName.bestGuess(producerQualifiedName), CodegenConfig.producerParName).build();
+
+        var methodBuilder = MethodSpec.methodBuilder(CodegenConfig.decodeMethodName)
+                .addModifiers(PUBLIC, FINAL, STATIC)
+                .addParameter(producerPar)
+                .returns(ClassName.get(messageTypeMirror.asType()));
+
+        fieldSpecs.forEach(field -> {
+            var mappedVal = typeToTypeData.get(field.type());
+
+            args.add("$L");
+            formatArgs.add(CodeBlock.of("$N.$L", CodegenConfig.producerParName, mappedVal.producerMethod()));
+        });
+
+        String format = "return new $L(" + args + ")";
+
+        var codeBlock = CodeBlock.of(format, formatArgs.toArray());
+
+        methodBuilder.beginControlFlow("try").addStatement(codeBlock)
+                .nextControlFlow("catch ($T e)", Exception.class)
+                .addStatement("throw new $T($N)", IllegalStateException.class, "e")
+                .endControlFlow();
+
+        return methodBuilder.build();
+    }
+
+    public MethodSpec getProduceFromRecordMethod(Iterable<FieldSpec> fieldSpecs, TypeMirror record,
+            TypeElement messageTypeElement) {
+        var parameter = ParameterSpec.builder(Object.class, decodeFromRecordParName).build();
+
+        var recName = "castedRec";
+        var methodBuilder = MethodSpec.methodBuilder(decodeFromRecordMethodName)
+                .addModifiers(PUBLIC, STATIC, FINAL)
+                .returns(ClassName.get(messageTypeElement.asType()))
+                .addParameter(parameter)
+                .beginControlFlow(CodeBlock.of("if($N instanceof $T $L)", decodeFromRecordParName, record, recName));
+
+        StringJoiner args = new StringJoiner(", ");
+        List<Object> formatArgs = new ArrayList<>();
+        formatArgs.add(String.format(CodegenConfig.generatedClassNameFormat, messageTypeElement.getSimpleName()));
+
+        fieldSpecs.forEach(field -> {
+            args.add("$L");
+            formatArgs.add(CodeBlock.of("$N.$N()", recName, field.name()));
+        });
+
+        String format = "return new $L(" + args + ")";
+
+        methodBuilder
+                .addStatement(format, formatArgs.toArray())
+                .nextControlFlow("else")
+                .addStatement("throw new $T(\"$L\")", IllegalStateException.class,
+                        "Invalid type passed to %s".formatted(decodeFromRecordMethodName))
+                .endControlFlow();
+
+        return methodBuilder.build();
+    }
+}

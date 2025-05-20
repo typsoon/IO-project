@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 import network.messages.MessagesConfig;
 
-public class ByteChannelDataReceiver implements DataReceiver {
+public class ByteChannelDataReceiver implements DataConsumer {
     private static final Charset charset = MessagesConfig.msgCharset;
     private final WritableByteChannel out;
 

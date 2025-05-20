@@ -10,13 +10,13 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import network.messages.utils.DataReceiver;
+import network.messages.utils.DataConsumer;
 import network.messages.utils.OutputStreamDataReceiver;
 
 public class LogInResponseTest {
     private LogInResponse testedResponse;
     private ByteArrayOutputStream out;
-    private DataReceiver dataReceiver;
+    private DataConsumer dataReceiver;
 
     @BeforeEach
     void init() {
@@ -57,8 +57,7 @@ class CorrectlyEncodedPayload {
             out.write(Byte.BYTES + Integer.BYTES);
             out.write(msgCode);
             out.writeInt(payloadWithToken.get());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException(e);
         }
 
@@ -76,8 +75,7 @@ class CorrectlyEncodedPayload {
             out.write(Byte.BYTES + Integer.BYTES);
             out.write(msgCode);
             out.writeInt(NO_AUTH_TOKEN_INDICATOR);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException(e);
         }
 

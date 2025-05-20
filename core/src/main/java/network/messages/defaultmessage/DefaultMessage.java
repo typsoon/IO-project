@@ -1,26 +1,18 @@
 package network.messages.defaultmessage;
 
-import java.io.IOException;
-
 import game.Action;
+import messagetraits.AutoMessageTraits;
 import network.messages.Message;
-import network.messages.utils.DataReceiver;
+import network.messages.utils.DataConsumer;
+import network.messages.utils.DataProducer;
 
+@AutoMessageTraits(consumer = DataConsumer.class, producer = DataProducer.class)
 public abstract class DefaultMessage<T extends Action> extends Message {
-    private final T action;
+}
 
-    protected DefaultMessage(T action) {
-        this.action = action;
-    }
+record PositionRecord(int i, byte b, int y) implements Action {
+};
 
-    @Override
-    public void encodeAndWrite(DataReceiver out) throws IOException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
-    }
-
-    @Override
-    public Action getAction() {
-        return action;
-    }
+abstract class Position extends DefaultMessage<PositionRecord> {
+    public static final byte id = 20;
 }
