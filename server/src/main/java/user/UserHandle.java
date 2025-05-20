@@ -6,8 +6,6 @@ import game.PlayerData;
 import game.engine.PlayerConfig;
 
 public interface UserHandle {
-    UserRoomHandler getUserRoomHandler();
-
     void gameStarted(ActionReceiver lobby);
 
     PlayerConfig getPlayerConfig();
