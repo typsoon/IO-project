@@ -8,7 +8,7 @@ import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
 import network.messages.utils.DataProducer;
 import network.messages.Message;
-import network.messages.defaultmessage.GeneratedClassesData;
+import network.messages.defaultmessage.DefaultMessage;
 import java.util.function.Function;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +18,7 @@ public class ConcreteMessageDecoder implements MessageDecoder {
 
     private static final Map<Byte, Function<DataProducer, ? extends Message>> decoders = new HashMap<>();
     static {
-        decoders.putAll(GeneratedClassesData.decoders);
-
-        // Logger.getGlobal().info(decoders.toString());
+        decoders.putAll(DefaultMessage.decoders);
     }
 
     // private static final Map<Byte, Function<Object, Message>> recordDecoders =

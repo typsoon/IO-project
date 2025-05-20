@@ -9,7 +9,7 @@ import network.messages.Message;
 public class ConcreteObjectDecoder implements ObjectToMessageDecoder {
     private static final Map<Class<?>, Function<Object, ? extends Message>> recordDecoders = new HashMap<>();
     static {
-        recordDecoders.putAll(GeneratedClassesData.recordDecoders);
+        recordDecoders.putAll(DefaultMessage.recordDecoders);
     }
 
     @Override
