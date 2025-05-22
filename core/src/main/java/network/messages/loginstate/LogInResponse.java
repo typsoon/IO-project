@@ -3,7 +3,7 @@ package network.messages.loginstate;
 import java.io.IOException;
 import java.util.Optional;
 
-import game.Action;
+import game.actions.Action;
 
 import network.messages.Message;
 import network.messages.utils.DataConsumer;

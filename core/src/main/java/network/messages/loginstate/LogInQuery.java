@@ -8,7 +8,7 @@ import network.messages.utils.DataConsumer;
 
 import java.nio.charset.Charset;
 
-import game.Action;
+import game.actions.Action;
 
 public final class LogInQuery extends Message {
     // TODO: import charset from config

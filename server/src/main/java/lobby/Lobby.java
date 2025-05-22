@@ -1,6 +1,6 @@
 package lobby;
 
-import game.Action;
+import game.actions.Action;
 import game.ActionReceiver;
 import game.PlayerConnector;
 import game.PlayerData;

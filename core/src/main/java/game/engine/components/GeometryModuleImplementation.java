@@ -1,6 +1,7 @@
 package game.engine.components;
 
 import java.awt.geom.Point2D;
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-public class GeometryModuleImplementation implements GeometryModule, GeometryFactory {
+public class GeometryModuleImplementation implements GeometryModule, GeometryFactory, Closeable {
 
     private final World world = new World(new Vector2(0,0), true);
     private final float timeStep;
@@ -18,15 +19,15 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
 
     private final Map<Body, GeometryRepresentation> geometryRepresentationMap = new HashMap<>();
 
-    GeometryModuleImplementation(float timeStep, int velocityIterations, int positionIterations ) {
+    public GeometryModuleImplementation(float timeStep, int velocityIterations, int positionIterations ) {
         this.timeStep = timeStep;
         this.velocityIterations = velocityIterations;
         this.positionIterations = positionIterations;
     }
-    GeometryModuleImplementation(float timeStep) {
+    public GeometryModuleImplementation(float timeStep) {
         this(timeStep, 6, 2);
     }
-    GeometryModuleImplementation() {
+    public GeometryModuleImplementation() {
         this(1/64f);
     }
 
@@ -87,7 +88,8 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
         world.step(timeStep, velocityIterations, positionIterations);
     }
 
-    public void dispose() {
+    @Override
+    public void close() {
         world.dispose();
     }
 }

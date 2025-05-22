@@ -1,14 +1,17 @@
 package game.session;
 
 import game.*;
+import game.actions.Action;
 import game.engine.Event;
 import game.engine.GameEngine;
+import game.gamestates.GameState;
 
+import java.io.Closeable;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class GameSessionManager implements ActionReceiver {
+public class GameSessionManager implements ActionReceiver, Closeable {
     private GameEngine gameEngine;
     private final HashMap<PlayerConnector, PlayerGamesStateSender> playerGameStateSenders = new HashMap<>();
     private final HashMap<PlayerConnector, Queue<GameState>> playerGameStateQueues = new HashMap<>();
@@ -57,6 +60,14 @@ public class GameSessionManager implements ActionReceiver {
             playerGameStateQueues.put(player.connector(), new LinkedList<>());
             playerGameStateSenders.put(player.connector(), gameState -> playerGameStateQueues.get(player.connector()).add(gameState));
         }
+    }
+    @Override
+    public void close() throws  java.io.IOException {
+        stopGameLoop();
+        for (PlayerConnector playerConnector : playerGameStateSenders.keySet()) {
+            playerConnector.unsubscribe(this);
+        }
+        gameEngine.close();
     }
 
 }

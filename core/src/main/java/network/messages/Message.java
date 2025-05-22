@@ -2,7 +2,7 @@ package network.messages;
 
 import java.io.IOException;
 
-import game.Action;
+import game.actions.Action;
 import network.messages.utils.DataConsumer;
 
 import messagetraits.MessageTraits;
