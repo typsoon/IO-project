@@ -1,0 +1,26 @@
+If you can see this file, then the methods written below turned out to be sufficient.
+
+Problem - can't use github in IntelliJ, namely:
+-> Get from Version Control...
+-> GitHub
+- (account is added but all you can see is)
+-> "Invalid authentication data. Re-Login"
+
+How to solve that:
+In the same bar as 'File', 'Edit', etc. there is 'Help'. And at the very bottom there is 'About'.
+Make sure your current build is newer that June 10, 2024.
+Either way, if you want to update, then go to the section 'Help', 'Check for Updates...', and update.
+(Windows 10) if you see that 'elevator.exe' needs access to you hard drive, you need to accept it. Only then will the update be installed.
+If <now> your version is newer that June 10, 2024, you can progress further.
+
+Further:
+Try if you can clone a repository. If you still see the same issue, you may try to re-login by hand (I did that).
+Namely, go to 'File' -> 'Settings' -> 'Version Control' -> 'GitHub'. There, remove your account from the list (aka log out).
+Now (in 'Get from Version Control...' -> 'GitHub') try to 'Log in via GitHub...'.
+If it's insufficient (you only see public repositories, or none), log out again.
+In (in 'Get from Version Control...' -> 'GitHub') go to 'Log in with Token...'.
+Clicking that 'Generate' option will lead you to the correct site. There, choose what you need and generate the Token.
+It's gonna be a random string. You need to paste that just on the left of that 'Generate' button you pressed a second ago.
+And now just log in. Default setting of the Token should allow you to see all your repositories now.
+
+If you still cannot access this repository via IntelliJ, please contact me (BB).
