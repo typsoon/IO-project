@@ -1,7 +1,7 @@
 package game.engine;
 
 import game.PlayerGamesStateSender;
-import game.Action;
+import game.actions.Action;
 
 public record Event(
         PlayerGamesStateSender playerGamesStateSender,

@@ -1,4 +1,4 @@
-package game;
+package game.gamestates;
 
 public interface GameState {
 }

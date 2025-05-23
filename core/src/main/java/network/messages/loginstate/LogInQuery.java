@@ -3,10 +3,10 @@ package network.messages.loginstate;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import game.Action;
 import network.messages.Message.EncryptedMessage;
 import network.messages.MessagesConfig;
 import network.messages.utils.DataConsumer;
+import game.actions.Action;
 
 public final class LogInQuery extends EncryptedMessage {
     // TODO: import charset from config
