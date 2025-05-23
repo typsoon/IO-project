@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 
-import game.Action;
+import game.actions.Action;
 import messagetraits.AutoMessageTraits;
 import network.messages.defaultmessage.GeneratedClassesData;
 import network.messages.Message;
