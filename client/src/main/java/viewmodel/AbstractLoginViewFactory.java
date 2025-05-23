@@ -1,6 +1,6 @@
 package viewmodel;
 
-import network.socketwrappers.sendertypes.LoginStateSender;
+import network.socketwrappers.SenderTypes.LoginStateSender;
 
 public interface AbstractLoginViewFactory {
     AbstractView getLoginView(RequestHandler requestHandler, LoginStateSender authenticatingSocket);

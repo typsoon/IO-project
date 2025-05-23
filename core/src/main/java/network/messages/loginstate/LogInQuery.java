@@ -1,16 +1,14 @@
 package network.messages.loginstate;
 
 import java.io.IOException;
-
-import network.messages.Message;
-import network.messages.MessagesConfig;
-import network.messages.utils.DataConsumer;
-
 import java.nio.charset.Charset;
 
 import game.Action;
+import network.messages.Message.EncryptedMessage;
+import network.messages.MessagesConfig;
+import network.messages.utils.DataConsumer;
 
-public final class LogInQuery extends Message {
+public final class LogInQuery extends EncryptedMessage {
     // TODO: import charset from config
     public static final byte id = 0;
     private static Charset charset = MessagesConfig.msgCharset;

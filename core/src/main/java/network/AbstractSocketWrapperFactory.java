@@ -1,10 +1,9 @@
 package network;
 
-import network.socketwrappers.sendertypes.LoginStateSender;
-
 import java.io.IOException;
 
-import network.socketwrappers.sendertypes.ConfigurationStateSender;
+import network.socketwrappers.SenderTypes.LoginStateSender;
+import network.socketwrappers.SenderTypes.ConfigurationStateSender;
 
 public interface AbstractSocketWrapperFactory {
     LoginStateSender getAuthenticatingSocket(ConnectionData connectionData) throws IOException;

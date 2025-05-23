@@ -1,6 +1,6 @@
 package session;
 
-import network.socketwrappers.DuplexSocket;
+import network.socketwrappers.SocketTypes.DuplexSocket;
 
 public interface AbstractSessionFactory {
     Session getSession(DuplexSocket clientSocket);

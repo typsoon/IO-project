@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
-import network.socketwrappers.sendertypes.LoginStateSender;
+import network.socketwrappers.SenderTypes.LoginStateSender;
 import viewmodel.RequestHandler;
 
 public class LoginViewEventListener implements EventListener {
@@ -33,9 +33,9 @@ public class LoginViewEventListener implements EventListener {
 
             Optional<LogInResponse> result;
             try {
-                result = this.loginStateSender.sendMessage(new LogInQuery(credentials.username(), credentials.password()));
-            }
-            catch (IOException e) {
+                result = this.loginStateSender
+                        .sendMessage(new LogInQuery(credentials.username(), credentials.password()));
+            } catch (IOException e) {
                 logger.info(String.format("Error occured wile sending message %s", e));
                 result = Optional.empty();
             }

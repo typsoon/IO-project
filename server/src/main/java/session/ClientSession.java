@@ -17,7 +17,7 @@ import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
 import network.messages.utils.ByteBufferDataProducer;
 import network.messages.utils.ByteChannelDataReceiver;
-import network.socketwrappers.DuplexSocket;
+import network.socketwrappers.SocketTypes.DuplexSocket;
 
 import static session.HandlingResult.*;
 

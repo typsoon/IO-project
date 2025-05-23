@@ -1,6 +1,6 @@
 package viewmodel;
 
-import network.socketwrappers.sendertypes.ConfigurationStateSender;
+import network.socketwrappers.SenderTypes.ConfigurationStateSender;
 
 public interface AbstractViewProvider {
     AbstractView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket);

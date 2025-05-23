@@ -7,7 +7,7 @@ import java.net.Socket;
 import network.ServerSocketWrapper;
 import network.messages.utils.InputStreamDataProducer;
 import network.messages.utils.OutputStreamDataReceiver;
-import network.socketwrappers.DuplexSocket;
+import network.socketwrappers.SocketTypes.DuplexSocket;
 
 public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
     private final ServerSocket serverSocket;

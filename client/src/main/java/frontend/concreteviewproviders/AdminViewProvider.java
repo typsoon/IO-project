@@ -2,7 +2,7 @@ package frontend.concreteviewproviders;
 
 import com.badlogic.gdx.Game;
 
-import network.socketwrappers.sendertypes.ConfigurationStateSender;
+import network.socketwrappers.SenderTypes.ConfigurationStateSender;
 import viewmodel.AbstractView;
 import viewmodel.AbstractViewProvider;
 import viewmodel.RequestHandler;

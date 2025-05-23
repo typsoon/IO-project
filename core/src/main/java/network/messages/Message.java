@@ -8,8 +8,17 @@ import network.messages.utils.DataConsumer;
 import messagetraits.MessageTraits;
 
 @MessageTraits
-public abstract class Message {
+public sealed abstract class Message permits Message.EncryptedMessage, Message.UDPMessage, Message.TCPMessage {
     public abstract void encodeAndWrite(DataConsumer out) throws IOException;
 
     public abstract Action getAction();
+
+    public static non-sealed abstract class EncryptedMessage extends Message {
+    }
+
+    public static non-sealed abstract class UDPMessage extends Message {
+    }
+
+    public static non-sealed abstract class TCPMessage extends Message {
+    }
 }

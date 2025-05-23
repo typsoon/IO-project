@@ -8,8 +8,8 @@ import network.messages.Message;
 import network.messages.decoding.ConcreteMessageDecoder;
 import network.messages.decoding.MessageDecoder;
 import network.messages.utils.DataProducer;
+import network.socketwrappers.SocketTypes.DuplexSocket;
 import network.messages.utils.DataConsumer;
-import network.socketwrappers.DuplexSocket;
 
 import java.util.logging.Level;
 

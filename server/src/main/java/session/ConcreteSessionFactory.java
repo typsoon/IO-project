@@ -1,6 +1,6 @@
 package session;
 
-import network.socketwrappers.DuplexSocket;
+import network.socketwrappers.SocketTypes.DuplexSocket;
 
 public class ConcreteSessionFactory implements AbstractSessionFactory {
     @Override

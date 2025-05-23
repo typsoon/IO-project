@@ -9,7 +9,7 @@ import java.nio.channels.SocketChannel;
 
 import network.NIOServerSocketWrapper;
 import network.messages.utils.ByteChannelDataReceiver;
-import network.socketwrappers.DuplexSocket;
+import network.socketwrappers.SocketTypes.DuplexSocket;
 
 public class ConcreteNIOServerSocketWrapper implements NIOServerSocketWrapper {
     private final int port;

@@ -2,7 +2,7 @@ package frontend.concreteviews.loginview;
 
 import com.badlogic.gdx.Game;
 
-import network.socketwrappers.sendertypes.LoginStateSender;
+import network.socketwrappers.SenderTypes.LoginStateSender;
 import viewmodel.AbstractLoginViewFactory;
 import viewmodel.AbstractView;
 import viewmodel.RequestHandler;

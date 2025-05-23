@@ -8,7 +8,7 @@ import com.badlogic.gdx.Gdx;
 
 import network.AbstractSocketWrapperFactory;
 import network.ConnectionData;
-import network.socketwrappers.sendertypes.LoginStateSender;
+import network.socketwrappers.SenderTypes.LoginStateSender;
 import viewmodel.requests.AbstractRequest;
 import viewmodel.requests.MoveToConfigurationRequest;
 
@@ -19,9 +19,9 @@ public class ViewManager implements RequestHandler {
     private final AbstractLoginViewFactory loginViewFactory;
 
     public ViewManager(final AbstractViewProvider userViewProvider,
-                       final AbstractSocketWrapperFactory abstractSocketWrapperFactory,
-                       final AbstractViewProvider adminViewProvider,
-                       final AbstractLoginViewFactory abstractLoginViewFactory) {
+            final AbstractSocketWrapperFactory abstractSocketWrapperFactory,
+            final AbstractViewProvider adminViewProvider,
+            final AbstractLoginViewFactory abstractLoginViewFactory) {
         this.userViewProvider = userViewProvider;
         this.socketWrapperFactory = abstractSocketWrapperFactory;
         this.adminViewProvider = adminViewProvider;
@@ -40,8 +40,7 @@ public class ViewManager implements RequestHandler {
         try {
             authenticatingSocket = socketWrapperFactory.getAuthenticatingSocket(connectionData);
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -85,8 +84,7 @@ class PropertiesLoader {
             hostname = properties.getProperty("hostname");
             port = Integer.parseInt(properties.getProperty("port"));
             udp_port = Integer.parseInt(properties.getProperty("udp_port"));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             hostname = "localhost";
             port = 4567;
             udp_port = 4568;

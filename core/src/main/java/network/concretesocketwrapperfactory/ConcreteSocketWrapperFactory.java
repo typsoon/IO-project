@@ -7,9 +7,9 @@ import network.AbstractSocketWrapperFactory;
 import network.ConnectionData;
 import network.messages.utils.InputStreamDataProducer;
 import network.messages.utils.OutputStreamDataReceiver;
+import network.socketwrappers.SenderTypes.ConfigurationStateSender;
+import network.socketwrappers.SenderTypes.LoginStateSender;
 import network.socketwrappers.concretesocketwrappers.ConcreteAuthenticatingSocket;
-import network.socketwrappers.sendertypes.ConfigurationStateSender;
-import network.socketwrappers.sendertypes.LoginStateSender;
 
 public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactory {
     private final SocketManager socketManager;
@@ -32,8 +32,7 @@ public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactor
         Socket socket;
         try {
             socket = socketManager.getConnection(connectionData);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException(illegalStateErrorMessage,
                     e);
         }

@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import game.Action;
 
-import network.messages.Message;
+import network.messages.Message.EncryptedMessage;
 import network.messages.utils.DataConsumer;
 
-public final class LogInResponse extends Message {
+public final class LogInResponse extends EncryptedMessage {
     public static int NO_AUTH_TOKEN = -1;
     public static final byte id = 1;
 
