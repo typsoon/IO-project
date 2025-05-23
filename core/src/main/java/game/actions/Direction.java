@@ -3,27 +3,22 @@ package game.actions;
 import game.Utility.Vector2F;
 
 public enum Direction {
-    N,
-    NE,
-    E,
-    SE,
-    S,
-    SW,
-    W,
-    NW;
+    N(new Vector2F(0, 1)),
+    NE(new Vector2F(1, 1).normalize()),
+    E(new Vector2F(1, 0)),
+    SE(new Vector2F(1, -1).normalize()),
+    S(new Vector2F(0, -1)),
+    SW(new Vector2F(-1, -1).normalize()),
+    W(new Vector2F(-1, 0)),
+    NW(new Vector2F(-1, 1).normalize());
     public Direction opposite() {
         return values()[(this.ordinal() + 4) % 8];
     }
+    private final Vector2F vector;
     public Vector2F vector() {
-        return switch (this) {
-            case N -> new Vector2F(0, -1);
-            case NE -> new Vector2F(1, -1).normalize();
-            case E -> new Vector2F(1, 0);
-            case SE -> new Vector2F(1, 1).normalize();
-            case S -> new Vector2F(0, 1);
-            case SW -> new Vector2F(-1, 1).normalize();
-            case W -> new Vector2F(-1, 0);
-            case NW -> new Vector2F(-1, -1).normalize();
-        };
+        return vector;
+    }
+    Direction(Vector2F vector) {
+        this.vector = vector;
     }
 }
