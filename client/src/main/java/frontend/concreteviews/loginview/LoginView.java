@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
+import frontend.concreteviews.mainmenu.MainMenuViewFactory;
 import network.Credentials;
 import viewmodel.AbstractView;
 
@@ -118,10 +119,11 @@ public class LoginView extends ScreenAdapter implements AbstractView {
             }
         });
 
-        final Button buttonExit = new TextButton("Exit", textButtonStyle);
-        buttonExit.addListener(new ClickListener() {
+        final Button buttonBack = new TextButton("Back", textButtonStyle);
+        buttonBack.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                Gdx.app.exit();
+                final var mainMenuView = new MainMenuViewFactory(game).getMainMenuView();
+                mainMenuView.display();
             }
         });
 
@@ -142,7 +144,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
         table.add(loginButton);
         table.getCell(loginButton).spaceBottom(40);
         table.row();
-        table.add(buttonExit);
+        table.add(buttonBack);
 
         // table.debug();
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

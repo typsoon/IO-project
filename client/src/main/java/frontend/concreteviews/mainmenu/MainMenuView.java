@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.ScreenUtils;
 import viewmodel.AbstractView;
 import viewmodel.RequestHandler;
 import viewmodel.ViewManagerInjector;
@@ -34,9 +35,22 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
     }
 
     @Override
+    public void dispose() {
+        atlas.dispose();
+        skin.dispose();
+        stage.dispose();
+    }
+
+    @Override
     public void render(final float delta) {
+        ScreenUtils.clear(0, 0, 0, 1, true);
         super.render(delta);
         stage.draw();
+    }
+
+    @Override
+    public void resize(final int width, final int height) {
+        stage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -58,8 +72,8 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
         textButtonStyle.pressedOffsetY = -1;
 
 
-        final Button buttonGoToLogin = new TextButton("Log in", textButtonStyle);
-        buttonGoToLogin.addListener(new ClickListener() {
+        final Button buttonConnect = new TextButton("Connect", textButtonStyle);
+        buttonConnect.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
                 final var viewManager = new ViewManagerInjector(game).getViewManager();
                 viewManager.start();
@@ -76,8 +90,8 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
 
 
         final Table table = new Table(skin);
-        table.add(buttonGoToLogin);
-        table.getCell(buttonGoToLogin).spaceBottom(40);
+        table.add(buttonConnect);
+        table.getCell(buttonConnect).spaceBottom(40);
         table.row();
         table.add(buttonExit);
 
