@@ -1,8 +1,8 @@
 package user;
 
-import game.ActionReceiver;
-import game.PlayerConnector;
-import game.PlayerData;
+import game.session.ActionReceiver;
+import game.session.PlayerConnector;
+import game.session.PlayerData;
 import game.engine.PlayerConfig;
 
 public interface UserHandle {

@@ -1,6 +1,6 @@
 package game.engine;
 
-import game.PlayerGamesStateSender;
+import game.session.PlayerGamesStateSender;
 
 public record EnginePlayerData(
         PlayerGamesStateSender playerGamesStateSender,

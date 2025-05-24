@@ -1,4 +1,4 @@
-package game.engine.components;
+package game.engine.modules;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import game.engine.entities.EntityGeometryConfig;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
@@ -18,7 +19,7 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
     private final int velocityIterations;
     private final int positionIterations;
 
-    private final Map<Body, GeometryRepresentation> geometryRepresentationMap = new HashMap<>();
+    private final Map<Body, MovingGeometryRepresentation> geometryRepresentationMap = new HashMap<>();
 
     public GeometryModuleImplementation(float timeStep, int velocityIterations, int positionIterations ) {
         this.timeStep = timeStep;
@@ -33,17 +34,17 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
     }
 
     @Override
-    public GeometryRepresentation createGeometryRepresentation(EntityGeometryConfig config) {
+    public MovingGeometryRepresentation createGeometryRepresentation(EntityGeometryConfig config, float startingX, float startingY) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = switch (config.bodyType()) {
             case STATIC -> BodyDef.BodyType.StaticBody;
             case DYNAMIC -> BodyDef.BodyType.DynamicBody;
             case KINEMATIC -> BodyDef.BodyType.KinematicBody;
         };
-        bodyDef.position.set(config.startingX(), config.startingY());
+        bodyDef.position.set(startingX, startingY);
         bodyDef.linearDamping = config.linearDamping();
         bodyDef.angularDamping = config.angularDamping();
-
+        bodyDef.fixedRotation = !config.isRotatable();
         Body body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
@@ -56,7 +57,7 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
         fixtureDef.restitution = config.restitution();
         body.createFixture(fixtureDef);
         shape.dispose();
-        GeometryRepresentation geometryRepresentation = new GeometryRepresentation() {
+        MovingGeometryRepresentation movingGeometryRepresentation = new MovingGeometryRepresentation() {
             @Override
             public Point2F getPosition() {
                 return new Point2F(body.getPosition().x, body.getPosition().y);
@@ -68,16 +69,17 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
             }
             @Override
             public void move(float dx, float dy) {
-                body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);
+//                body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);
+                body.setLinearVelocity(dx, dy);
             }
         };
-        geometryRepresentationMap.put(body, geometryRepresentation);
-        return geometryRepresentation;
+        geometryRepresentationMap.put(body, movingGeometryRepresentation);
+        return movingGeometryRepresentation;
     }
 
     @Override
-    public Collection<GeometryRepresentation> getEntitiesInArea(float x, float y, float width, float height) {
-        Collection<GeometryRepresentation> entitiesInArea = new ArrayList<>();
+    public Collection<MovingGeometryRepresentation> getEntitiesInArea(float x, float y, float width, float height) {
+        Collection<MovingGeometryRepresentation> entitiesInArea = new ArrayList<>();
         world.QueryAABB(
                 fixture -> {
                     entitiesInArea.add(geometryRepresentationMap.get(fixture.getBody()));
@@ -95,5 +97,10 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
     @Override
     public void close() {
         world.dispose();
+    }
+
+    //for debug purposes
+    public World getWorld() {
+        return world;
     }
 }

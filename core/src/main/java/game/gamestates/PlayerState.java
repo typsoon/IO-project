@@ -4,11 +4,9 @@ import game.engine.entities.GeometryConfigID;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
-public record EntityState(
-        int entityId,
+public record PlayerState(
         GeometryConfigID geometryConfigId,
         Point2F position,
         Vector2F velocity
-        // there should be what entity is holding, for example
-) implements GameState{
-}
+        //this will hold more information that entity state
+) implements GameState { }

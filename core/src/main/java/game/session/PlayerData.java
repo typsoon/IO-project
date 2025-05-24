@@ -1,4 +1,4 @@
-package game;
+package game.session;
 
 import game.engine.PlayerConfig;
 

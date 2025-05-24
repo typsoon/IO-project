@@ -1,9 +1,9 @@
 package lobby;
 
 import game.actions.Action;
-import game.ActionReceiver;
-import game.PlayerConnector;
-import game.PlayerData;
+import game.session.ActionReceiver;
+import game.session.PlayerConnector;
+import game.session.PlayerData;
 import game.session.GameSessionManager;
 import user.UserHandle;
 
