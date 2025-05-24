@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.badlogic.gdx.Gdx;
 
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import network.AbstractSocketWrapperFactory;
 import network.ConnectionData;
 import network.socketwrappers.SenderTypes.LoginStateSender;
@@ -64,8 +65,6 @@ public class ViewManager implements RequestHandler {
             }
         }
     }
-
-    ;
 }
 
 // TODO: delete this class later
@@ -84,7 +83,7 @@ class PropertiesLoader {
             hostname = properties.getProperty("hostname");
             port = Integer.parseInt(properties.getProperty("port"));
             udp_port = Integer.parseInt(properties.getProperty("udp_port"));
-        } catch (IOException e) {
+        } catch (IOException | GdxRuntimeException e) {         //remove the need to copy that random file from Sitson
             hostname = "localhost";
             port = 4567;
             udp_port = 4568;
