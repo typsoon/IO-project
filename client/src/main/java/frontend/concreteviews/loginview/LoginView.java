@@ -142,7 +142,6 @@ public class LoginView extends ScreenAdapter implements AbstractView {
         table.add(loginButton);
         table.getCell(loginButton).spaceBottom(40);
         table.row();
-        table.row();
         table.add(buttonExit);
 
         // table.debug();
