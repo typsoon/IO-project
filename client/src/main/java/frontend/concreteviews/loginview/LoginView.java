@@ -59,7 +59,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
 
         Gdx.input.setInputProcessor(stage);
 
-        atlas = new TextureAtlas(Gdx.files.internal("LoginView.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("BasicView.atlas"));
         skin = new Skin(atlas);
         final Table table = new Table(skin);
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import viewmodel.AbstractView;
-import viewmodel.RequestHandler;
 import viewmodel.ViewManagerInjector;
 
 public class MainMenuView extends ScreenAdapter implements AbstractView {
@@ -61,7 +59,7 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
         parameter.size = 50;
 
         stage = new Stage();
-        atlas = new TextureAtlas(Gdx.files.internal("LoginView.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("BasicView.atlas"));
         skin = new Skin(atlas);
         Gdx.input.setInputProcessor(stage);
 
