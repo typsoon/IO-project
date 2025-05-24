@@ -1,6 +1,5 @@
 package game.engine.components;
 
-import java.awt.geom.Point2D;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +8,8 @@ import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import game.utility.Point2F;
+import game.utility.Vector2F;
 
 public class GeometryModuleImplementation implements GeometryModule, GeometryFactory, Closeable {
 
@@ -55,13 +56,16 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
         fixtureDef.restitution = config.restitution();
         body.createFixture(fixtureDef);
         shape.dispose();
-
         GeometryRepresentation geometryRepresentation = new GeometryRepresentation() {
             @Override
-            public Point2D getPosition() {
-                return new Point2D.Float(body.getPosition().x, body.getPosition().y);
+            public Point2F getPosition() {
+                return new Point2F(body.getPosition().x, body.getPosition().y);
             }
-
+            @Override
+            public Vector2F getVelocity() {
+                Vector2 velocity = body.getLinearVelocity();
+                return new Vector2F(velocity.x, velocity.y);
+            }
             @Override
             public void move(float dx, float dy) {
                 body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);

@@ -1,6 +1,6 @@
 package game.actions;
 
-import game.Utility.Vector2F;
+import game.utility.Vector2F;
 
 public record PlayerSlotUse (
         UsageType usageType,

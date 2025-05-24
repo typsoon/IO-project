@@ -1,6 +1,6 @@
 package game.actions;
 
-import game.Utility.Vector2F;
+import game.utility.Vector2F;
 
 public enum Direction {
     N(new Vector2F(0, 1)),
