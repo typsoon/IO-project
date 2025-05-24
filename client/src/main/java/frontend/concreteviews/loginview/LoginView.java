@@ -25,11 +25,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import network.Credentials;
-import viewmodel.AbstractView;
+import viewmodel.AbstractLoginView;
 
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-public class LoginView extends ScreenAdapter implements AbstractView {
+public class LoginView extends ScreenAdapter implements AbstractLoginView {
     private final Game game;
     private final EventListener loginViewEventListener;
 

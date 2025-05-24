@@ -3,11 +3,11 @@ package viewmodel;
 import network.socketwrappers.SenderTypes.ConfigurationStateSender;
 
 public interface AbstractViewProvider {
-    AbstractView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket);
+    AbstractLoginView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket);
 
-    // AbstractView createGameplayView(RequestHandler requestHandler,
+    // AbstractLoginView createGameplayView(RequestHandler requestHandler,
     // ClientSocketWrapper clientSocketWrapper);
     //
-    // AbstractView createGameplayStatsView(RequestHandler requestHandler,
+    // AbstractLoginView createGameplayStatsView(RequestHandler requestHandler,
     // ClientSocketWrapper clientSocketWrapper);
 }

@@ -3,7 +3,7 @@ package frontend.concreteviews.serverlookupview;
 import com.badlogic.gdx.Game;
 
 import viewmodel.AbstractServerLookupViewFactory;
-import viewmodel.AbstractView;
+import viewmodel.AbstractLoginView;
 import viewmodel.RequestHandler;
 
 public class ServerLookupViewFactory implements AbstractServerLookupViewFactory {
@@ -14,7 +14,7 @@ public class ServerLookupViewFactory implements AbstractServerLookupViewFactory 
     }
 
     @Override
-    public AbstractView getServerLookupView(RequestHandler requestHandler) {
+    public AbstractLoginView getServerLookupView(RequestHandler requestHandler) {
         final var loginViewInputAdapter = new ServerLookupViewEventListener(requestHandler);
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getServerLookupView'");

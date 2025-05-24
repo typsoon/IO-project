@@ -1,5 +1,5 @@
 package viewmodel;
 
 public interface AbstractServerLookupViewFactory {
-    AbstractView getServerLookupView(RequestHandler requestHandler);
+    AbstractLoginView getServerLookupView(RequestHandler requestHandler);
 }
