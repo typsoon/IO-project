@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 
 import network.socketwrappers.SenderTypes.LoginStateSender;
 import viewmodel.AbstractLoginViewFactory;
-import viewmodel.AbstractLoginView;
+import viewmodel.AbstractView;
 import viewmodel.RequestHandler;
 
 public class LoginViewFactory implements AbstractLoginViewFactory {
@@ -14,7 +14,7 @@ public class LoginViewFactory implements AbstractLoginViewFactory {
         this.game = game;
     }
 
-    public AbstractLoginView getLoginView(final RequestHandler requestHandler, LoginStateSender authenticatingSocket) {
+    public AbstractView getLoginView(final RequestHandler requestHandler, LoginStateSender authenticatingSocket) {
         final var loginViewInputAdapter = new LoginViewEventListener(requestHandler, authenticatingSocket);
         return new LoginView(game, loginViewInputAdapter);
     }

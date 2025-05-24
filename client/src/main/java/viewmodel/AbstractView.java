@@ -1,6 +1,6 @@
 package viewmodel;
 
-public interface AbstractLoginView {
+public interface AbstractView {
     void display();
 
     void hide();
