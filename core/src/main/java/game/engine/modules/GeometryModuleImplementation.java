@@ -19,7 +19,7 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
     private final int velocityIterations;
     private final int positionIterations;
 
-    private final Map<Body, MovingGeometryRepresentation> geometryRepresentationMap = new HashMap<>();
+    private final Map<Body, ManagingGeometryRepresentation> geometryRepresentationMap = new HashMap<>();
 
     public GeometryModuleImplementation(float timeStep, int velocityIterations, int positionIterations ) {
         this.timeStep = timeStep;
@@ -34,7 +34,7 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
     }
 
     @Override
-    public MovingGeometryRepresentation createGeometryRepresentation(EntityGeometryConfig config, float startingX, float startingY) {
+    public ManagingGeometryRepresentation createGeometryRepresentation(EntityGeometryConfig config, float startingX, float startingY) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = switch (config.bodyType()) {
             case STATIC -> BodyDef.BodyType.StaticBody;
@@ -49,7 +49,6 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(config.width()/2, config.height()/2);
-
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = config.density();
@@ -57,7 +56,7 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
         fixtureDef.restitution = config.restitution();
         body.createFixture(fixtureDef);
         shape.dispose();
-        MovingGeometryRepresentation movingGeometryRepresentation = new MovingGeometryRepresentation() {
+        ManagingGeometryRepresentation geometryRepresentation = new ManagingGeometryRepresentation() {
             @Override
             public Point2F getPosition() {
                 return new Point2F(body.getPosition().x, body.getPosition().y);
@@ -72,9 +71,26 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
 //                body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);
                 body.setLinearVelocity(dx, dy);
             }
+            @Override
+            public void setPosition(float x, float y) {
+                body.setTransform(x, y, body.getAngle());
+            }
+            @Override
+            public void setVelocity(float vx, float vy) {
+                body.setLinearVelocity(vx, vy);
+            }
+            @Override
+            public void setRotation(float angle) {
+                body.setTransform(body.getPosition(), angle);
+            }
+            @Override
+            public void dispose() {
+                world.destroyBody(body);
+                geometryRepresentationMap.remove(body);
+            }
         };
-        geometryRepresentationMap.put(body, movingGeometryRepresentation);
-        return movingGeometryRepresentation;
+        geometryRepresentationMap.put(body, geometryRepresentation);
+        return geometryRepresentation;
     }
 
     @Override
