@@ -1,6 +1,8 @@
 package viewmodel;
 
-            //pass as if it was a token. call start to go back to some starting menu
-public interface AbstractViewManager {
+            //don't use outside package concerning frontend. use AbstractViewManager instead
+public interface AbstractViewManager extends AbstractGeneralViewManager {
     void start();
+    AbstractViewFactory getViewFactory();
+    AbstractTextureManager getTextureManager();
 }

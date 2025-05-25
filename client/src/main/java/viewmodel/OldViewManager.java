@@ -7,6 +7,7 @@ import java.util.Properties;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import frontend.concreteviews.loginview.LoginViewFactory;
 import network.AbstractSocketWrapperFactory;
 import network.ConnectionData;
 import network.socketwrappers.SenderTypes.LoginStateSender;
@@ -18,19 +19,19 @@ public class OldViewManager implements RequestHandler {
     private final AbstractViewProvider userViewProvider;
     private final AbstractSocketWrapperFactory socketWrapperFactory;
     private final AbstractViewProvider adminViewProvider;
-    private final AbstractLoginViewFactory loginViewFactory;
+    private final LoginViewFactory loginViewFactory;
 
     public OldViewManager(final AbstractViewProvider userViewProvider,
                           final AbstractSocketWrapperFactory abstractSocketWrapperFactory,
                           final AbstractViewProvider adminViewProvider,
-                          final AbstractLoginViewFactory abstractLoginViewFactory) {
+                          final LoginViewFactory loginViewFactory) {
         this.userViewProvider = userViewProvider;
         this.socketWrapperFactory = abstractSocketWrapperFactory;
         this.adminViewProvider = adminViewProvider;
-        this.loginViewFactory = abstractLoginViewFactory;
+        this.loginViewFactory = loginViewFactory;
     }
 
-    public void start(AbstractDefaultViewManager viewManager) {
+    public void start(AbstractViewManager viewManager) {
         // TODO: BIG TODO: Import this from config
         var propertiesLoader = new PropertiesLoader();
 

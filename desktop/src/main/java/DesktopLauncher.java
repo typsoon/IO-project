@@ -2,14 +2,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import viewmodel.AbstractViewManager;
-import viewmodel.ViewManagerInjector;
+import viewmodel.BasicViewManagerInjector;
 
 class GameLauncher extends Game {
     @Override
     public void create() {
-        final AbstractViewManager viewManager = new ViewManagerInjector(this).getViewManager();
-        viewManager.start();
+        new BasicViewManagerInjector(this).getViewManager().start();
     }
 }
 
