@@ -1,11 +1,10 @@
-package game.engine.components;
+package game.engine.entities;
 
 public record EntityGeometryConfig(
-        float startingX,
-        float startingY,
         float width,
         float height,
         BodyType bodyType,
+        boolean isRotatable,
         float friction,
         float restitution,
         float density,

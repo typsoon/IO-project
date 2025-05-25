@@ -1,11 +1,13 @@
 package game.engine;
 
-import game.PlayerGamesStateSender;
+import game.engine.entities.Entity;
+import game.engine.modules.GeometryRepresentation;
+import game.session.PlayerGamesStateSender;
 import game.actions.PlayerMove;
 import game.actions.PlayerSlotUse;
-import game.engine.components.EntityFactory;
-import game.engine.components.GeometryModule;
-import game.engine.components.Player;
+import game.engine.entities.EntityFactory;
+import game.engine.modules.GeometryModule;
+import game.engine.entities.Player;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -17,6 +19,7 @@ public class GameEngineImplementation implements GameEngine {
     private final GeometryModule geometryModule;
     private final EntityFactory entityFactory;
     private final Map<PlayerGamesStateSender, Player> players = new java.util.HashMap<>();
+    private final Map<GeometryRepresentation, Entity> entities = new java.util.HashMap<>();
     private final Collection<Closeable> resourcesToClose;
 
     @Override
@@ -32,7 +35,17 @@ public class GameEngineImplementation implements GameEngine {
             }
         }
         geometryModule.Cycle();
-        //ToDO: Handle game state updates and send them to players
+
+        for (Map.Entry<PlayerGamesStateSender, Player> entry : players.entrySet()) {
+            PlayerGamesStateSender sender = entry.getKey();
+            Player player = entry.getValue();
+            sender.sendGameState(player.getPlayerState());
+            for(GeometryRepresentation geometryRepresentation: geometryModule.getEntitiesInArea(player.getSightRange())){
+                if(geometryRepresentation == player.geometryRepresentation())
+                    continue; // Skip sending the player's own state
+                sender.sendGameState(entities.get(geometryRepresentation).getEntityState());
+            }
+        }
     }
 
     protected GameEngineImplementation(Collection<EnginePlayerData> players, GeometryModule geometryModule, EntityFactory entityFactory, Collection<Closeable> resourcesToClose) {
@@ -40,7 +53,8 @@ public class GameEngineImplementation implements GameEngine {
         this.entityFactory = entityFactory;
         this.resourcesToClose = resourcesToClose;
         for (EnginePlayerData playerData : players) {
-            Player player = entityFactory.createPlayer(playerData.playerConfig());
+            Player player = entityFactory.createPlayer(playerData.playerConfig(),0,0);
+            entities.put(player.geometryRepresentation(), player);
             this.players.put(playerData.playerGamesStateSender(), player);
         }
     }
@@ -49,5 +63,10 @@ public class GameEngineImplementation implements GameEngine {
         for (Closeable closeable : resourcesToClose) {
                 closeable.close();
         }
+    }
+
+    //for testing purposes
+    public GeometryModule getGeometryModule() {
+        return geometryModule;
     }
 }

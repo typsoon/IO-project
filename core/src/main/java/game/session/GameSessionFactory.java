@@ -1,8 +1,5 @@
 package game.session;
 
-import game.PlayerConnector;
-import game.PlayerData;
-import game.PlayerGamesStateSender;
 import game.engine.EnginePlayerData;
 import game.engine.GameEngine;
 import game.engine.GameEngineFactory;

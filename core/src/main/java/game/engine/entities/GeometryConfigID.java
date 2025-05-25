@@ -1,4 +1,4 @@
-package game.engine.components;
+package game.engine.entities;
 
 public enum GeometryConfigID {
     CHICKEN,

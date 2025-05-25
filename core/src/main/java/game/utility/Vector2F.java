@@ -1,4 +1,4 @@
-package game.Utility;
+package game.utility;
 
 public record Vector2F(
         float x,

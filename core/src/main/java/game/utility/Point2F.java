@@ -1,4 +1,4 @@
-package game.Utility;
+package game.utility;
 
 public record Point2F(
         float x,

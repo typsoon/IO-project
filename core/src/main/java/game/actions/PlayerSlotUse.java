@@ -1,9 +1,10 @@
 package game.actions;
 
-import game.Utility.Vector2F;
+import game.utility.Vector2F;
 
 public record PlayerSlotUse (
         UsageType usageType,
-        Vector2F direction
+        Vector2F direction,
+        int slot
 ) implements Action {
 }

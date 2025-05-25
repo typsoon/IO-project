@@ -1,7 +1,7 @@
 package game.engine;
 
-import game.engine.components.EntityFactory;
-import game.engine.components.GeometryModuleImplementation;
+import game.engine.entities.EntityFactory;
+import game.engine.modules.GeometryModuleImplementation;
 
 import java.util.Collection;
 
