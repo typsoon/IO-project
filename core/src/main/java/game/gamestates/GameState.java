@@ -1,4 +1,6 @@
 package game.gamestates;
 
-public interface GameState {
+import network.messages.Sendable;
+
+public interface GameState extends Sendable {
 }
