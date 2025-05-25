@@ -46,7 +46,6 @@ public class GeometryModuleImplementation implements GeometryModule, GeometryFac
         bodyDef.angularDamping = config.angularDamping();
         bodyDef.fixedRotation = !config.isRotatable();
         Body body = world.createBody(bodyDef);
-
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(config.width()/2, config.height()/2);
         FixtureDef fixtureDef = new FixtureDef();
