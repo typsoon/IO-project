@@ -2,13 +2,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import frontend.concreteviews.mainmenu.MainMenuViewFactory;
+import viewmodel.AbstractViewManager;
+import viewmodel.ViewManagerInjector;
 
 class GameLauncher extends Game {
     @Override
     public void create() {
-        final var mainMenuView = new MainMenuViewFactory(this).getMainMenuView();
-        mainMenuView.display();
+        final AbstractViewManager viewManager = new ViewManagerInjector(this).getViewManager();
+        viewManager.start();
     }
 }
 

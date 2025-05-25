@@ -24,14 +24,15 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import frontend.concreteviews.mainmenu.MainMenuViewFactory;
 import network.Credentials;
+import viewmodel.AbstractDefaultViewManager;
 import viewmodel.AbstractView;
 
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class LoginView extends ScreenAdapter implements AbstractView {
     private final Game game;
+    private final AbstractDefaultViewManager viewManager;
     private final EventListener loginViewEventListener;
 
     private TextureAtlas atlas;
@@ -42,10 +43,11 @@ public class LoginView extends ScreenAdapter implements AbstractView {
     private FreeTypeFontGenerator generator;
 
     private OrthographicCamera gameCamera;
-
-    LoginView(final Game game, final EventListener loginViewEventListener) {
+    //TODO view: refactor to make similar to MainMenuView
+    LoginView(final Game game, final EventListener loginViewEventListener, final AbstractDefaultViewManager viewManager) {
         this.game = game;
         this.loginViewEventListener = loginViewEventListener;
+        this.viewManager = viewManager;
     }
 
     @Override
@@ -122,8 +124,7 @@ public class LoginView extends ScreenAdapter implements AbstractView {
         final Button buttonBack = new TextButton("Back", textButtonStyle);
         buttonBack.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                final var mainMenuView = new MainMenuViewFactory(game).getMainMenuView();
-                mainMenuView.display();
+                viewManager.start();
             }
         });
 

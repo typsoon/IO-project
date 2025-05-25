@@ -11,33 +11,29 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
+import viewmodel.AbstractDefaultViewManager;
 import viewmodel.AbstractView;
-import viewmodel.ViewManagerInjector;
+import viewmodel.OldViewManagerInjector;
 
 public class MainMenuView extends ScreenAdapter implements AbstractView {
     private final Game game;
+    private final AbstractDefaultViewManager viewManager;
 
     private TextureAtlas atlas;
     private Skin skin;
     private Stage stage;
 
 
-    MainMenuView(final Game game) {
+    MainMenuView(final Game game, final AbstractDefaultViewManager viewManager) {
         this.game = game;
+        this.viewManager = viewManager;
     }
-
 
     @Override
     public void display() {
         game.setScreen(this);
     }
 
-    @Override
-    public void dispose() {
-        atlas.dispose();
-        skin.dispose();
-        stage.dispose();
-    }
 
     @Override
     public void render(final float delta) {
@@ -53,7 +49,7 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
 
     @Override
     public void show() {
-        //TODO: understand and refractor (code taken from LoginView)
+        //TODO view: understand and refractor (code taken from LoginView)
         var generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Harrington_SHAREWARE.ttf"));
         final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
@@ -73,8 +69,8 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
         final Button buttonConnect = new TextButton("Connect", textButtonStyle);
         buttonConnect.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                final var viewManager = new ViewManagerInjector(game).getViewManager();
-                viewManager.start();
+                final var oldViewManager = new OldViewManagerInjector(game).getViewManager();
+                oldViewManager.start(viewManager);
             }
         });
 
@@ -97,7 +93,12 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
         stage.addActor(table);
     }
 
-
+    @Override
+    public void dispose() {
+        atlas.dispose();
+        skin.dispose();
+        stage.dispose();
+    }
 }
 //        final var viewManager = new ViewManagerInjector(this).getViewManager();
 //        viewManager.start();
