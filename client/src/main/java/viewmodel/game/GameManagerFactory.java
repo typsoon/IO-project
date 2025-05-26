@@ -1,7 +1,7 @@
 package viewmodel.game;
 
 import game.engine.modules.GeometrySystem;
-import viewmodel.ClientGameManagerImpl;
+import viewmodel.game.ClientGameManagerImpl;
 
 public class GameManagerFactory {
     public static ClientGameManager createGameManager(GeometrySystem geometrySystem, EntityViewFactory entityViewFactory) {
