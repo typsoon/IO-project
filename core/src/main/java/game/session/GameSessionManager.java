@@ -39,7 +39,7 @@ public class GameSessionManager implements ActionReceiver, Closeable {
                 for(PlayerConnector player : playerGameStateQueues.keySet()){
                     Queue<GameState> gameStates = playerGameStateQueues.get(player);
                     if (!gameStates.isEmpty()) {
-                        System.out.println("Sending game states to player: " + player);
+//                        System.out.println("Sending game states to player: " + player);
                         player.sendGameState(gameStates);
                         gameStates.clear();
                     }

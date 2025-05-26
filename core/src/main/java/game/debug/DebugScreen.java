@@ -31,7 +31,7 @@ public class DebugScreen implements Screen {
 
     public DebugScreen() {
         camera = new OrthographicCamera(20, 20);
-        camera.position.set(10, 10, 0);
+        camera.position.set(0, 0, 0);
         camera.update();
         debugRenderer = new Box2DDebugRenderer();
 
@@ -115,10 +115,10 @@ public class DebugScreen implements Screen {
         public void unsubscribe(ActionReceiver receiver) { this.receiver = null; }
         @Override
         public void sendGameState(java.util.Collection<game.gamestates.GameState> gameStates) {
-            for (game.gamestates.GameState gameState : gameStates) {
-                // For debug, we can just print the game state or handle it as needed
-                System.out.println("Game State: " + gameState);
-            }
+//            for (game.gamestates.GameState gameState : gameStates) {
+//                // For debug, we can just print the game state or handle it as needed
+//                System.out.println("Game State: " + gameState);
+//            }
         }
 
         public void sendAction(game.actions.Action action) {
