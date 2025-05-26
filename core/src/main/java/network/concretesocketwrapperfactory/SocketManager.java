@@ -1,10 +1,10 @@
 package network.concretesocketwrapperfactory;
 
 import java.io.IOException;
-import java.net.Socket;
 
 import network.ConnectionData;
+import java.net.Socket;
 
 public interface SocketManager {
-    Socket getConnection(ConnectionData connectionData) throws IOException;
+    Socket getSSLConnection(ConnectionData connectionData) throws IOException;
 }

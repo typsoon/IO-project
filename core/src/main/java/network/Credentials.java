@@ -1,4 +1,6 @@
 package network;
 
-public record Credentials(String username, String password) {
+import game.actions.Action;
+
+public record Credentials(String login, String password) implements Action {
 }

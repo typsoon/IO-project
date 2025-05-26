@@ -8,3 +8,5 @@ dependencies {
     implementation project(":messagetraitschecker")
     annotationProcessor project(':messagetraitschecker') // Register the processor
 }
+
+sourceSets.main.resources.srcDirs = ["../resources"]

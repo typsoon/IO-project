@@ -21,7 +21,7 @@ public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactor
 
     @Override
     public LoginStateSender getAuthenticatingSocket(ConnectionData connectionData) throws IOException {
-        var socket = socketManager.getConnection(connectionData);
+        var socket = socketManager.getSSLConnection(connectionData);
         var producer = new InputStreamDataProducer(socket.getInputStream());
         var receiver = new OutputStreamDataReceiver(socket.getOutputStream());
         return new ConcreteAuthenticatingSocket(producer, receiver);
@@ -31,7 +31,7 @@ public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactor
     public ConfigurationStateSender getConfigurationSocket(ConnectionData connectionData, int authToken) {
         Socket socket;
         try {
-            socket = socketManager.getConnection(connectionData);
+            socket = socketManager.getSSLConnection(connectionData);
         } catch (IOException e) {
             throw new IllegalStateException(illegalStateErrorMessage,
                     e);

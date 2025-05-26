@@ -34,7 +34,7 @@ public class LoginViewEventListener implements EventListener {
             Optional<LogInResponse> result;
             try {
                 result = this.loginStateSender
-                        .sendMessage(new LogInQuery(credentials.username(), credentials.password()));
+                        .sendMessage(new LogInQuery(credentials.login(), credentials.password()));
             } catch (IOException e) {
                 logger.info(String.format("Error occured wile sending message %s", e));
                 result = Optional.empty();

@@ -1,5 +1,9 @@
 package session;
 
+import static session.HandlingResult.CONNECTION_ENDED;
+import static session.HandlingResult.DONT_RESPOND;
+import static session.HandlingResult.SHOULD_RESPOND;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
@@ -18,8 +22,6 @@ import network.messages.loginstate.LogInResponse;
 import network.messages.utils.ByteBufferDataProducer;
 import network.messages.utils.ByteChannelDataReceiver;
 import network.socketwrappers.SocketTypes.DuplexSocket;
-
-import static session.HandlingResult.*;
 
 public class ClientSession implements Session {
     private final DuplexSocket clientSocket;

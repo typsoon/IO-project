@@ -8,6 +8,8 @@ import network.messages.MessagesConfig;
 import network.messages.utils.DataConsumer;
 import game.actions.Action;
 
+import network.Credentials;
+
 public final class LogInQuery extends EncryptedMessage {
     // TODO: import charset from config
     public static final byte id = 0;
@@ -36,8 +38,7 @@ public final class LogInQuery extends EncryptedMessage {
 
     @Override
     public Action getAction() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
+        return new Credentials(username, password);
     }
 
     public static Charset getCharset() {
