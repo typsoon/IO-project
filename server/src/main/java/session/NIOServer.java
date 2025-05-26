@@ -6,14 +6,14 @@ import java.util.logging.Logger;
 
 import network.server.nio.NIOConnectionManager;
 import network.server.nio.NIOConnectionManager.ClientAndTheirMessage;
-import session.SessionManagerInjector.SessionManager;
+import session.ServerInjector.Server;
 
-public class NIOSessionManager implements SessionManager {
+public class NIOServer implements Server {
     private final NIOConnectionManager<ClientData> connectionManager;
     private final ExecutorService workerThreadPool;
     private final Logger logger = Logger.getGlobal();
 
-    public NIOSessionManager(NIOConnectionManager<ClientData> connectionManager, ExecutorService executorService) {
+    public NIOServer(NIOConnectionManager<ClientData> connectionManager, ExecutorService executorService) {
         this.connectionManager = connectionManager;
         this.workerThreadPool = executorService;
     }

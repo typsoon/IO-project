@@ -24,14 +24,14 @@ public class RoomHandle implements IUserRoomHandle, IRoomUserHandle {
 
     @Override
     public void createRoom(RoomConfig roomConfig) {
-        if (room != null) return;
+        if (room != null)
+            return;
         roomManager.createRoom(roomConfig, member).ifPresentOrElse(
                 r -> room = r,
                 () -> {
                     // Handle room creation failure
                     System.out.println("Room creation failed");
-                }
-        );
+                });
     }
 
     @Override
@@ -53,23 +53,28 @@ public class RoomHandle implements IUserRoomHandle, IRoomUserHandle {
 
     @Override
     public void joinRoom(Room room) {
-        if (this.room != null) return;
-        if (room.hasPassword()) return; // TODO: handle message back
+        if (this.room != null)
+            return;
+        if (room.hasPassword())
+            return; // TODO: handle message back
         this.room = room;
         room.addMember(member);
     }
 
     @Override
     public void joinRoom(Room room, String password) {
-        if (this.room != null) return;
-        if (!room.roomConfig().password().equals(password)) return; // TODO: handle message back
+        if (this.room != null)
+            return;
+        if (!room.roomConfig().password().equals(password))
+            return; // TODO: handle message back
         this.room = room;
         room.addMember(member); // TODO: Check password
     }
 
     @Override
     public void leaveRoom() {
-        if (room == null) return;
+        if (room == null)
+            return;
         room.removeMember(member);
         if (room.members().isEmpty()) {
             roomManager.deleteRoom(room);
@@ -79,35 +84,44 @@ public class RoomHandle implements IUserRoomHandle, IRoomUserHandle {
 
     @Override
     public void setAdmin(RoomMember newAdmin) {
-        if (room == null) return;
-        if (room.getAdmin() != this.user) return;
+        if (room == null)
+            return;
+        if (room.getAdmin() != this.user)
+            return;
         room.setAdmin(newAdmin);
     }
 
     @Override
     public void kickUser(RoomMember user) {
-        if (room == null) return;
-        if (room.getAdmin() != this.user) return;
+        if (room == null)
+            return;
+        if (room.getAdmin() != this.user)
+            return;
         room.removeMember(user);
     }
 
     @Override
     public void deleteRoom() {
-        if (room == null) return;
-        if (room.getAdmin() != this.user) return;
+        if (room == null)
+            return;
+        if (room.getAdmin() != this.user)
+            return;
         roomManager.deleteRoom(room);
     }
 
     @Override
     public void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine) {
-        if (room == null || room.getAdmin() != this.user) return;
-        if (room.members().size() > lobbySize) return;
+        if (room == null || room.getAdmin() != this.user)
+            return;
+        if (room.members().size() > lobbySize)
+            return;
         matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(), lobbySize);
     }
 
     @Override
     public void createGame(IMatchmakingEngine matchmakingEngine) {
-        if (room == null || room.getAdmin() != this.user) return;
+        if (room == null || room.getAdmin() != this.user)
+            return;
         matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(), room.members().size());
     }
 }

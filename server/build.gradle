@@ -7,14 +7,14 @@ dependencies {
 }
 
 application {
-  mainClass = 'Server'
+  mainClass = 'ServerLauncher'
 }
 
 jar {
     from project(':core').sourceSets.main.output
     manifest {
         attributes(
-            'Main-Class': 'Server'  // Replace with your fully qualified main class name
+            'Main-Class': 'ServerLauncher'  // Replace with your fully qualified main class name
         )
     }
 }

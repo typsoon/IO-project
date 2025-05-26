@@ -1,13 +1,13 @@
 
 import java.io.IOException;
 
-import session.SessionManagerInjector;
+import session.ServerInjector;
 
-public class Server {
+public class ServerLauncher {
     public static void main(String[] args) throws IOException {
         // var sessionManager = new SessionManagerInjector().getSessionManager(8080);
-        var sessionManager = new SessionManagerInjector().getSessionManager(4567, 4568, 4569);
+        var server = new ServerInjector().getServer(4567, 4568, 4569);
 
-        sessionManager.start();
+        server.start();
     }
 }
