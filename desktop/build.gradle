@@ -14,3 +14,9 @@ dependencies {
 application {
   mainClass = 'DesktopLauncher'
 }
+
+run {
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        jvmArgs += "-XstartOnFirstThread"
+    }
+}
