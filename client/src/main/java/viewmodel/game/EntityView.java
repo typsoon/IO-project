@@ -5,7 +5,7 @@ import game.engine.modules.ManagingGeometryRepresentation;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
-public record EntityView(ManagingGeometryRepresentation geometryRepresentation, Sprite sprite) {
+public record EntityView(ManagingGeometryRepresentation geometryRepresentation, Sprite sprite) implements IEntityView {
     public void setPosition(Point2F position) {
         geometryRepresentation.setPosition(position);
         sprite.setPosition(position.x(), position.y());
