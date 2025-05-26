@@ -1,22 +1,22 @@
 package user;
 
-import lobby.MatchmakingEngine;
+import lobby.IMatchmakingEngine;
 import room.Room;
 import room.RoomConfig;
-import room.RoomManager;
+import room.IRoomManager;
 import room.RoomMember;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomHandle implements UserRoomHandle, RoomUserHandle {
-    private final RoomManager roomManager;
-    private final UserHandle user;
+public class RoomHandle implements IUserRoomHandle, IRoomUserHandle {
+    private final IRoomManager roomManager;
+    private final IUserHandle user;
     private Room room = null;
     private final RoomMember member;
 
-    public RoomHandle(RoomManager roomManager, UserHandle user) {
+    public RoomHandle(IRoomManager roomManager, IUserHandle user) {
         this.roomManager = roomManager;
         this.user = user;
         this.member = new RoomMember(user, this);
@@ -99,14 +99,14 @@ public class RoomHandle implements UserRoomHandle, RoomUserHandle {
     }
 
     @Override
-    public void findGame(int lobbySize, MatchmakingEngine matchmakingEngine) {
+    public void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine) {
         if (room == null || room.getAdmin() != this.user) return;
         if (room.members().size() > lobbySize) return;
         matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(), lobbySize);
     }
 
     @Override
-    public void createGame(MatchmakingEngine matchmakingEngine) {
+    public void createGame(IMatchmakingEngine matchmakingEngine) {
         if (room == null || room.getAdmin() != this.user) return;
         matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(), room.members().size());
     }

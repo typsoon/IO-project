@@ -1,6 +1,6 @@
 package room;
 
-import user.UserHandle;
+import user.IUserHandle;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,7 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
         return roomConfig.password() != null;
     }
 
-    public UserHandle getAdmin() {
+    public IUserHandle getAdmin() {
         return admin.admin();
     }
 
@@ -56,17 +56,17 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
     }
 
     public static class Admin {
-        private UserHandle admin;
+        private IUserHandle admin;
 
-        public Admin(UserHandle admin) {
+        public Admin(IUserHandle admin) {
             this.admin = admin;
         }
 
-        public UserHandle admin() {
+        public IUserHandle admin() {
             return admin;
         }
 
-        public void changeAdmin(UserHandle admin) {
+        public void changeAdmin(IUserHandle admin) {
             this.admin = admin;
         }
     }

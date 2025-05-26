@@ -2,6 +2,8 @@ package viewmodel.requests;
 
 import network.ConnectionData;
 
+
+            //TODO remove
 public class MoveToConfigurationRequest extends AbstractRequest {
     private final int authToken;
 

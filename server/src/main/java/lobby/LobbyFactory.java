@@ -2,21 +2,20 @@ package lobby;
 
 import game.session.GameSessionFactory;
 import game.session.GameSessionManager;
-import user.UserHandle;
+import user.IUserHandle;
 
 import java.util.Collection;
 
 public class LobbyFactory {
-    public static Lobby createLobby(Collection<UserHandle> players) {
+    public static Lobby createLobby(Collection<IUserHandle> players) {
         GameSessionManager sessionManager = GameSessionFactory.createGameSessionManager(players.stream()
-                .map(UserHandle::getPlayerData)
+                .map(IUserHandle::getPlayerData)
                 .toList());
         Lobby lobby = new Lobby(players, sessionManager);
-        for (UserHandle player : players) {
+        for (IUserHandle player : players) {
             player.gameStarted(lobby);
         }
 
         return lobby;
     }
-
 }

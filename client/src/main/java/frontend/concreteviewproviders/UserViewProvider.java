@@ -16,7 +16,7 @@ public class UserViewProvider implements AbstractViewProvider {
 
     @Override
     public AbstractView createConfigurationView(RequestHandler requestHandler,
-            ConfigurationStateSender configurationSocket) {
+                                                ConfigurationStateSender configurationSocket) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createConfigurationView'");
     }

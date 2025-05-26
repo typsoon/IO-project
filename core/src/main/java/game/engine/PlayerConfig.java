@@ -1,6 +1,6 @@
 package game.engine;
 
-import game.engine.components.GeometryConfigID;
+import game.engine.entities.GeometryConfigID;
 
 public record PlayerConfig(
         GeometryConfigID geometryConfigID

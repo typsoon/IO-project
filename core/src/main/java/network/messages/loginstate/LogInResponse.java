@@ -3,9 +3,8 @@ package network.messages.loginstate;
 import java.io.IOException;
 import java.util.Optional;
 
-import game.actions.Action;
-
 import network.messages.Message.EncryptedMessage;
+import network.messages.Sendable;
 import network.messages.utils.DataConsumer;
 
 public final class LogInResponse extends EncryptedMessage {
@@ -31,7 +30,7 @@ public final class LogInResponse extends EncryptedMessage {
     }
 
     @Override
-    public Action getAction() {
+    public Sendable getSendable() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAction'");
     }

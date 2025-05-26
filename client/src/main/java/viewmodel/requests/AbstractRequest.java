@@ -2,6 +2,7 @@ package viewmodel.requests;
 
 import network.ConnectionData;
 
+            //TODO: remove
 public abstract class AbstractRequest {
     private final ConnectionData connectionData;
 

@@ -12,7 +12,7 @@ public class CodegenConfig {
     public static final String idFieldName = "id";
     public static final String staticSizeFieldName = "staticSize";
     public static final String encodeAndWriteMethodName = "encodeAndWrite";
-    public static final String getActionMethodName = "getAction";
+    public static final String getSendableMethodName = "getSendable";
     public static final String decodeMethodName = "decode";
 
     public static final String decodeFromRecordMethodName = "decodeFromRecord";
@@ -33,6 +33,7 @@ public class CodegenConfig {
     public static final int DYNAMIC_SIZE = -1;
 
     public static final Map<TypeName, TypeNameData> typeToTypeData = new HashMap<>();
+
     static {
         typeToTypeData.put(TypeName.BYTE, new TypeNameData("putByte($N)", "getByte()", Byte.BYTES));
         typeToTypeData.put(TypeName.INT, new TypeNameData("putInt($N)", "getInt()", Integer.BYTES));

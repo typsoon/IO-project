@@ -5,8 +5,8 @@ import java.nio.charset.Charset;
 
 import network.messages.Message.EncryptedMessage;
 import network.messages.MessagesConfig;
+import network.messages.Sendable;
 import network.messages.utils.DataConsumer;
-import game.actions.Action;
 
 import network.Credentials;
 
@@ -37,8 +37,9 @@ public final class LogInQuery extends EncryptedMessage {
     }
 
     @Override
-    public Action getAction() {
-        return new Credentials(username, password);
+    public Sendable getSendable() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
     }
 
     public static Charset getCharset() {

@@ -1,31 +1,31 @@
 package lobby;
 
-import game.actions.Action;
-import game.ActionReceiver;
-import game.PlayerConnector;
-import game.PlayerData;
+import game.actions.IAction;
+import game.session.IActionReceiver;
+import game.session.IPlayerConnector;
+import game.session.PlayerData;
 import game.session.GameSessionManager;
-import user.UserHandle;
+import user.IUserHandle;
 
 import java.util.Collection;
 
-public class Lobby implements ActionReceiver {
-    private final Collection<UserHandle> members;
+public class Lobby implements IActionReceiver {
+    private final Collection<IUserHandle> members;
     private final GameSessionManager sessionManager;
 
-    public Lobby(Collection<UserHandle> members, GameSessionManager sessionManager) {
+    public Lobby(Collection<IUserHandle> members, GameSessionManager sessionManager) {
         this.members = members;
         this.sessionManager = sessionManager;
     }
 
     public Collection<PlayerData> getPlayerData() {
         return members.stream()
-                .map(UserHandle::getPlayerData)
+                .map(IUserHandle::getPlayerData)
                 .toList();
     }
 
     @Override
-    public void sendAction(PlayerConnector player, Action action) {
+    public void sendAction(IPlayerConnector player, IAction action) {
         sessionManager.sendAction(player, action);
     }
 }

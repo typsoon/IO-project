@@ -1,12 +1,14 @@
 package game.gamestates;
 
-import game.Utility.Point2F;
-import game.actions.Action;
-import game.engine.components.BodyType;
+import game.engine.entities.GeometryConfigID;
+import game.utility.Point2F;
+import game.utility.Vector2F;
 
 public record EntityState(
-        BodyType bodyType,
+        int entityId,
+        GeometryConfigID geometryConfigId,
         Point2F position,
-        Action action
-) {
+        Vector2F velocity
+        // there should be what entity is holding, for example
+) implements IGameState {
 }

@@ -1,9 +1,9 @@
 package game.engine;
 
-import game.PlayerGamesStateSender;
-import game.actions.Action;
+import game.session.IPlayerGamesStateSender;
+import game.actions.IAction;
 
 public record Event(
-        PlayerGamesStateSender playerGamesStateSender,
-        Action action
+        IPlayerGamesStateSender playerGamesStateSender,
+        IAction action
 ) {}

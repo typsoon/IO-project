@@ -1,6 +1,6 @@
 package game.actions;
 
-import game.Utility.Vector2F;
+import game.utility.Vector2F;
 
 public enum Direction {
     N(new Vector2F(0, 1)),
@@ -10,7 +10,8 @@ public enum Direction {
     S(new Vector2F(0, -1)),
     SW(new Vector2F(-1, -1).normalize()),
     W(new Vector2F(-1, 0)),
-    NW(new Vector2F(-1, 1).normalize());
+    NW(new Vector2F(-1, 1).normalize()),
+    NONE(new Vector2F(0, 0));
     public Direction opposite() {
         return values()[(this.ordinal() + 4) % 8];
     }
@@ -18,6 +19,7 @@ public enum Direction {
     public Vector2F vector() {
         return vector;
     }
+
     Direction(Vector2F vector) {
         this.vector = vector;
     }
