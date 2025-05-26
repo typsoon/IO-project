@@ -180,7 +180,8 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
                         var receivedMessage = messageDecoder
                                 .decodeMessage(new ByteBufferDataProducer(msgByteBuffer.get().byteBuf()));
-                        logger.info("Received message: %s %s".formatted(receivedMessage, receivedMessage.getAction()));
+                        logger.info(
+                                "Received message: %s %s".formatted(receivedMessage, receivedMessage.getSendable()));
 
                         if (receivedMessage instanceof LogInQuery logInQuery) {
                             var id = databaseManager.getUserId(logInQuery.username());

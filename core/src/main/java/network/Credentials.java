@@ -1,6 +1,6 @@
 package network;
 
-import game.actions.Action;
+import network.messages.Sendable;
 
-public record Credentials(String login, String password) implements Action {
+public record Credentials(String login, String password) implements Sendable {
 }

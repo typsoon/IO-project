@@ -14,16 +14,16 @@ public final class LogInQuery extends EncryptedMessage {
     // TODO: import charset from config
     public static final byte id = 0;
     private static Charset charset = MessagesConfig.msgCharset;
-    private final String username, password;
+    private final String login, password;
 
     public LogInQuery(String username, String password) {
-        this.username = username;
+        this.login = username;
         this.password = password;
     }
 
     @Override
     public void encodeAndWrite(DataConsumer out) throws IOException {
-        var usernameBytes = username.getBytes(charset);
+        var usernameBytes = login.getBytes(charset);
         var passwordBytes = password.getBytes(charset);
 
         byte messageSize = (byte) (Byte.BYTES + 2 * Byte.BYTES + usernameBytes.length + passwordBytes.length);
@@ -32,14 +32,13 @@ public final class LogInQuery extends EncryptedMessage {
 
         out.putByte(id);
 
-        out.putString(username);
+        out.putString(login);
         out.putString(password);
     }
 
     @Override
     public Sendable getSendable() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
+        return new Credentials(login, password);
     }
 
     public static Charset getCharset() {
@@ -47,7 +46,7 @@ public final class LogInQuery extends EncryptedMessage {
     }
 
     public String username() {
-        return username;
+        return login;
     }
 
     public String password() {

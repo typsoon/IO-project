@@ -5,6 +5,7 @@ import java.io.IOException;
 import network.messages.utils.DataConsumer;
 
 import messagetraits.MessageTraits;
+import network.messages.Sendable;
 
 @MessageTraits
 public sealed abstract class Message permits Message.EncryptedMessage, Message.UDPMessage, Message.TCPMessage {
