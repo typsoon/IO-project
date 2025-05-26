@@ -5,7 +5,7 @@ import game.session.IPlayerConnector;
 import game.session.PlayerData;
 import game.engine.PlayerConfig;
 
-public interface UserHandle {
+public interface IUserHandle {
     void gameStarted(IActionReceiver lobby);
 
     PlayerConfig getPlayerConfig();
