@@ -4,8 +4,8 @@ package game.engine.modules;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
-//TOdo change name
-public interface ManagingGeometryRepresentation extends MovingGeometryRepresentation {
+//TOdo: change name
+public interface IManagingGeometryRepresentation extends IMovingGeometryRepresentation {
     void setPosition(float x, float y);
 
     default void setPosition(Point2F position) { setPosition(position.x(), position.y()); }

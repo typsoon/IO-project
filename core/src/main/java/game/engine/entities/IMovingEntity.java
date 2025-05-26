@@ -2,6 +2,6 @@ package game.engine.entities;
 
 import game.actions.Direction;
 
-public interface MovingEntity extends Entity {
+public interface IMovingEntity extends IEntity {
     void move(Direction direction);
 }

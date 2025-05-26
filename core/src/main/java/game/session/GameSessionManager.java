@@ -1,9 +1,9 @@
 package game.session;
 
-import game.actions.Action;
+import game.actions.IAction;
 import game.engine.Event;
-import game.engine.GameEngine;
-import game.gamestates.GameState;
+import game.engine.IGameEngine;
+import game.gamestates.IGameState;
 
 import java.io.Closeable;
 import java.util.*;
@@ -12,10 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GameSessionManager implements ActionReceiver, Closeable {
-    private GameEngine gameEngine;
-    private final HashMap<PlayerConnector, PlayerGamesStateSender> playerGameStateSenders = new HashMap<>();
-    private final HashMap<PlayerConnector, Queue<GameState>> playerGameStateQueues = new HashMap<>();
+public class GameSessionManager implements IActionReceiver, Closeable {
+    private IGameEngine gameEngine;
+    private final HashMap<IPlayerConnector, IPlayerGamesStateSender> playerGameStateSenders = new HashMap<>();
+    private final HashMap<IPlayerConnector, Queue<IGameState>> playerGameStateQueues = new HashMap<>();
 
     private final Queue<Event> eventQueue = new ConcurrentLinkedQueue<>(); //TOdo rethink this, maybe use a more sophisticated approach
 
@@ -23,7 +23,7 @@ public class GameSessionManager implements ActionReceiver, Closeable {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Override
-    public void sendAction(PlayerConnector player, Action action) {
+    public void sendAction(IPlayerConnector player, IAction action) {
         eventQueue.add(new Event(playerGameStateSenders.get(player),action));
     }
 
@@ -36,8 +36,8 @@ public class GameSessionManager implements ActionReceiver, Closeable {
 
     private void cycle(){
             try{
-                for(PlayerConnector player : playerGameStateQueues.keySet()){
-                    Queue<GameState> gameStates = playerGameStateQueues.get(player);
+                for(IPlayerConnector player : playerGameStateQueues.keySet()){
+                    Queue<IGameState> gameStates = playerGameStateQueues.get(player);
                     if (!gameStates.isEmpty()) {
 //                        System.out.println("Sending game states to player: " + player);
                         player.sendGameState(gameStates);
@@ -56,11 +56,11 @@ public class GameSessionManager implements ActionReceiver, Closeable {
             }
     }
 
-    protected Map<PlayerConnector, PlayerGamesStateSender> getPlayerGameStateSenders() {
+    protected Map<IPlayerConnector, IPlayerGamesStateSender> getPlayerGameStateSenders() {
         return Collections.unmodifiableMap(playerGameStateSenders);
     }
 
-    protected void SetupEngine(GameEngine gameEngine) {
+    protected void SetupEngine(IGameEngine gameEngine) {
         this.gameEngine = gameEngine;
     }
 
@@ -74,14 +74,14 @@ public class GameSessionManager implements ActionReceiver, Closeable {
     @Override
     public void close() throws  java.io.IOException {
         stopGameLoop();
-        for (PlayerConnector playerConnector : playerGameStateSenders.keySet()) {
+        for (IPlayerConnector playerConnector : playerGameStateSenders.keySet()) {
             playerConnector.unsubscribe(this);
         }
         gameEngine.close();
     }
 
     //for testing purposes
-    public GameEngine getGameEngine() {
+    public IGameEngine getGameEngine() {
         return gameEngine;
 
     }

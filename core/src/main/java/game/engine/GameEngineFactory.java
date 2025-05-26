@@ -1,15 +1,15 @@
 package game.engine;
 
 import game.engine.entities.EntityFactory;
-import game.engine.modules.GeometryModuleImplementation;
+import game.engine.modules.GeometryModule;
 
 import java.util.Collection;
 
 public class GameEngineFactory {
-    public static GameEngine createGameEngine(Collection<EnginePlayerData> players) {
-        GeometryModuleImplementation geometryModule = new GeometryModuleImplementation();
+    public static IGameEngine createGameEngine(Collection<EnginePlayerData> players) {
+        GeometryModule geometryModule = new GeometryModule();
         EntityFactory entityFactory = new EntityFactory(geometryModule);
-        return new GameEngineImplementation(
+        return new GameEngine(
                 players,
                 geometryModule,
                 entityFactory,

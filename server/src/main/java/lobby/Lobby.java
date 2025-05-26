@@ -1,15 +1,15 @@
 package lobby;
 
-import game.actions.Action;
-import game.session.ActionReceiver;
-import game.session.PlayerConnector;
+import game.actions.IAction;
+import game.session.IActionReceiver;
+import game.session.IPlayerConnector;
 import game.session.PlayerData;
 import game.session.GameSessionManager;
 import user.UserHandle;
 
 import java.util.Collection;
 
-public class Lobby implements ActionReceiver {
+public class Lobby implements IActionReceiver {
     private final Collection<UserHandle> members;
     private final GameSessionManager sessionManager;
 
@@ -25,7 +25,7 @@ public class Lobby implements ActionReceiver {
     }
 
     @Override
-    public void sendAction(PlayerConnector player, Action action) {
+    public void sendAction(IPlayerConnector player, IAction action) {
         sessionManager.sendAction(player, action);
     }
 }

@@ -1,11 +1,11 @@
 package viewmodel.game;
 
-import game.gamestates.GameState;
+import game.gamestates.IGameState;
 
 import java.util.Collection;
 
 public interface IClientGameManager {
-    void updateState(Collection<GameState> gameStates);
+    void updateState(Collection<IGameState> gameStates);
 
     void performCycle();
 }

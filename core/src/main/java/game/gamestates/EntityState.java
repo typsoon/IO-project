@@ -10,5 +10,5 @@ public record EntityState(
         Point2F position,
         Vector2F velocity
         // there should be what entity is holding, for example
-) implements GameState{
+) implements IGameState {
 }

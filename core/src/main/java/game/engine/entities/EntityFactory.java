@@ -1,16 +1,16 @@
 package game.engine.entities;
 
 import game.engine.PlayerConfig;
-import game.engine.modules.GeometryFactory;
+import game.engine.modules.IGeometryFactory;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 public class EntityFactory {
     private int nextEntityId = 0;
-    private final GeometryFactory geometryFactory;
+    private final IGeometryFactory geometryFactory;
     private final Map<GeometryConfigID, EntityGeometryConfig> geometryConfigMap = new EnumMap<>(GeometryConfigID.class);
-    public EntityFactory(GeometryFactory geometryFactory) {
+    public EntityFactory(IGeometryFactory geometryFactory) {
         this.geometryFactory = geometryFactory;
         //todo loader for geometry configs from files
         //this is placeholder for now (need to configure those values)

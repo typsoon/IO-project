@@ -6,15 +6,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import game.session.ActionReceiver;
-import game.session.PlayerConnector;
+import game.actions.IAction;
+import game.gamestates.IGameState;
+import game.session.IActionReceiver;
+import game.session.IPlayerConnector;
 import game.session.PlayerData;
 import game.actions.Direction;
 import game.actions.PlayerMove;
-import game.engine.GameEngineImplementation;
+import game.engine.GameEngine;
 import game.engine.PlayerConfig;
 import game.engine.entities.GeometryConfigID;
-import game.engine.modules.GeometryModuleImplementation;
+import game.engine.modules.GeometryModule;
 import game.session.GameSessionFactory;
 import game.session.GameSessionManager;
 
@@ -27,7 +29,7 @@ public class DebugScreen implements Screen {
     private final GameSessionManager sessionManager;
     private final LocalPlayerConnector player1Connector;
     private final LocalPlayerConnector player2Connector;
-    private final GeometryModuleImplementation geometryModule;
+    private final GeometryModule geometryModule;
 
     public DebugScreen() {
         camera = new OrthographicCamera(20, 20);
@@ -49,7 +51,7 @@ public class DebugScreen implements Screen {
         sessionManager.startGameLoop();
 
         // Get geometry module for debug rendering
-        geometryModule = (GeometryModuleImplementation) ((GameEngineImplementation) sessionManager.getGameEngine()).getGeometryModule();
+        geometryModule = (GeometryModule) ((GameEngine) sessionManager.getGameEngine()).getGeometryModule();
     }
 
     @Override
@@ -107,21 +109,21 @@ public class DebugScreen implements Screen {
     }
 
     // Local connector for debug input
-    private static class LocalPlayerConnector implements PlayerConnector {
-        private ActionReceiver receiver;
+    private static class LocalPlayerConnector implements IPlayerConnector {
+        private IActionReceiver receiver;
         @Override
-        public void subscribe(ActionReceiver receiver) { this.receiver = receiver; }
+        public void subscribe(IActionReceiver receiver) { this.receiver = receiver; }
         @Override
-        public void unsubscribe(ActionReceiver receiver) { this.receiver = null; }
+        public void unsubscribe(IActionReceiver receiver) { this.receiver = null; }
         @Override
-        public void sendGameState(java.util.Collection<game.gamestates.GameState> gameStates) {
+        public void sendGameState(java.util.Collection<IGameState> gameStates) {
 //            for (game.gamestates.GameState gameState : gameStates) {
 //                // For debug, we can just print the game state or handle it as needed
 //                System.out.println("Game State: " + gameState);
 //            }
         }
 
-        public void sendAction(game.actions.Action action) {
+        public void sendAction(IAction action) {
             if (receiver != null) receiver.sendAction(this, action);
         }
     }

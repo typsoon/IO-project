@@ -2,7 +2,7 @@ package viewmodel.game;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import game.engine.modules.GeometryFactory;
+import game.engine.modules.IGeometryFactory;
 import game.gamestates.EntityState;
 
 import java.util.function.Consumer;
@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 // Implementation of EntityViewFactory that creates EntityView instances.
 // This is closely tied to the ClientGameManager and as such requires its GeometryFactory.
 public class EntityViewFactory implements IEntityViewFactory {
-    private final GeometryFactory geometryFactory;
+    private final IGeometryFactory geometryFactory;
     private final TextureAtlas atlas;
     private final Consumer<Sprite> spriteConsumer;
 
-    public EntityViewFactory(GeometryFactory geometryFactory, TextureAtlas atlas, Consumer<Sprite> addSprite) {
+    public EntityViewFactory(IGeometryFactory geometryFactory, TextureAtlas atlas, Consumer<Sprite> addSprite) {
         this.geometryFactory = geometryFactory;
         this.atlas = atlas;
         this.spriteConsumer = addSprite;

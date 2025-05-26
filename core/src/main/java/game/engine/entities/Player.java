@@ -2,23 +2,23 @@ package game.engine.entities;
 
 import game.actions.Direction;
 import game.engine.PlayerConfig;
-import game.engine.modules.GeometryRepresentation;
-import game.engine.modules.MovingGeometryRepresentation;
+import game.engine.modules.IGeometryRepresentation;
+import game.engine.modules.IMovingGeometryRepresentation;
 import game.gamestates.EntityState;
 import game.gamestates.PlayerState;
 import game.utility.Rectangle2F;
 import game.utility.Vector2F;
 
-public class Player implements MovingEntity {
+public class Player implements IMovingEntity {
     private final int entityId;
     private final GeometryConfigID geometryConfigID;
-    private final MovingGeometryRepresentation movingGeometryRepresentation;
+    private final IMovingGeometryRepresentation movingGeometryRepresentation;
 
     //should be from file or config
     private final float speed = 8f;
     private final Vector2F sightRange = new Vector2F(100, 100);
 
-    public Player(PlayerConfig config, MovingGeometryRepresentation movingGeometryRepresentation, int entityId) {
+    public Player(PlayerConfig config, IMovingGeometryRepresentation movingGeometryRepresentation, int entityId) {
         this.movingGeometryRepresentation = movingGeometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
@@ -50,7 +50,7 @@ public class Player implements MovingEntity {
         );
     }
     @Override
-    public GeometryRepresentation geometryRepresentation() {
+    public IGeometryRepresentation geometryRepresentation() {
         return movingGeometryRepresentation;
     }
 

@@ -1,8 +1,8 @@
 package game.engine;
 
-import game.session.PlayerGamesStateSender;
+import game.session.IPlayerGamesStateSender;
 
 public record EnginePlayerData(
-        PlayerGamesStateSender playerGamesStateSender,
+        IPlayerGamesStateSender playerGamesStateSender,
         PlayerConfig playerConfig
 ){}

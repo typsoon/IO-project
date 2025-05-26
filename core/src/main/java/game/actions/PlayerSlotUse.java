@@ -6,5 +6,5 @@ public record PlayerSlotUse (
         UsageType usageType,
         Vector2F direction,
         int slot
-) implements Action {
+) implements IAction {
 }

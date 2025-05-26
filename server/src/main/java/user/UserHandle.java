@@ -1,16 +1,16 @@
 package user;
 
-import game.session.ActionReceiver;
-import game.session.PlayerConnector;
+import game.session.IActionReceiver;
+import game.session.IPlayerConnector;
 import game.session.PlayerData;
 import game.engine.PlayerConfig;
 
 public interface UserHandle {
-    void gameStarted(ActionReceiver lobby);
+    void gameStarted(IActionReceiver lobby);
 
     PlayerConfig getPlayerConfig();
 
-    PlayerConnector getPlayerConnector();
+    IPlayerConnector getPlayerConnector();
 
     default PlayerData getPlayerData() {
         return new PlayerData(getPlayerConnector(), getPlayerConfig());

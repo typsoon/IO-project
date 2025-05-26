@@ -9,4 +9,4 @@ public record PlayerState(
         Point2F position,
         Vector2F velocity
         //this will hold more information that entity state
-) implements GameState { }
+) implements IGameState { }

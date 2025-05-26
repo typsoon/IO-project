@@ -3,7 +3,7 @@ package game.session;
 import game.engine.PlayerConfig;
 
 public record PlayerData(
-        PlayerConnector connector,
+        IPlayerConnector connector,
         PlayerConfig config
 ) {
 }
