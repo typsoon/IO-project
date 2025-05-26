@@ -2,8 +2,8 @@ package session;
 
 import java.util.logging.Logger;
 
+import network.MessageDispatcher;
 import network.messages.Message;
-import network.server.MessageDispatcher;
 import network.server.nio.NIOConnectionManager.SessionConcract;
 
 public class ClientData implements SessionConcract {

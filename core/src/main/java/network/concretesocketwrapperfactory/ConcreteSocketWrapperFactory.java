@@ -7,7 +7,6 @@ import network.AbstractSocketWrapperFactory;
 import network.ConnectionData;
 import network.messages.utils.InputStreamDataProducer;
 import network.messages.utils.OutputStreamDataReceiver;
-import network.socketwrappers.SenderTypes.ConfigurationStateSender;
 import network.socketwrappers.SenderTypes.LoginStateSender;
 import network.socketwrappers.concretesocketwrappers.ConcreteAuthenticatingSocket;
 
@@ -25,19 +24,6 @@ public class ConcreteSocketWrapperFactory implements AbstractSocketWrapperFactor
         var producer = new InputStreamDataProducer(socket.getInputStream());
         var receiver = new OutputStreamDataReceiver(socket.getOutputStream());
         return new ConcreteAuthenticatingSocket(producer, receiver);
-    }
-
-    @Override
-    public ConfigurationStateSender getConfigurationSocket(ConnectionData connectionData, int authToken) {
-        Socket socket;
-        try {
-            socket = socketManager.getSSLConnection(connectionData);
-        } catch (IOException e) {
-            throw new IllegalStateException(illegalStateErrorMessage,
-                    e);
-        }
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getConfigurationSocket'");
     }
 
     public ConcreteSocketWrapperFactory() {

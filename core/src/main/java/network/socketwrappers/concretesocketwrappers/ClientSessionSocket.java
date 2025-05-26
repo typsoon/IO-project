@@ -13,7 +13,7 @@ import network.messages.utils.DataConsumer;
 
 import java.util.logging.Level;
 
-public class ClientSessionSocket implements DuplexSocket {
+public class ClientSessionSocket implements DuplexSocket<Message> {
     private final DataProducer in;
     private final DataConsumer out;
 

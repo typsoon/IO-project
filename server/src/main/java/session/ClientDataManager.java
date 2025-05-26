@@ -3,7 +3,7 @@ package session;
 import java.util.HashMap;
 
 import database.DatabaseManager.UserId;
-import network.server.ConcreteMessageDispatcher;
+import network.impl.ConcreteMessageDispatcher;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import java.util.Map;
 

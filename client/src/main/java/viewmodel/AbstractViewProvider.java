@@ -1,10 +1,8 @@
 package viewmodel;
 
-import network.socketwrappers.SenderTypes.ConfigurationStateSender;
-
-        //TODO remove
+//TODO remove
 public interface AbstractViewProvider {
-    AbstractView createConfigurationView(RequestHandler requestHandler, ConfigurationStateSender configurationSocket);
+    // AbstractView createConfigurationView(RequestHandler requestHandler);
 
     // AbstractView createGameplayView(RequestHandler requestHandler,
     // ClientSocketWrapper clientSocketWrapper);

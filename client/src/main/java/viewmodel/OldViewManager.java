@@ -14,7 +14,7 @@ import network.socketwrappers.SenderTypes.LoginStateSender;
 import viewmodel.requests.AbstractRequest;
 import viewmodel.requests.MoveToConfigurationRequest;
 
-            //TODO remove: transfer all tasks to proper classes and remove this
+//TODO remove: transfer all tasks to proper classes and remove this
 public class OldViewManager implements RequestHandler {
     private final AbstractViewProvider userViewProvider;
     private final AbstractSocketWrapperFactory socketWrapperFactory;
@@ -22,9 +22,9 @@ public class OldViewManager implements RequestHandler {
     private final LoginViewFactory loginViewFactory;
 
     public OldViewManager(final AbstractViewProvider userViewProvider,
-                          final AbstractSocketWrapperFactory abstractSocketWrapperFactory,
-                          final AbstractViewProvider adminViewProvider,
-                          final LoginViewFactory loginViewFactory) {
+            final AbstractSocketWrapperFactory abstractSocketWrapperFactory,
+            final AbstractViewProvider adminViewProvider,
+            final LoginViewFactory loginViewFactory) {
         this.userViewProvider = userViewProvider;
         this.socketWrapperFactory = abstractSocketWrapperFactory;
         this.adminViewProvider = adminViewProvider;
@@ -57,10 +57,6 @@ public class OldViewManager implements RequestHandler {
             case final MoveToConfigurationRequest moveToConfigurationRequest -> {
                 final var connectionData = moveToConfigurationRequest.getConnectionData();
                 final var authToken = moveToConfigurationRequest.getAuthToken();
-                final var configurationSocket = socketWrapperFactory.getConfigurationSocket(connectionData,
-                        authToken);
-                final var configurationView = userViewProvider.createConfigurationView(this, configurationSocket);
-                configurationView.display();
             }
             default -> {
                 throw new IllegalArgumentException(request.toString());
@@ -85,7 +81,7 @@ class PropertiesLoader {
             hostname = properties.getProperty("hostname");
             port = Integer.parseInt(properties.getProperty("port"));
             udp_port = Integer.parseInt(properties.getProperty("udp_port"));
-        } catch (IOException | GdxRuntimeException e) {         //remove the need to copy that random file from Sitson
+        } catch (IOException | GdxRuntimeException e) { // remove the need to copy that random file from Sitson
             hostname = "localhost";
             port = 4567;
             udp_port = 4568;

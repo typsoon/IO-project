@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.channels.spi.AbstractSelectableChannel;
 
 import network.server.nio.NIOSocketServer;
 
@@ -18,7 +19,7 @@ public class UDPSocketServer implements NIOSocketServer {
     }
 
     @Override
-    public ServerSocketChannel getServerSocketChannel() {
+    public AbstractSelectableChannel getServerSocketChannel() {
         return serverSocket;
     }
 

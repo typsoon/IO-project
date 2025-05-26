@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Queue;
 
 import database.DatabaseManager.UserId;
+import network.MessageDispatcher;
 import network.messages.Message;
-import network.server.MessageDispatcher;
 
 public interface NIOConnectionManager<T extends NIOConnectionManager.SessionConcract> {
     public static interface SessionConcract {

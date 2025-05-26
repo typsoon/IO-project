@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.channels.spi.AbstractSelectableChannel;
+import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
 
@@ -18,10 +20,13 @@ public class DummySSLSocketServer implements NIOSSLSocketServer {
         this.serverSocket = ServerSocketChannel.open();
         this.serverSocket.bind(new InetSocketAddress(port));
         this.serverSocket.configureBlocking(false);
+
+        Logger.getGlobal().info("Server started at port %d".formatted(port));
+
     }
 
     @Override
-    public ServerSocketChannel getServerSocketChannel() {
+    public AbstractSelectableChannel getServerSocketChannel() {
         return serverSocket;
     }
 
