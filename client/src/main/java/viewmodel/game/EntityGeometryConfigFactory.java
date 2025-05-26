@@ -6,7 +6,7 @@ import game.engine.entities.GeometryConfigID;
 
 import java.util.Map;
 
-public class EntityFactory {
+public class EntityGeometryConfigFactory {
     public static EntityGeometryConfig createEntityGeometryConfig(GeometryConfigID geometryConfigID) {
         EntityGeometryConfig config = geometryConfigMap.get(geometryConfigID);
         if (config == null) {
