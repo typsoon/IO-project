@@ -1,5 +1,9 @@
 package frontend.concreteviews.basicviews;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -8,28 +12,32 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import network.ConnectionData;
+import network.client.ClientSideSocketWrapperFactory;
 import viewmodel.AbstractView;
 import viewmodel.AbstractViewManager;
-import viewmodel.OldViewManagerInjector;
 
 public class PlayView extends ScreenAdapter implements AbstractView {
     private final Game game;
     private final AbstractViewManager viewManager;
+    private final ClientSideSocketWrapperFactory ClientSideSocketWrapperFactory;
 
     private Stage stage;
 
-
-    public PlayView(final Game game, final AbstractViewManager viewManager) {
+    public PlayView(final Game game, final AbstractViewManager viewManager,
+            ClientSideSocketWrapperFactory clientSideSocketWrapperFactory) {
         this.game = game;
         this.viewManager = viewManager;
+        this.ClientSideSocketWrapperFactory = clientSideSocketWrapperFactory;
     }
 
     @Override
     public void display() {
         game.setScreen(this);
     }
-
 
     @Override
     public void render(final float delta) {
@@ -45,23 +53,29 @@ public class PlayView extends ScreenAdapter implements AbstractView {
 
     @Override
     public void show() {
-        //TODO hardcoded: remove hardcoded strings, use config instead
+        // TODO hardcoded: remove hardcoded strings, use config instead
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         final Button buttonConnect = viewManager.getTextureManager().getTextButton("Connect");
         buttonConnect.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                //TODO: change to a proper use of viewManager
-                final var oldViewManager = new OldViewManagerInjector(game).getViewManager();
-                oldViewManager.start(viewManager);
+                // TODO: change to a proper use of viewManager
+                var clientSideSocketWrapper = ClientSideSocketWrapperFactory.getClientSideSocketWrapper();
+
+                var propertiesLoader = new PropertiesLoader();
+                var connectionData = new ConnectionData(propertiesLoader.hostname, propertiesLoader.port,
+                        propertiesLoader.udp_port);
+                clientSideSocketWrapper.establishConnection(connectionData);
+
+                viewManager.moveToLoginView(clientSideSocketWrapper);
             }
         });
 
         final Button buttonBack = viewManager.getTextureManager().getTextButton("Back");
         buttonBack.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                viewManager.getViewFactory().getMainMenuView().display();
+                viewManager.moveToMainMenu();
             }
         });
 
@@ -77,5 +91,29 @@ public class PlayView extends ScreenAdapter implements AbstractView {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+}
+
+class PropertiesLoader {
+    String hostname;
+    int port;
+    int udp_port;
+
+    PropertiesLoader() {
+        var fileName = "ServerAddress.properties";
+        Properties properties = new Properties();
+        try (
+                InputStream input = Gdx.files.internal(fileName).read()) {
+            properties.load(input);
+
+            hostname = properties.getProperty("hostname");
+            port = Integer.parseInt(properties.getProperty("port"));
+            udp_port = Integer.parseInt(properties.getProperty("udp_port"));
+        } catch (IOException | GdxRuntimeException e) { // remove the need to copy that random file from Sitson
+            hostname = "localhost";
+            port = 4567;
+            udp_port = 4568;
+            // throw new RuntimeException(e);
+        }
     }
 }

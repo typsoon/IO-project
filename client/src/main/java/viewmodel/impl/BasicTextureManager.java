@@ -1,4 +1,4 @@
-package viewmodel;
+package viewmodel.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
+
+import viewmodel.AbstractTextureManager;
 
 public class BasicTextureManager implements AbstractTextureManager {
     private final TextureAtlas atlas;
@@ -17,8 +19,8 @@ public class BasicTextureManager implements AbstractTextureManager {
     private final TextField.TextFieldStyle textFieldStyle;
     private final Label.LabelStyle labelStyle;
 
-    BasicTextureManager(){
-        //TODO view: use config instead of hardcoded names
+    BasicTextureManager() {
+        // TODO view: use config instead of hardcoded names
         this.atlas = new TextureAtlas(Gdx.files.internal("BasicView.atlas"));
         this.skin = new Skin(atlas);
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Harrington_SHAREWARE.ttf"));
@@ -40,7 +42,6 @@ public class BasicTextureManager implements AbstractTextureManager {
 
         this.labelStyle = new Label.LabelStyle(font, Color.WHITE);
     }
-
 
     public Button getTextButton(String name) {
         return new TextButton(name, textButtonStyle);

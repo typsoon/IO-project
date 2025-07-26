@@ -1,34 +1,29 @@
-package frontend.concreteviews.loginview;
+package frontend.concreteviews.gameclientview;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-
-import network.Credentials;
-import viewmodel.AbstractViewManager;
 import viewmodel.AbstractView;
+import viewmodel.AbstractViewManager;
 
-public class LoginView extends ScreenAdapter implements AbstractView {
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+public class GameClientView extends ScreenAdapter implements AbstractView {
     private final Game game;
     private final AbstractViewManager viewManager;
-    private final EventListener loginViewEventListener;
 
     private Stage stage;
 
-    // TODO view: refactor to make similar to MainMenuView
-    public LoginView(final Game game, final EventListener loginViewEventListener,
+    public GameClientView(final Game game,
             final AbstractViewManager viewManager) {
         this.game = game;
-        this.loginViewEventListener = loginViewEventListener;
         this.viewManager = viewManager;
     }
 
@@ -55,12 +50,14 @@ public class LoginView extends ScreenAdapter implements AbstractView {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        stage.addListener(this.loginViewEventListener);
+        // stage.addListener(this.loginViewEventListener);
 
-        final var usernameField = viewManager.getTextureManager().getTextField("Username");
-
-        final var passwordField = viewManager.getTextureManager().getTextField("Password");
-        passwordField.setPasswordMode(true);
+        // final var usernameField =
+        // viewManager.getTextureManager().getTextField("Username");
+        //
+        // final var passwordField =
+        // viewManager.getTextureManager().getTextField("Password");
+        // passwordField.setPasswordMode(true);
 
         final Button loginButton = viewManager.getTextureManager().getTextButton("Log in");
         loginButton.addListener(new InputListener() {
@@ -68,8 +65,6 @@ public class LoginView extends ScreenAdapter implements AbstractView {
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
                     final int button) {
                 // TODO: remove dependency on network module
-                final var credentials = new Credentials(usernameField.getText(), passwordField.getText());
-                loginButton.fire(new CredentialsTypedEvent(credentials));
                 return true;
             }
         });
@@ -82,11 +77,6 @@ public class LoginView extends ScreenAdapter implements AbstractView {
         });
 
         final Table table = viewManager.getTextureManager().getTable();
-        table.add(usernameField);
-        table.getCell(usernameField).spaceBottom(40).width(300);
-        table.row();
-        table.add(passwordField);
-        table.getCell(passwordField).spaceBottom(40).width(300);
         table.row();
         table.add(loginButton);
         table.getCell(loginButton).spaceBottom(40);
@@ -100,5 +90,4 @@ public class LoginView extends ScreenAdapter implements AbstractView {
     public void dispose() {
         stage.dispose();
     }
-
 }

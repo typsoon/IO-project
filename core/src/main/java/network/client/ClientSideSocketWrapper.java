@@ -7,7 +7,7 @@ import network.ConnectionData;
 import network.messages.Message;
 import network.messages.Sendable;
 
-public interface ClientSideSocketWrapper {
+public interface ClientSideSocketWrapper extends AutoCloseable {
     public static enum EstablishConnectionResult {
         ESTABLISHED, FAILED
     }

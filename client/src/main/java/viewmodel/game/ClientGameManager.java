@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
 // not finished yet, but for now I have no idea how the interface should look like
 public class ClientGameManager implements IClientGameManager {
     private final IGeometryModule geometryModule;
@@ -37,8 +36,7 @@ public class ClientGameManager implements IClientGameManager {
             entityView = entityViews.get(entityState.entityId());
             entityView.setPosition(entityState.position());
             entityView.setVelocity(entityState.velocity());
-        }
-        else {
+        } else {
             entityView = entityViewFactory.createEntityView(entityState);
             entityViews.put(entityState.entityId(), entityView);
         }

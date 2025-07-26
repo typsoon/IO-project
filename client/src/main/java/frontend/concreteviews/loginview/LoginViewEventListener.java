@@ -7,20 +7,22 @@ import java.util.logging.Logger;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
+import network.client.ClientSideSocketWrapper;
+import network.client.ClientSideSocketWrapper.ConnectionEndedException;
 import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
-import network.socketwrappers.SenderTypes.LoginStateSender;
-import viewmodel.RequestHandler;
+import viewmodel.AbstractViewManager;
 
 public class LoginViewEventListener implements EventListener {
-    private final RequestHandler requestHandler;
-    private final LoginStateSender loginStateSender;
+    private final AbstractViewManager viewManager;
     // TODO: maybe remove logging from here
     private final Logger logger = Logger.getLogger("LoginViewInputAdapter");
+    private final ClientSideSocketWrapper clientSideSocketWrapper;
 
-    public LoginViewEventListener(final RequestHandler requestHandler, final LoginStateSender loginStateSender) {
-        this.requestHandler = requestHandler;
-        this.loginStateSender = loginStateSender;
+    public LoginViewEventListener(final AbstractViewManager viewManager,
+            ClientSideSocketWrapper clientSideSocketWrapper) {
+        this.viewManager = viewManager;
+        this.clientSideSocketWrapper = clientSideSocketWrapper;
     }
 
     @Override
@@ -33,11 +35,16 @@ public class LoginViewEventListener implements EventListener {
 
             Optional<LogInResponse> result;
             try {
-                result = this.loginStateSender
-                        .sendMessage(new LogInQuery(credentials.login(), credentials.password()));
+                result = this.clientSideSocketWrapper.dispatchMessage(
+                        new LogInQuery(credentials.login(), credentials.password()));
             } catch (IOException e) {
                 logger.info(String.format("Error occured wile sending message %s", e));
                 result = Optional.empty();
+            } catch (ConnectionEndedException connectionEndedException) {
+                // FIXME: Security issue: doing this here can grow stack infinitely and we don't
+                // want that
+                viewManager.moveToMainMenu();
+                return true;
             }
 
             if (result.isEmpty()) {
@@ -51,6 +58,10 @@ public class LoginViewEventListener implements EventListener {
             }
 
             logger.info("Succesfully logged in");
+            // var clientSideSocketWrapper =
+            // clientSideSocketWrapperFactory.getClientSideSocketWrapper();
+
+            // viewManager.moveToGameClient(clientSideSocketWrapper);
             // requestHandler.handleRequest(new MoveToConfigurationRequest());
 
             return true;

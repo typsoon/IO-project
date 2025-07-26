@@ -18,7 +18,6 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
 
     private Stage stage;
 
-
     public MainMenuView(final Game game, final AbstractViewManager viewManager) {
         this.game = game;
         this.viewManager = viewManager;
@@ -28,7 +27,6 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
     public void display() {
         game.setScreen(this);
     }
-
 
     @Override
     public void render(final float delta) {
@@ -44,7 +42,7 @@ public class MainMenuView extends ScreenAdapter implements AbstractView {
 
     @Override
     public void show() {
-        //TODO hardcoded: remove hardcoded strings, use config instead
+        // TODO: hardcoded - remove hardcoded strings, use config instead
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 

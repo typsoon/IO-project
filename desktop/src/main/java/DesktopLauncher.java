@@ -2,7 +2,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import viewmodel.BasicViewManagerInjector;
+import viewmodel.impl.BasicViewManagerInjector;
 
 class GameLauncher extends Game {
     @Override

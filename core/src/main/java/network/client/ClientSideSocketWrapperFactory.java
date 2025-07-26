@@ -4,7 +4,7 @@ import network.client.impl.ClientSideSocketWrapperImpl;
 import network.impl.ConcreteMessageDispatcher;
 
 public class ClientSideSocketWrapperFactory {
-    ClientSideSocketWrapper getClientSideSocketWrapper() {
+    public ClientSideSocketWrapper getClientSideSocketWrapper() {
         return new ClientSideSocketWrapperImpl(new ConcreteMessageDispatcher());
     };
 

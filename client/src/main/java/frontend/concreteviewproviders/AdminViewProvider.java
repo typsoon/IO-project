@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 
 import viewmodel.AbstractView;
 import viewmodel.AbstractViewProvider;
-import viewmodel.RequestHandler;
 
 public class AdminViewProvider implements AbstractViewProvider {
     private final Game game;
