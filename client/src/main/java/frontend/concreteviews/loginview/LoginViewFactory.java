@@ -18,6 +18,7 @@ public class LoginViewFactory {
         return new LoginView(
                 game,
                 new LoginViewEventListener(viewManager, clientSideSocketWrapper),
+                viewManager.getTextureManager(),
                 viewManager);
     }
 }

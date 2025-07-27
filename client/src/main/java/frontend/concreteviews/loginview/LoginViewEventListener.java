@@ -16,8 +16,8 @@ import viewmodel.AbstractViewManager;
 public class LoginViewEventListener implements EventListener {
     private final AbstractViewManager viewManager;
     // TODO: maybe remove logging from here
-    private final Logger logger = Logger.getLogger("LoginViewInputAdapter");
     private final ClientSideSocketWrapper clientSideSocketWrapper;
+    private final Logger logger = Logger.getLogger("LoginViewInputAdapter");
 
     public LoginViewEventListener(final AbstractViewManager viewManager,
             ClientSideSocketWrapper clientSideSocketWrapper) {
@@ -58,6 +58,7 @@ public class LoginViewEventListener implements EventListener {
             }
 
             logger.info("Succesfully logged in");
+            viewManager.moveToGameClient(clientSideSocketWrapper);
             // var clientSideSocketWrapper =
             // clientSideSocketWrapperFactory.getClientSideSocketWrapper();
 

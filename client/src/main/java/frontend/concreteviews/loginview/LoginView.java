@@ -15,19 +15,22 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import network.Credentials;
 import viewmodel.AbstractViewManager;
+import viewmodel.AbstractTextureManager;
 import viewmodel.AbstractView;
 
 public class LoginView extends ScreenAdapter implements AbstractView {
     private final Game game;
-    private final AbstractViewManager viewManager;
     private final EventListener loginViewEventListener;
+    private final AbstractTextureManager textureManager;
+    private final AbstractViewManager viewManager;
 
     private Stage stage;
 
     // TODO view: refactor to make similar to MainMenuView
     public LoginView(final Game game, final EventListener loginViewEventListener,
-            final AbstractViewManager viewManager) {
+            AbstractTextureManager textureManager, AbstractViewManager viewManager) {
         this.game = game;
+        this.textureManager = textureManager;
         this.loginViewEventListener = loginViewEventListener;
         this.viewManager = viewManager;
     }
@@ -57,12 +60,12 @@ public class LoginView extends ScreenAdapter implements AbstractView {
 
         stage.addListener(this.loginViewEventListener);
 
-        final var usernameField = viewManager.getTextureManager().getTextField("Username");
+        final var usernameField = textureManager.getTextField("Username");
 
-        final var passwordField = viewManager.getTextureManager().getTextField("Password");
+        final var passwordField = textureManager.getTextField("Password");
         passwordField.setPasswordMode(true);
 
-        final Button loginButton = viewManager.getTextureManager().getTextButton("Log in");
+        final Button loginButton = textureManager.getTextButton("Log in");
         loginButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
@@ -74,14 +77,14 @@ public class LoginView extends ScreenAdapter implements AbstractView {
             }
         });
 
-        final Button buttonBack = viewManager.getTextureManager().getTextButton("Back");
+        final Button buttonBack = textureManager.getTextButton("Back");
         buttonBack.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
                 viewManager.getViewFactory().getPlayView().display();
             }
         });
 
-        final Table table = viewManager.getTextureManager().getTable();
+        final Table table = textureManager.getTable();
         table.add(usernameField);
         table.getCell(usernameField).spaceBottom(40).width(300);
         table.row();

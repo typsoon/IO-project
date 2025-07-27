@@ -21,7 +21,6 @@ public class BasicViewManager implements AbstractViewManager {
     @Override
     public void start() {
         viewFactory.getMainMenuView().display();
-        ;
     }
 
     @Override
@@ -36,8 +35,7 @@ public class BasicViewManager implements AbstractViewManager {
 
     @Override
     public void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveToGameClient'");
+        viewFactory.getGameClientView(clientSideSocketWrapper).display();
     }
 
     @Override

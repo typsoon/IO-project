@@ -17,7 +17,6 @@ import network.messages.utils.OutputStreamDataReceiver;
 import network.messages.Sendable;
 import network.socketwrappers.SocketTypes.DuplexSocket;
 import network.socketwrappers.concretesocketwrappers.ClientSessionSSLSocket;
-import network.socketwrappers.concretesocketwrappers.ClientSessionSocket;
 
 public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     private final MessageDispatcher messageDispatcher;

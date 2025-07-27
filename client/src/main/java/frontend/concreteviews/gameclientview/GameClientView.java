@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import viewmodel.AbstractTextureManager;
 import viewmodel.AbstractView;
-import viewmodel.AbstractViewManager;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -17,14 +17,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class GameClientView extends ScreenAdapter implements AbstractView {
     private final Game game;
-    private final AbstractViewManager viewManager;
+    private final AbstractTextureManager textureManager;
+    private final GameClientViewEventListener gameClientViewEventListener;
 
     private Stage stage;
 
-    public GameClientView(final Game game,
-            final AbstractViewManager viewManager) {
+    public GameClientView(final Game game, AbstractTextureManager textureManager,
+            GameClientViewEventListener gameClientViewEventListener2) {
         this.game = game;
-        this.viewManager = viewManager;
+        this.textureManager = textureManager;
+        this.gameClientViewEventListener = gameClientViewEventListener2;
     }
 
     @Override
@@ -50,17 +52,10 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        // stage.addListener(this.loginViewEventListener);
+        stage.addListener(this.gameClientViewEventListener);
 
-        // final var usernameField =
-        // viewManager.getTextureManager().getTextField("Username");
-        //
-        // final var passwordField =
-        // viewManager.getTextureManager().getTextField("Password");
-        // passwordField.setPasswordMode(true);
-
-        final Button loginButton = viewManager.getTextureManager().getTextButton("Log in");
-        loginButton.addListener(new InputListener() {
+        final Button playButton = textureManager.getTextButton("Play");
+        playButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
                     final int button) {
@@ -69,19 +64,19 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
             }
         });
 
-        final Button buttonBack = viewManager.getTextureManager().getTextButton("Back");
-        buttonBack.addListener(new ClickListener() {
+        final Button exitButton = textureManager.getTextButton("Exit");
+        exitButton.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                viewManager.getViewFactory().getPlayView().display();
+                Gdx.app.exit();
             }
         });
 
-        final Table table = viewManager.getTextureManager().getTable();
+        final Table table = textureManager.getTable();
         table.row();
-        table.add(loginButton);
-        table.getCell(loginButton).spaceBottom(40);
+        table.add(playButton);
+        table.getCell(playButton).spaceBottom(40);
         table.row();
-        table.add(buttonBack);
+        table.add(exitButton);
 
         stage.addActor(table);
     }

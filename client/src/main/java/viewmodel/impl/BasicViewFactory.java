@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import frontend.concreteviews.basicviews.MainMenuView;
 import frontend.concreteviews.basicviews.NotImplementedView;
 import frontend.concreteviews.basicviews.PlayView;
-import frontend.concreteviews.gameclientview.GameClientView;
+import frontend.concreteviews.gameclientview.GameClientViewInjector;
 import frontend.concreteviews.loginview.LoginViewFactory;
 import network.client.ClientSideSocketWrapper;
 import network.client.ClientSideSocketWrapperFactory;
@@ -41,7 +41,8 @@ public class BasicViewFactory implements AbstractViewFactory {
 
     @Override
     public AbstractView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
-        return new GameClientView(game, viewManager);
+        return new GameClientViewInjector(game, viewManager.getTextureManager(), viewManager)
+                .getGameClientView(clientSideSocketWrapper);
     }
 
     @Override
