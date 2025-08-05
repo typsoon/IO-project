@@ -1,7 +1,6 @@
 package network.socketwrappers.concretesocketwrappers;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 import network.messages.Message;
@@ -31,7 +30,7 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
     }
 
     @Override
-    public Optional<Message> sendMessage(Message message) {
+    public void sendMessage(Message message) {
         try {
             message.encodeAndWrite(out);
         } catch (IOException e) {
@@ -40,7 +39,7 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
             logger.log(Level.SEVERE, "An error occured: ", e);
         }
 
-        return Optional.empty();
+        // return Optional.empty();
     }
 
     @Override

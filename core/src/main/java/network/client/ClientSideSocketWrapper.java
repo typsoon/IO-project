@@ -1,7 +1,7 @@
 package network.client;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Collection;
 
 import network.ConnectionData;
 import network.messages.Message;
@@ -15,12 +15,12 @@ public interface ClientSideSocketWrapper extends AutoCloseable {
     public static class ConnectionEndedException extends Exception {
     }
 
-    Sendable getSendable() throws IOException;
+    Collection<Sendable> getSendables() throws IOException;
 
     /**
      * Will throw IllegalStateException if the sender was not yet connected
      */
-    <U extends Message> Optional<U> dispatchMessage(Message message) throws IOException, ConnectionEndedException;
+    void dispatchMessage(Message message) throws IOException, ConnectionEndedException;
 
     EstablishConnectionResult establishConnection(ConnectionData connectionData);
 }

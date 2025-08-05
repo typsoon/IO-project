@@ -22,7 +22,7 @@ public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
         Socket clientSocket = serverSocket.accept();
         var producer = new InputStreamDataProducer(clientSocket.getInputStream());
         var receiver = new OutputStreamDataReceiver(clientSocket.getOutputStream());
-        return new ClientSessionSocket(producer, receiver);
+        return new ClientSessionSocket<Message>(producer, receiver);
     }
 
     @Override

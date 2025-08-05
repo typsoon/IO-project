@@ -1,7 +1,6 @@
 package network.socketwrappers;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import network.messages.Message;
 
@@ -17,8 +16,7 @@ public final class SocketTypes {
     public interface SocketSender<SentMessage extends Message> {
         /**
          * @param message
-         * @return a response if it's expected
          */
-        <T extends Message> Optional<T> sendMessage(SentMessage message) throws IOException;
+        void sendMessage(SentMessage message) throws IOException;
     }
 }

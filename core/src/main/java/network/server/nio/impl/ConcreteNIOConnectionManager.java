@@ -56,11 +56,12 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
         }
 
         @Override
-        public <U extends Message> Optional<U> sendMessage(T message) throws IOException {
+        // public <U extends Message> void sendMessage(T message) throws IOException {
+        public void sendMessage(T message) throws IOException {
             synchronized (key) {
                 queue.add(message);
                 key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
-                return Optional.empty();
+                // return Optional.empty();
             }
         }
     }

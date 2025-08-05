@@ -1,6 +1,5 @@
 package messagetraits;
 
-import static javax.lang.model.element.ElementKind.ANNOTATION_TYPE;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.INTERFACE;
 import static javax.lang.model.element.Modifier.ABSTRACT;

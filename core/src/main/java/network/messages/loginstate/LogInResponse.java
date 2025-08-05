@@ -11,14 +11,13 @@ public final class LogInResponse extends EncryptedMessage {
     public static int NO_AUTH_TOKEN = -1;
     public static final byte id = 1;
 
+    public static record Payload(Optional<Integer> authToken) implements Sendable {
+    };
+
+    private final Payload authTokenOptional;
+
     public LogInResponse(Optional<Integer> authTokenOptional) {
-        this.authTokenOptional = authTokenOptional;
-    }
-
-    private final Optional<Integer> authTokenOptional;
-
-    public final Optional<Integer> authTokenOptional() {
-        return authTokenOptional;
+        this.authTokenOptional = new Payload(authTokenOptional);
     }
 
     @Override
@@ -26,12 +25,11 @@ public final class LogInResponse extends EncryptedMessage {
         byte msgSize = Byte.BYTES + Integer.BYTES;
         out.putByte(msgSize);
         out.putByte(id);
-        out.putInt(authTokenOptional.orElse(NO_AUTH_TOKEN));
+        out.putInt(authTokenOptional.authToken.orElse(NO_AUTH_TOKEN));
     }
 
     @Override
     public Sendable getSendable() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAction'");
+        return authTokenOptional;
     }
 }

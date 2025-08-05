@@ -2,11 +2,11 @@ package frontend.concreteviews.loginview;
 
 import com.badlogic.gdx.Game;
 
+import frontend.ViewWithEventLoop;
 import network.client.ClientSideSocketWrapper;
 import viewmodel.AbstractViewManager;
 import viewmodel.AbstractView;
 
-//TODO view: remove and use BasicViewFactory instead
 public class LoginViewFactory {
     private final Game game;
 
@@ -15,10 +15,15 @@ public class LoginViewFactory {
     }
 
     public AbstractView getLoginView(AbstractViewManager viewManager, ClientSideSocketWrapper clientSideSocketWrapper) {
-        return new LoginView(
+        var loginView = new LoginView(
                 game,
                 new LoginViewEventListener(viewManager, clientSideSocketWrapper),
                 viewManager.getTextureManager(),
                 viewManager);
+
+        var handler = new LoginViewMessageHandler(clientSideSocketWrapper, viewManager);
+
+        return new ViewWithEventLoop(handler, loginView,
+                game);
     }
 }
