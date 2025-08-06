@@ -35,7 +35,7 @@ public class AutoMessagesGenerator {
     private final static ProducerGenerator producerGenerator = new ProducerGenerator();
 
     private byte getStaticSize(Iterable<FieldSpec> fieldSpecs) {
-        byte staticSize = 0;
+        byte staticSize = CodegenConfig.MESSAGE_CODE_SIZE;
 
         for (FieldSpec field : fieldSpecs) {
             var mappedVal = CodegenConfig.typeToTypeData.get(field.type());
@@ -115,7 +115,7 @@ public class AutoMessagesGenerator {
     }
 
     public String genClass(ConsumerProducer consumerProducer, String messageTraitsQualifiedName,
-                           TypeElement element, ProcessingEnvironment processingEnv) {
+            TypeElement element, ProcessingEnvironment processingEnv) {
         String className = CodegenConfig.generatedClassNameFormat.formatted(element.getSimpleName());
         String packageName = processingEnv.getElementUtils()
                 .getPackageOf(element).getQualifiedName().toString();
@@ -160,8 +160,7 @@ public class AutoMessagesGenerator {
             javaFile.writeTo(processingEnv.getFiler());
 
             return "%s.%s".formatted(packageName, className);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             processingEnv.getMessager()
                     .printError("Error encountered while generating classes: %s".formatted(e.toString()));
             throw new IllegalStateException(e);

@@ -30,6 +30,7 @@ public class CodegenConfig {
             int size) {
     }
 
+    public static final int MESSAGE_CODE_SIZE = Byte.BYTES;
     public static final int DYNAMIC_SIZE = -1;
 
     public static final Map<TypeName, TypeNameData> typeToTypeData = new HashMap<>();
