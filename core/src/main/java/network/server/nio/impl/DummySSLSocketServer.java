@@ -15,8 +15,10 @@ import network.server.nio.NIOSSLSocketServer;
 
 public class DummySSLSocketServer implements NIOSSLSocketServer {
     private final ServerSocketChannel serverSocket;
+    private final int port;
 
     public DummySSLSocketServer(int port) throws IOException {
+        this.port = port;
         this.serverSocket = ServerSocketChannel.open();
         this.serverSocket.bind(new InetSocketAddress(port));
         this.serverSocket.configureBlocking(false);
@@ -40,5 +42,10 @@ public class DummySSLSocketServer implements NIOSSLSocketServer {
 
     @Override
     public void acceptClient(ReadableByteChannel in) throws SSLException {
+    }
+
+    @Override
+    public int getPort() {
+        return port;
     }
 }

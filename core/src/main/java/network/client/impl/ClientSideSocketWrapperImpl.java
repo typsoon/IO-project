@@ -5,8 +5,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 import network.ConnectionData;
@@ -18,6 +21,10 @@ import network.messages.Message.EncryptedMessage;
 import network.messages.Message.TCPMessage;
 import network.messages.Message.UDPMessage;
 import network.messages.Sendable;
+import network.messages.defaultmessage.ObjectToMessageDecoder;
+import network.messages.loginstate.LogInResponse;
+import network.messages.loginstate.PortInfoRequest;
+import network.messages.loginstate.PortInfoResponse;
 import network.messages.utils.InputStreamDataProducer;
 import network.messages.utils.OutputStreamDataReceiver;
 import network.socketwrappers.SocketTypes.DuplexSocket;
@@ -35,6 +42,8 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
 
     private final Collection<Sendable> pendingSendables = new ArrayList<>();
     private final ExecutorService executorService = new ForkJoinPool();
+    private TokenHolder tokenHolder = new TokenHolder();
+    private final ObjectToMessageDecoder objectToMessageDecoder;
 
     private Socket sslSocket;
 
@@ -42,8 +51,10 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     // ConcurrentLinkedQueue<>();
     // private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public ClientSideSocketWrapperImpl(MessageDispatcher messageDispatcher) {
+    public ClientSideSocketWrapperImpl(MessageDispatcher messageDispatcher,
+            ObjectToMessageDecoder objectToMessageDecoder) {
         this.messageDispatcher = messageDispatcher;
+        this.objectToMessageDecoder = objectToMessageDecoder;
     }
 
     private class SendableReceiver implements Runnable {
@@ -53,19 +64,64 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
             this.socketWrapper = socketWrapper;
         }
 
+        protected void handleMessage(Message received) {
+            pendingSendables.add(received.getSendable());
+        }
+
         @Override
-        public void run() {
+        public final void run() {
             while (true) {
                 try {
                     var received = socketWrapper.receiveMessage();
 
                     synchronized (pendingSendables) {
-                        pendingSendables.add(received.getSendable());
+                        handleMessage(received);
+                        Logger.getGlobal().info(received.getClass().getSimpleName());
                     }
                 } catch (IOException ioException) {
                     Logger.getGlobal().severe("IOException encountered here!");
                 }
             }
+        }
+    }
+
+    private class SSLSendableReceiver extends SendableReceiver {
+        public SSLSendableReceiver(DuplexSocket<?> socketWrapper) {
+            super(socketWrapper);
+        }
+
+        public final void handleMessage(Message received) {
+            switch (received.getSendable()) {
+                case LogInResponse.Payload authTokenHolder -> {
+                    var authToken = authTokenHolder.authToken();
+                    if (authToken.isPresent()) {
+                        tokenHolder.setToken(authToken.get());
+
+                        var portInfoRequest = objectToMessageDecoder.decodeFromRecord(new PortInfoRequest.Payload());
+
+                        try {
+                            Logger.getGlobal().info("Requesting port info %s"
+                                    .formatted(portInfoRequest.getClass().getSimpleName()));
+
+                            messageDispatcher.dispatchMessage(portInfoRequest);
+
+                        } catch (IOException ioException) {
+                            Logger.getGlobal().severe("Error requesting portInfo");
+                            throw new IllegalStateException("Error requesting portInfo");
+                        } catch (Exception e) {
+                            Logger.getGlobal().severe("Illegal state");
+                        }
+                    }
+                }
+                case PortInfoResponse.Payload portInfo -> {
+                    Logger.getGlobal().info("Received port info");
+                }
+
+                default -> {
+                }
+            }
+
+            super.handleMessage(received);
         }
     }
 
@@ -98,7 +154,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
             messageDispatcher.connectSSLSender(sslSocketWrapper);
             sslSocketContainer.setSocketWrapper(sslSocketWrapper);
             executorService
-                    .submit(new SendableReceiver(sslSocketWrapper));
+                    .submit(new SSLSendableReceiver(sslSocketWrapper));
         } catch (IOException e) {
             return EstablishConnectionResult.FAILED;
         }
@@ -110,6 +166,42 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     public void close() throws Exception {
         if (sslSocket != null) {
             sslSocket.close();
+        }
+    }
+}
+
+/**
+ * A thread
+ * safe container for
+ * the token
+ */
+class TokenHolder {
+    private Optional<Integer> token = Optional.empty();
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    public void setToken(int tokenVal) {
+        if (!token.isEmpty()) {
+            throw new IllegalStateException("You are setting a token for the second time");
+        }
+
+        token = Optional.of(tokenVal);
+    }
+
+    public void renewToken(int tokenVal) {
+        lock.writeLock().lock();
+        try {
+            token = Optional.of(tokenVal);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    public int getToken() {
+        lock.readLock().lock();
+        try {
+            return token.orElseThrow();
+        } finally {
+            lock.readLock().unlock();
         }
     }
 }

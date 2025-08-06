@@ -5,12 +5,15 @@ import java.util.logging.Logger;
 import network.MessageDispatcher;
 import network.messages.Message;
 import network.server.nio.NIOConnectionManager.SessionConcract;
+import user.IUserRoomHandle;
 
 public class ClientData implements SessionConcract {
     private final MessageDispatcher messageDispatcher;
+    private final IUserRoomHandle userRoomHandle;
 
-    public ClientData(MessageDispatcher messageDispatcher) {
+    public ClientData(MessageDispatcher messageDispatcher, IUserRoomHandle userRoomHandle) {
         this.messageDispatcher = messageDispatcher;
+        this.userRoomHandle = userRoomHandle;
     }
 
     @Override

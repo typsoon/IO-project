@@ -93,8 +93,10 @@ public class SSLSocketServerImpl implements NIOSSLSocketServer {
     }
     private final Map<ReadableByteChannel, SocketChannelData> socketsData = new HashMap<>();
     private final ServerSocketChannel serverSocket;
+    private final int port;
 
     public SSLSocketServerImpl(int port) throws IOException {
+        this.port = port;
         this.serverSocket = ServerSocketChannel.open();
         this.serverSocket.bind(new InetSocketAddress(port));
         this.serverSocket.configureBlocking(false);
@@ -217,5 +219,10 @@ public class SSLSocketServerImpl implements NIOSSLSocketServer {
 
         socketsData.put(in, new SocketChannelData(appIn, netIn, netOut, sslEngine,
                 new Box<>(DidFinishHandshake.DIDNT)));
+    }
+
+    @Override
+    public int getPort() {
+        return port;
     }
 }

@@ -9,6 +9,7 @@ import network.server.nio.NIOConnectionManager.SessionConcract;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import network.server.nio.NIOConnectionManagerFactory;
 import network.server.nio.NIOSSLSocketServer;
+import network.messages.defaultmessage.ConcreteObjectDecoder;
 
 public class NIOConnectionManagerFactoryImpl implements NIOConnectionManagerFactory {
 
@@ -30,7 +31,8 @@ public class NIOConnectionManagerFactoryImpl implements NIOConnectionManagerFact
         ConcreteDatabaseManager concreteDatabaseManager = new ConcreteDatabaseManager();
         return new ConcreteNIOConnectionManager<>(concreteDatabaseManager,
                 new ConcreteAuthenticationService(concreteDatabaseManager),
-                udpServer, tcpServer, sslServer, sessionCreator);
+                udpServer, tcpServer, sslServer, sessionCreator,
+                new ConcreteObjectDecoder());
     }
 
 }

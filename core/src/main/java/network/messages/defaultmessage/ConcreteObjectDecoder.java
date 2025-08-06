@@ -3,6 +3,7 @@ package network.messages.defaultmessage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import network.messages.Message;
 
@@ -14,6 +15,6 @@ public class ConcreteObjectDecoder implements ObjectToMessageDecoder {
 
     @Override
     public Message decodeFromRecord(Object record) {
-        return recordDecoders.get(record).apply(record);
+        return recordDecoders.get(record.getClass()).apply(record);
     }
 }

@@ -11,8 +11,10 @@ import network.server.nio.NIOSocketServer;
 
 public class UDPSocketServer implements NIOSocketServer {
     private final ServerSocketChannel serverSocket;
+    private final int port;
 
     public UDPSocketServer(int port) throws IOException {
+        this.port = port;
         this.serverSocket = ServerSocketChannel.open();
         this.serverSocket.bind(new InetSocketAddress(port));
         this.serverSocket.configureBlocking(false);
@@ -27,5 +29,10 @@ public class UDPSocketServer implements NIOSocketServer {
     public ByteBuffer preprocessData(SocketChannel in) throws IOException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'preprocessData'");
+    }
+
+    @Override
+    public int getPort() {
+        return port;
     }
 }

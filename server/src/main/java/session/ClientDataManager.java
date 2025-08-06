@@ -5,6 +5,8 @@ import java.util.HashMap;
 import database.DatabaseManager.UserId;
 import network.impl.ConcreteMessageDispatcher;
 import network.server.nio.NIOConnectionManager.SessionCreator;
+import user.IUserRoomHandle;
+
 import java.util.Map;
 
 public class ClientDataManager implements SessionCreator<ClientData> {
@@ -12,7 +14,10 @@ public class ClientDataManager implements SessionCreator<ClientData> {
 
     @Override
     public ClientData getSession(UserId address) {
-        activeClientsData.computeIfAbsent(address, _address -> new ClientData(new ConcreteMessageDispatcher()));
+        IUserRoomHandle userRoomHandle = null;
+
+        activeClientsData.computeIfAbsent(address,
+                _address -> new ClientData(new ConcreteMessageDispatcher(), userRoomHandle));
         return activeClientsData.get(address);
     }
 }

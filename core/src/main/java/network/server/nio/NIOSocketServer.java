@@ -10,4 +10,6 @@ public interface NIOSocketServer {
     AbstractSelectableChannel getServerSocketChannel();
 
     ByteBuffer preprocessData(SocketChannel in) throws IOException;
+
+    int getPort();
 }

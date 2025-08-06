@@ -26,8 +26,6 @@ public class ConcreteMessageDecoder implements MessageDecoder {
 
     @Override
     public Message decodeMessage(DataProducer dataProducer) throws IOException {
-        // byte messageLen = dataProducer.getByte();
-
         byte messageCode = dataProducer.getByte();
 
         logger.finer(String.format("Received message of code: %s", messageCode));
