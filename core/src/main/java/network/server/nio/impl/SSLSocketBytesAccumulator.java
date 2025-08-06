@@ -22,7 +22,7 @@ public class SSLSocketBytesAccumulator implements BytesAccumulator {
         }
         msgSizeBuf.flip();
         var msgSize = msgSizeBuf.get();
-        logger.info("Message size: %s".formatted(msgSize));
+        logger.finest("Message size: %s".formatted(msgSize));
 
         currBuffer = Optional.of(ByteBuffer.allocate(msgSize));
     }
@@ -38,7 +38,7 @@ public class SSLSocketBytesAccumulator implements BytesAccumulator {
             var readRes = byteIn.read(actBufferUnwrapped);
 
             if (readRes == 0) {
-                Logger.getGlobal().info("No bytes read, waiting for more data");
+                Logger.getGlobal().finest("No bytes read, waiting for more data");
                 return Optional.empty();
             } else if (readRes == -1) {
                 // TODO: Close session
@@ -47,7 +47,7 @@ public class SSLSocketBytesAccumulator implements BytesAccumulator {
         }
         actBufferUnwrapped.flip();
 
-        Logger.getGlobal().info("ByteBufInfo pos %d cap %d lim %d".formatted(actBufferUnwrapped.position(),
+        Logger.getGlobal().finest("ByteBufInfo pos %d cap %d lim %d".formatted(actBufferUnwrapped.position(),
                 actBufferUnwrapped.capacity(), actBufferUnwrapped.limit()));
 
         try {

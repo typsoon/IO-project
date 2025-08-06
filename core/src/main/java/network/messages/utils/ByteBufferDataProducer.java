@@ -17,13 +17,13 @@ public class ByteBufferDataProducer implements DataProducer {
 
     @Override
     public int getInt() throws IOException {
-        Logger.getGlobal().info("Pos: %d, Capacity: %d".formatted(byteBuffer.remaining(), byteBuffer.capacity()));
+        Logger.getGlobal().finest("Pos: %d, Capacity: %d".formatted(byteBuffer.remaining(), byteBuffer.capacity()));
         return byteBuffer.getInt();
     }
 
     @Override
     public byte getByte() throws IOException {
-        Logger.getGlobal().info(
+        Logger.getGlobal().finest(
                 "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(), byteBuffer.capacity(),
                         byteBuffer.limit()));
         return byteBuffer.get();

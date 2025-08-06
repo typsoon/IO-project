@@ -26,7 +26,7 @@ public class LoginViewMessageHandler implements CyclePerformer {
             var sendables = clientSideSocketWrapper.getSendables();
 
             if (sendables.size() > 0) {
-                Logger.getGlobal().info("I am here, size %d".formatted(sendables.size()));
+                Logger.getGlobal().finest("I am here, size %d".formatted(sendables.size()));
             }
 
             for (Sendable sendable : sendables) {
