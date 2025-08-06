@@ -15,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import network.ConnectionData;
 import network.client.ClientSideSocketWrapperFactory;
+import network.utils.ConnectionData;
 import viewmodel.AbstractView;
 import viewmodel.AbstractViewManager;
 

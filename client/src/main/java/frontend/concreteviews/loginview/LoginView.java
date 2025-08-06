@@ -11,9 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import network.utils.Credentials;
+
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import network.Credentials;
 import viewmodel.AbstractViewManager;
 import viewmodel.AbstractTextureManager;
 import viewmodel.AbstractView;

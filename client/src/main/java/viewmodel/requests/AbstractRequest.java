@@ -1,8 +1,8 @@
 package viewmodel.requests;
 
-import network.ConnectionData;
+import network.utils.ConnectionData;
 
-            //TODO: remove
+//TODO: remove
 public abstract class AbstractRequest {
     private final ConnectionData connectionData;
 

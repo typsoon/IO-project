@@ -8,35 +8,31 @@ import network.messages.decoding.ConcreteMessageDecoder;
 import network.messages.decoding.MessageDecoder;
 import network.messages.utils.DataProducer;
 import network.socketwrappers.SocketTypes.DuplexSocket;
-import network.utils.TokenView;
 import network.messages.utils.DataConsumer;
 
 import java.util.logging.Level;
 
-public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
+public class ServerClientSessionSocket<T extends Message> implements DuplexSocket<T> {
     private final DataProducer in;
     private final DataConsumer out;
-    private final TokenView tokenHolder;
 
     private final MessageDecoder messageDecoder;
     private Logger logger = Logger.getGlobal();
 
-    public ClientSessionSocket(DataProducer in, DataConsumer out, TokenView tokenHolder,
+    public ServerClientSessionSocket(DataProducer in, DataConsumer out,
             MessageDecoder messageDecoder) {
         this.in = in;
         this.out = out;
         this.messageDecoder = messageDecoder;
-        this.tokenHolder = tokenHolder;
     }
 
-    public ClientSessionSocket(DataProducer in, DataConsumer out, TokenView tokenHolder) {
-        this(in, out, tokenHolder, new ConcreteMessageDecoder());
+    public ServerClientSessionSocket(DataProducer in, DataConsumer out) {
+        this(in, out, new ConcreteMessageDecoder());
     }
 
     @Override
     public void sendMessage(Message message) {
         try {
-            out.putInt(tokenHolder.getToken());
             message.encodeAndWrite(out);
         } catch (IOException e) {
             logger.log(Level.OFF, String.format("An error occured: %s", e));

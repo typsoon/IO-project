@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.Set;
 
 import database.DatabaseManager;
-import network.Credentials;
+import network.utils.Credentials;
 
 public class ConcreteDatabaseManager implements DatabaseManager {
     private final Set<Integer> possibleIdVals;

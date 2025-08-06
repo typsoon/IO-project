@@ -3,9 +3,9 @@ package network.client;
 import java.io.IOException;
 import java.util.Collection;
 
-import network.ConnectionData;
 import network.messages.Message;
 import network.messages.Sendable;
+import network.utils.ConnectionData;
 
 public interface ClientSideSocketWrapper extends AutoCloseable {
     public static enum EstablishConnectionResult {

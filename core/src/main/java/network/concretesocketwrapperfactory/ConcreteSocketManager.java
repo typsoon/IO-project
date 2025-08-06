@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import network.ConnectionData;
+import network.utils.ConnectionData;
 
 class ConcreteSocketManager implements SocketManager {
     // private final Map<ConnectionData, Socket> activeConnections = new

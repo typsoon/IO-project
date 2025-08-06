@@ -1,4 +1,4 @@
-package network;
+package network.utils;
 
 import network.messages.Sendable;
 

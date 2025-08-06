@@ -7,8 +7,7 @@ import network.messages.Message.EncryptedMessage;
 import network.messages.MessagesConfig;
 import network.messages.Sendable;
 import network.messages.utils.DataConsumer;
-
-import network.Credentials;
+import network.utils.Credentials;
 
 public final class LogInQuery extends EncryptedMessage {
     // TODO: import charset from config

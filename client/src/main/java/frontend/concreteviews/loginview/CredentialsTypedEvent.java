@@ -2,7 +2,7 @@ package frontend.concreteviews.loginview;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
 
-import network.Credentials;
+import network.utils.Credentials;
 
 public class CredentialsTypedEvent extends Event {
     private final Credentials credentials;

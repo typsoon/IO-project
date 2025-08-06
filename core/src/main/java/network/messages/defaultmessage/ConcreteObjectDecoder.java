@@ -3,7 +3,6 @@ package network.messages.defaultmessage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import network.messages.Message;
 

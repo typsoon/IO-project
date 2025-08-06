@@ -25,6 +25,8 @@ public class DesktopLauncher {
         applog.addHandler(systemOut);
         applog.setLevel(level);
 
+        applog.setUseParentHandlers(false);
+
         final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setForegroundFPS(60);
         config.setTitle("IO Game");

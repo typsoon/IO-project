@@ -5,14 +5,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
-import network.ConnectionData;
 import network.MessageDispatcher;
 import network.client.ClientSideSocketWrapper;
 import network.impl.SingleWriteSocketContainer;
@@ -29,6 +25,9 @@ import network.messages.utils.InputStreamDataProducer;
 import network.messages.utils.OutputStreamDataReceiver;
 import network.socketwrappers.SocketTypes.DuplexSocket;
 import network.socketwrappers.concretesocketwrappers.ClientSessionSSLSocket;
+import network.socketwrappers.concretesocketwrappers.ClientSessionSocket;
+import network.utils.ConnectionData;
+import network.utils.TokenHolder;
 
 public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     private final MessageDispatcher messageDispatcher;
@@ -46,6 +45,8 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     private final ObjectToMessageDecoder objectToMessageDecoder;
 
     private Socket sslSocket;
+    private Socket tcpSocket;
+    private ConnectionData sslConnectionData;
 
     // private final Collection<Sendable> pendingSendables = new
     // ConcurrentLinkedQueue<>();
@@ -114,7 +115,24 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                     }
                 }
                 case PortInfoResponse.Payload portInfo -> {
-                    Logger.getGlobal().info("Received port info");
+                    try {
+                        tcpSocket = new Socket(sslConnectionData.host(), portInfo.tcpPort());
+
+                        var producer = new InputStreamDataProducer(tcpSocket.getInputStream());
+                        var consumer = new OutputStreamDataReceiver(tcpSocket.getOutputStream());
+
+                        var tcpSocketWrapper = new ClientSessionSocket<Message.TCPMessage>(producer, consumer,
+                                tokenHolder);
+                        messageDispatcher.connectTCPSender(tcpSocketWrapper);
+                        tcpSocketContainer.setSocketWrapper(tcpSocketWrapper);
+                        executorService
+                                .submit(new SendableReceiver(tcpSocketWrapper));
+
+                        Logger.getGlobal().info("Received port info");
+                    } catch (Exception e) {
+                        Logger.getGlobal().severe("An error occured after trying to establish tcp and udp connection");
+                        throw new IllegalStateException(e);
+                    }
                 }
 
                 default -> {
@@ -145,6 +163,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     @Override
     public EstablishConnectionResult establishConnection(ConnectionData connectionData) {
         try {
+            this.sslConnectionData = connectionData;
             sslSocket = new Socket(connectionData.host(), connectionData.port());
 
             var producer = new InputStreamDataProducer(sslSocket.getInputStream());
@@ -167,41 +186,8 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
         if (sslSocket != null) {
             sslSocket.close();
         }
-    }
-}
-
-/**
- * A thread
- * safe container for
- * the token
- */
-class TokenHolder {
-    private Optional<Integer> token = Optional.empty();
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-
-    public void setToken(int tokenVal) {
-        if (!token.isEmpty()) {
-            throw new IllegalStateException("You are setting a token for the second time");
-        }
-
-        token = Optional.of(tokenVal);
-    }
-
-    public void renewToken(int tokenVal) {
-        lock.writeLock().lock();
-        try {
-            token = Optional.of(tokenVal);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    public int getToken() {
-        lock.readLock().lock();
-        try {
-            return token.orElseThrow();
-        } finally {
-            lock.readLock().unlock();
+        if (tcpSocket != null) {
+            tcpSocket.close();
         }
     }
 }

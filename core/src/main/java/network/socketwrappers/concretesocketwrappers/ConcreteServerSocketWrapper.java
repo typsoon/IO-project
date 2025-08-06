@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import network.ServerSocketWrapper;
 import network.messages.Message;
 import network.messages.utils.InputStreamDataProducer;
 import network.messages.utils.OutputStreamDataReceiver;
+import network.server.ServerSocketWrapper;
 import network.socketwrappers.SocketTypes.DuplexSocket;
 
 public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
@@ -22,7 +22,7 @@ public class ConcreteServerSocketWrapper implements ServerSocketWrapper {
         Socket clientSocket = serverSocket.accept();
         var producer = new InputStreamDataProducer(clientSocket.getInputStream());
         var receiver = new OutputStreamDataReceiver(clientSocket.getOutputStream());
-        return new ClientSessionSocket<Message>(producer, receiver);
+        return new ServerClientSessionSocket<Message>(producer, receiver);
     }
 
     @Override
