@@ -20,7 +20,7 @@ public class DesktopLauncher {
     public static void main(final String[] arg) {
         var applog = Logger.getGlobal();
         Handler systemOut = new ConsoleHandler();
-        var level = Level.INFO;
+        var level = Level.FINER;
         systemOut.setLevel(level);
         applog.addHandler(systemOut);
         applog.setLevel(level);

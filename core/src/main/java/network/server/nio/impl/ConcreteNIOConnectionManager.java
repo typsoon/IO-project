@@ -1,6 +1,7 @@
 package network.server.nio.impl;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -17,10 +18,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
-import network.messages.loginstate.PortInfoRequest;
-import network.messages.loginstate.PortInfoResponse;
 
-import network.messages.defaultmessage.ObjectToMessageDecoder;
 import database.DatabaseManager;
 import database.DatabaseManager.UserId;
 import network.messages.Message;
@@ -29,13 +27,17 @@ import network.messages.Message.TCPMessage;
 import network.messages.Message.UDPMessage;
 import network.messages.decoding.ConcreteMessageDecoder;
 import network.messages.decoding.MessageDecoder;
+import network.messages.defaultmessage.ObjectToMessageDecoder;
 import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
+import network.messages.loginstate.PortInfoRequest;
+import network.messages.loginstate.PortInfoResponse;
 import network.messages.utils.ByteBufferDataProducer;
 import network.messages.utils.ByteChannelDataReceiver;
 import network.server.AuthenticationService;
 import network.server.AuthenticationService.Token;
 import network.server.nio.BytesAccumulator;
+import network.server.nio.BytesAccumulator.ReadData;
 import network.server.nio.BytesAccumulator.WhatWasRead;
 import network.server.nio.NIOConnectionManager;
 import network.server.nio.NIOConnectionManager.SessionConcract;
@@ -147,17 +149,18 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
                     if (key.attachment() == null) {
                         // TODO: Not sure if it is SSLSocketBytesAccumulator that should be attached
                         // here, think about it and potentially change it
-                        key.attach(new SSLSocketBytesAccumulator());
+                        key.attach(new OrdinaryBytesAccumulator());
                     }
 
+                    Optional<ReadData> msgByteBuffer;
                     if (key.attachment() instanceof final BytesAccumulator bytesAcc) {
-                        readTokenAndSetUpTCPorUDPconnection(bytesAcc, clientSocketChannel, key);
-                        continue;
-                    }
+                        msgByteBuffer = readTokenAndSetUpTCPorUDPconnection(bytesAcc, clientSocketChannel, key);
 
-                    // Read incoming bytes
-                    final var attachment = (ChannelAttachment<T, ? extends Message>) key.attachment();
-                    final var msgByteBuffer = attachment.bytesAccumulator.accumulateBytes(clientSocketChannel);
+                    } else {
+                        // Read incoming bytes
+                        final var attachment = (ChannelAttachment<T, ? extends Message>) key.attachment();
+                        msgByteBuffer = attachment.bytesAccumulator.accumulateBytes(clientSocketChannel);
+                    }
 
                     if (msgByteBuffer.isEmpty()) {
                         // Waiting for the rest of the bytes
@@ -165,23 +168,33 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
                     }
 
                     // Handle read bytes
-                    switch (msgByteBuffer.get().whatWasRead()) {
-                        case TOKEN -> {
-                            final var tokenVal = msgByteBuffer.get().byteBuf().getInt();
-                            final var userId = authenticationService.getUser(tokenVal);
+                    final var attachment = (ChannelAttachment<T, ? extends Message>) key.attachment();
 
-                            if (userId == null) {
-                                logger.warning(
-                                        String.format("Received message from unauthorized user - invalid token %s",
-                                                clientSocketChannel.getRemoteAddress()));
+                    while (!msgByteBuffer.isEmpty()) {
+                        switch (msgByteBuffer.get().whatWasRead()) {
+                            case TOKEN -> {
+                                final var tokenVal = msgByteBuffer.get().byteBuf().getInt();
+                                final var userId = authenticationService.getUser(tokenVal);
 
-                                // TODO: disconnect user
-                                throw new IllegalStateException("Message from unauthorized user");
+                                if (userId == null) {
+                                    logger.severe(attachment.bytesAccumulator.getClass().getCanonicalName());
+
+                                    logger.warning(
+                                            String.format(
+                                                    "Received message from unauthorized user %s - invalid token %d",
+                                                    clientSocketChannel.getRemoteAddress(), tokenVal));
+
+                                    // TODO: disconnect user
+                                    throw new IllegalStateException("Message from unauthorized user");
+                                }
+
+                                msgByteBuffer = attachment.bytesAccumulator.accumulateBytes(clientSocketChannel);
                             }
-                        }
 
-                        case MESSAGE -> {
-                            handleMessageBytes(msgByteBuffer.get(), answer, attachment, key);
+                            case MESSAGE -> {
+                                handleMessageBytes(msgByteBuffer.get(), answer, attachment, key);
+                                msgByteBuffer = Optional.empty();
+                            }
                         }
                     }
                 }
@@ -288,41 +301,56 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
         logger.info(String.format("Client connected %s", clientSocketChannel.getRemoteAddress()));
     }
 
-    private final void readTokenAndSetUpTCPorUDPconnection(final BytesAccumulator bytesAcc,
+    // Returns true if the connection was succesfully set up
+    private final Optional<ReadData> readTokenAndSetUpTCPorUDPconnection(final BytesAccumulator bytesAcc,
             final SocketChannel clientSocketChannel, final SelectionKey key) throws IOException {
         final var tokenRes = bytesAcc.accumulateBytes(clientSocketChannel);
 
         if (tokenRes.isEmpty()) {
-            return;
+            return Optional.empty();
         }
         assert tokenRes.get().whatWasRead() == WhatWasRead.TOKEN;
 
-        final var serverSocketChannel = (ServerSocketChannel) key.channel();
-        final var userIdVal = tokenRes.get().byteBuf().getInt();
-        final UserId userId = authenticationService.getUser(userIdVal);
+        final var userTokenVal = tokenRes.get().byteBuf().getInt();
+
+        final UserId userId = authenticationService.getUser(userTokenVal);
         if (userId == null) {
             logger.warning(
                     String.format("Received message from unauthorized user - invalid token %s",
                             clientSocketChannel.getRemoteAddress()));
-            return;
+            return Optional.empty();
         }
+
+        logger.finer(
+                "Received token %d, it is correct and session will be created for the user %d".formatted(userTokenVal,
+                        userId.id()));
 
         final var session = sessionCreator.getSession(userId);
 
-        if (Objects.equals(udpMessageSender.getServerSocketChannel(), serverSocketChannel)) {
+        final var channel = ((SocketChannel) key.channel()).getLocalAddress();
+        var port = ((InetSocketAddress) channel).getPort();
+
+        if (udpMessageSender.getPort() == port) {
             final var attachment = new ChannelAttachment<T, UDPMessage>(session, new ArrayDeque<>(),
                     new OrdinaryBytesAccumulator());
             key.attach(attachment);
 
             final var udpSender = new QueueInserter<>(attachment.messageQueue, key);
             session.getMessageDispatcher().connectUDPSender(udpSender);
-        } else if (Objects.equals(tcpMessageSender.getServerSocketChannel(), serverSocketChannel)) {
+
+            return tokenRes;
+        } else if (tcpMessageSender.getPort() == port) {
             final var attachment = new ChannelAttachment<T, TCPMessage>(session, new ArrayDeque<>(),
                     new OrdinaryBytesAccumulator());
+
             key.attach(attachment);
 
             final var tcpSender = new QueueInserter<>(attachment.messageQueue, key);
             session.getMessageDispatcher().connectTCPSender(tcpSender);
+
+            return tokenRes;
+        } else {
+            throw new IllegalStateException("Port doesn't correspond to a tcp or udp socket");
         }
     }
 
@@ -334,12 +362,9 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
         if (msg instanceof Message.EncryptedMessage encryptedMsg) {
             final var realType = (ChannelAttachment<T, Message.EncryptedMessage>) attachment;
-            logger.info("IASAS %s".formatted(msg.getClass().getSimpleName()));
 
             switch (encryptedMsg) {
                 case final PortInfoRequest portInfoReq -> {
-
-                    logger.info("dddddd");
                     final var sslSender = new QueueInserter<Message.EncryptedMessage>(
                             realType.messageQueue(), key);
 

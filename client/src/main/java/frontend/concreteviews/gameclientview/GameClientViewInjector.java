@@ -4,6 +4,7 @@ package frontend.concreteviews.gameclientview;
 import com.badlogic.gdx.Game;
 
 import network.client.ClientSideSocketWrapper;
+import network.messages.defaultmessage.ConcreteObjectDecoder;
 import viewmodel.AbstractTextureManager;
 import viewmodel.AbstractView;
 import viewmodel.AbstractViewManager;
@@ -21,6 +22,7 @@ public class GameClientViewInjector {
 
     public AbstractView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
         return new GameClientView(game, textureManager,
-                new GameClientViewEventListener(viewManager, clientSideSocketWrapper));
+                new GameClientViewEventListener(viewManager, clientSideSocketWrapper,
+                        new ConcreteObjectDecoder()));
     }
 }

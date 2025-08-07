@@ -59,7 +59,7 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
                     final int button) {
-                // TODO: remove dependency on network module
+                playButton.fire(new GameClientViewEvents.CreateRoomEvent(""));
                 return true;
             }
         });
