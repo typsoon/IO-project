@@ -95,9 +95,6 @@ public class AutoMessagesGenerator {
             if (mappedVal.size() == DYNAMIC_SIZE) {
                 initialDynamicSizeVal += CodegenConfig.STRING_SIZE_VALUE_SIZE;
 
-                // calculateDynamicSizeBlockBuilder.addStatement("$N += $N.length()",
-                // answerVarName, field.name());
-
                 calculateDynamicSizeBlockBuilder.addStatement("$N += $N.length()",
                         answerVarName, field.name());
             }

@@ -312,6 +312,7 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
         assert tokenRes.get().whatWasRead() == WhatWasRead.TOKEN;
 
         final var userTokenVal = tokenRes.get().byteBuf().getInt();
+        tokenRes.get().byteBuf().flip();
 
         final UserId userId = authenticationService.getUser(userTokenVal);
         if (userId == null) {
@@ -332,7 +333,7 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
         if (udpMessageSender.getPort() == port) {
             final var attachment = new ChannelAttachment<T, UDPMessage>(session, new ArrayDeque<>(),
-                    new OrdinaryBytesAccumulator());
+                    bytesAcc);
             key.attach(attachment);
 
             final var udpSender = new QueueInserter<>(attachment.messageQueue, key);
@@ -341,7 +342,7 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
             return tokenRes;
         } else if (tcpMessageSender.getPort() == port) {
             final var attachment = new ChannelAttachment<T, TCPMessage>(session, new ArrayDeque<>(),
-                    new OrdinaryBytesAccumulator());
+                    bytesAcc);
 
             key.attach(attachment);
 

@@ -10,7 +10,7 @@ public class GameClientViewEvents {
             return name;
         }
 
-        public CreateRoomEvent(String name) {
+        public CreateRoomEvent(final String name) {
             this.name = name;
         }
     }

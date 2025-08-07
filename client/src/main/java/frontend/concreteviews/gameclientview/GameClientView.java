@@ -54,12 +54,14 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
 
         stage.addListener(this.gameClientViewEventListener);
 
-        final Button playButton = textureManager.getTextButton("Play");
+        final var roomNameField = textureManager.getTextField("Room name");
+
+        final Button playButton = textureManager.getTextButton("Create room");
         playButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
                     final int button) {
-                playButton.fire(new GameClientViewEvents.CreateRoomEvent(""));
+                playButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
                 return true;
             }
         });
@@ -72,6 +74,8 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
         });
 
         final Table table = textureManager.getTable();
+        table.add(roomNameField);
+        table.getCell(roomNameField).spaceBottom(40).width(300);
         table.row();
         table.add(playButton);
         table.getCell(playButton).spaceBottom(40);

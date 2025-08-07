@@ -22,6 +22,6 @@ public class ClientData implements SessionConcract {
     }
 
     public void handleMessage(Message message) {
-        Logger.getGlobal().info("Received message %s".formatted(message));
+        Logger.getGlobal().info("Received message %s with payload %s".formatted(message, message.getSendable()));
     }
 }
