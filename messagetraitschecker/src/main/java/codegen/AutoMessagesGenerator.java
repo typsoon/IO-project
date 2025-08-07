@@ -1,6 +1,10 @@
 package codegen;
 
 import static codegen.CodegenConfig.DYNAMIC_SIZE;
+import static codegen.CodegenConfig.MESSAGE_SIZE_TYPE;
+import static codegen.CodegenConfig.answerVarName;
+import static codegen.CodegenConfig.getDynamicSizeMethodName;
+import static codegen.CodegenConfig.staticSizeFieldName;
 import static codegen.CodegenConfig.typeToTypeData;
 import static com.palantir.javapoet.TypeName.BYTE;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -73,11 +77,47 @@ public class AutoMessagesGenerator {
         return methodBuilder.build();
     }
 
+    private MethodSpec getGetDynamicSize(Iterable<FieldSpec> fieldSpecs) {
+        var retType = MESSAGE_SIZE_TYPE;
+
+        var methodBuilder = MethodSpec.methodBuilder(CodegenConfig.getDynamicSizeMethodName)
+                .addModifiers(PRIVATE)
+                .addModifiers(FINAL)
+                .returns(retType);
+
+        int initialDynamicSizeVal = 0;
+
+        var calculateDynamicSizeBlockBuilder = CodeBlock.builder();
+
+        for (FieldSpec field : fieldSpecs) {
+            var mappedVal = typeToTypeData.get(field.type());
+
+            if (mappedVal.size() == DYNAMIC_SIZE) {
+                initialDynamicSizeVal += CodegenConfig.STRING_SIZE_VALUE_SIZE;
+
+                // calculateDynamicSizeBlockBuilder.addStatement("$N += $N.length()",
+                // answerVarName, field.name());
+
+                calculateDynamicSizeBlockBuilder.addStatement("$N += $N.length()",
+                        answerVarName, field.name());
+            }
+        }
+
+        methodBuilder.addStatement("$T $N = $L", retType, answerVarName, initialDynamicSizeVal)
+                .addCode(calculateDynamicSizeBlockBuilder.build())
+                .addStatement("return $N", answerVarName);
+
+        return methodBuilder.build();
+    }
+
     private MethodSpec getEncodeAndWrite(Iterable<FieldSpec> fieldSpecs, String consumerQualifiedName) {
         var consumerParName = CodegenConfig.consumerParName;
         var consumerSpec = ParameterSpec.builder(ClassName.bestGuess(consumerQualifiedName), consumerParName)
                 .build();
         var byteTypeNameData = typeToTypeData.get(BYTE);
+
+        var calculateSizeCodeBlock = CodeBlock.of("($T)($N + $N())", MESSAGE_SIZE_TYPE, staticSizeFieldName,
+                getDynamicSizeMethodName);
 
         var methodBuilder = MethodSpec.methodBuilder(CodegenConfig.encodeAndWriteMethodName)
                 .addModifiers(PUBLIC)
@@ -85,7 +125,7 @@ public class AutoMessagesGenerator {
                 .addAnnotation(Override.class)
                 .addParameter(consumerSpec)
                 .addStatement("$N.$L", consumerParName,
-                        CodeBlock.of(byteTypeNameData.consumerMethod(), CodegenConfig.staticSizeFieldName))
+                        CodeBlock.of(byteTypeNameData.consumerMethod(), calculateSizeCodeBlock))
                 .addStatement("$N.$L", consumerParName,
                         CodeBlock.of(byteTypeNameData.consumerMethod(), CodegenConfig.idFieldName));
 
@@ -125,10 +165,11 @@ public class AutoMessagesGenerator {
         var fieldSpecs = GenericTypeUtils.getFieldSpecs(templateArgTypeMirror, processingEnv);
         var constructor = getConstructor(fieldSpecs);
         var encodeAndWrite = getEncodeAndWrite(fieldSpecs, consumerProducer.consumerQualifiedName());
+        var getDynamicSize = getGetDynamicSize(fieldSpecs);
 
         var staticSize = getStaticSize(fieldSpecs);
 
-        var staticSizeField = FieldSpec.builder(Byte.class, CodegenConfig.staticSizeFieldName, PRIVATE, STATIC, FINAL)
+        var staticSizeField = FieldSpec.builder(BYTE, CodegenConfig.staticSizeFieldName, PRIVATE, STATIC, FINAL)
                 .initializer(CodeBlock.of("$L", staticSize)).build();
 
         var getSendable = getGetSendable(fieldSpecs, templateArgTypeMirror);
@@ -147,6 +188,7 @@ public class AutoMessagesGenerator {
                 .addField(staticSizeField)
                 .addFields(fieldSpecs)
                 .addMethod(constructor)
+                .addMethod(getDynamicSize)
                 .addMethod(produceMethod)
                 .addMethod(produceFromRecordMethod)
                 .addMethod(encodeAndWrite)
