@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import viewmodel.AbstractTextureManager;
 import viewmodel.AbstractView;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -54,18 +55,6 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
 
         stage.addListener(this.gameClientViewEventListener);
 
-        final var roomNameField = textureManager.getTextField("Room name");
-
-        final Button playButton = textureManager.getTextButton("Create room");
-        playButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                    final int button) {
-                playButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
-                return true;
-            }
-        });
-
         final Button exitButton = textureManager.getTextButton("Exit");
         exitButton.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
@@ -73,16 +62,73 @@ public class GameClientView extends ScreenAdapter implements AbstractView {
             }
         });
 
-        final Table table = textureManager.getTable();
-        table.add(roomNameField);
-        table.getCell(roomNameField).spaceBottom(40).width(300);
-        table.row();
-        table.add(playButton);
-        table.getCell(playButton).spaceBottom(40);
-        table.row();
-        table.add(exitButton);
+        var roomActionsTable = getRoomActionsTable();
+        var matchmakingActionsTable = getMatchmakingActionsTable();
 
-        stage.addActor(table);
+        var mainTable = textureManager.getTable();
+        mainTable.add(matchmakingActionsTable).expandX();
+        mainTable.add(roomActionsTable).spaceBottom(40).expandX();
+        mainTable.row();
+        mainTable.add(exitButton).colspan(2);
+
+        stage.addActor(mainTable);
+    }
+
+    private final Actor getRoomActionsTable() {
+        final var roomNameField = textureManager.getTextField("Room name");
+
+        final Button createRoomButton = textureManager.getTextButton("Create room");
+        createRoomButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                    final int button) {
+                createRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
+                return true;
+            }
+        });
+
+        final Button joinRoomButton = textureManager.getTextButton("Browse rooms");
+        joinRoomButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                    final int button) {
+                joinRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
+                return true;
+            }
+        });
+
+        // final Table roomActionsTable = textureManager.getTable();
+        final Table answer = new Table();
+        answer.add(roomNameField);
+        answer.getCell(roomNameField).spaceBottom(40).width(300);
+        answer.row();
+        answer.add(createRoomButton);
+        answer.getCell(createRoomButton).spaceBottom(40);
+        answer.row();
+        answer.add(joinRoomButton);
+        answer.getCell(joinRoomButton).spaceBottom(40);
+
+        return answer;
+    }
+
+    private final Actor getMatchmakingActionsTable() {
+        final Button findGameButton = textureManager.getTextButton("Find game");
+        findGameButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                    final int button) {
+                // playButton.fire(new
+                // GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
+                return true;
+            }
+        });
+
+        // final Table roomActionsTable = textureManager.getTable();
+        final Table answer = new Table();
+        answer.add(findGameButton).expandY();
+        answer.getCell(findGameButton).spaceBottom(40);
+
+        return answer;
     }
 
     @Override
