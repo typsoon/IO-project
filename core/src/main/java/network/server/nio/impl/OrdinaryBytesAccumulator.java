@@ -18,11 +18,12 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
     private final Logger logger = Logger.getGlobal();
     private State state = State.TOKEN_NOT_READ;
 
-    private void createBuffer(ReadableByteChannel in) throws IOException {
+    // true if a buffer was created
+    private boolean createBuffer(ReadableByteChannel in) throws IOException {
         if (State.TOKEN_NOT_READ.equals(state)) {
             currBuffer = Optional.of(ByteBuffer.allocate(MessagesConfig.tokenSize));
             logger.finest("Allocated buffer for token: buffer capacity: %s".formatted(currBuffer.get().capacity()));
-            return;
+            return true;
         }
 
         ByteBuffer msgSizeBuf = ByteBuffer.allocate(Byte.BYTES);
@@ -32,17 +33,28 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
             // TODO: Connection has ended
             throw new IllegalStateException("Connection has ended");
         }
+        if (readRes == 0) {
+            return false;
+        }
+
         msgSizeBuf.flip();
+        logger.finer(
+                "limit %d position %d remaining %d capacity %d".formatted(msgSizeBuf.limit(), msgSizeBuf.position(),
+                        msgSizeBuf.remaining(), msgSizeBuf.capacity()));
         var msgSize = msgSizeBuf.get();
         logger.finest("Message size: %s".formatted(msgSize));
 
         currBuffer = Optional.of(ByteBuffer.allocate(msgSize));
+
+        return true;
     }
 
     public Optional<ReadData> accumulateBytes(ReadableByteChannel byteIn)
             throws IOException {
         if (currBuffer.isEmpty()) {
-            createBuffer(byteIn);
+            if (!createBuffer(byteIn)) {
+                return Optional.empty();
+            }
         }
 
         var actBufferUnwrapped = currBuffer.get();
