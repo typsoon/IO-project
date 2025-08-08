@@ -1,8 +1,8 @@
 package frontend.concreteviews.gameclientview;
 
-import utility.CyclePerformer;
+import utility.ICyclePerformer;
 
-public class GameClientViewMessageHandler implements CyclePerformer {
+public class GameClientViewMessageHandler implements ICyclePerformer {
 
     @Override
     public void performCycle() {

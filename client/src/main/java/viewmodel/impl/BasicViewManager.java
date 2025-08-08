@@ -1,10 +1,11 @@
 package viewmodel.impl;
 
 import network.client.ClientSideSocketWrapper;
-import viewmodel.TextureManager;
-import viewmodel.ViewManager;
+import viewmodel.ITextureManager;
+import viewmodel.IViewFactory;
+import viewmodel.IViewManager;
 
-public class BasicViewManager implements ViewManager {
+public class BasicViewManager implements IViewManager {
     private final BasicViewFactory viewFactory;
     private final BasicTextureManager textureManager;
 
@@ -24,7 +25,12 @@ public class BasicViewManager implements ViewManager {
     }
 
     @Override
-    public TextureManager getTextureManager() {
+    public IViewFactory getViewFactory() {
+        return viewFactory;
+    }
+
+    @Override
+    public ITextureManager getTextureManager() {
         return textureManager;
     }
 

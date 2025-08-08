@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
-public interface TextureManager {
+public interface ITextureManager {
     Button getTextButton(String name);
 
     Table getTable();

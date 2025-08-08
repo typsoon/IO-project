@@ -1,6 +1,6 @@
 package viewmodel;
 
-public interface View {
+public interface IView {
     void display();
 
     void hide();

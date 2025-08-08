@@ -3,7 +3,7 @@ package network.server.nio;
 import java.io.IOException;
 import java.util.Collection;
 
-import database.DatabaseManager.UserId;
+import database.IDatabaseManager.UserId;
 import network.MessageDispatcher;
 import network.messages.Message;
 

@@ -3,8 +3,8 @@ package frontend;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
-import utility.CyclePerformer;
-import viewmodel.View;
+import utility.ICyclePerformer;
+import viewmodel.IView;
 
 // NOTE: this class has 2 responsiblities but one (providing display()) is
 // really simple so I decided not to split it
@@ -15,14 +15,14 @@ import viewmodel.View;
  * a cycle of a contained cycle performer before calling render on a contained
  * {@link Screen}
  */
-public class ViewWithEventLoop implements Screen, View {
+public class ViewWithEventLoop implements Screen, IView {
     // public class ViewWithEventLoop extends ScreenAdapter implements AbstractView
     // {
     private final Game game;
-    private final CyclePerformer cyclePerformer;
+    private final ICyclePerformer cyclePerformer;
     private final Screen delegate;
 
-    public ViewWithEventLoop(CyclePerformer cyclePerformer, Screen delegate, Game game) {
+    public ViewWithEventLoop(ICyclePerformer cyclePerformer, Screen delegate, Game game) {
         this.game = game;
         this.delegate = delegate;
         this.cyclePerformer = cyclePerformer;

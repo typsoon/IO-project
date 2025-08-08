@@ -3,7 +3,7 @@ package viewmodel.impl;
 import com.badlogic.gdx.Game;
 
 import network.client.ClientSideSocketWrapperFactory;
-import viewmodel.ViewManager;
+import viewmodel.IViewManager;
 
 public class BasicViewManagerInjector {
     private final Game game;
@@ -12,7 +12,7 @@ public class BasicViewManagerInjector {
         this.game = game;
     }
 
-    public ViewManager getViewManager() {
+    public IViewManager getViewManager() {
         final var textureManager = new BasicTextureManager();
         final var clientSideSocketWrapperFactory = new ClientSideSocketWrapperFactory();
         final BasicViewFactory viewFactory = new BasicViewFactory(game, clientSideSocketWrapperFactory);

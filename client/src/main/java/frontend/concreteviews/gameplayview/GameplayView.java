@@ -13,8 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import frontend.gamestate.ReadOnlyDisplayableGameState;
-import viewmodel.TextureManager;
+import frontend.gamestate.IReadOnlyDisplayableGameState;
+import viewmodel.ITextureManager;
 
 //NOTE: this class doesn't implement View, nor does it contain GameplayManager. We use ViewWithEventLoop class to wrap
 //GameplayView and provide required functionalities
@@ -31,13 +31,13 @@ public class GameplayView extends ScreenAdapter {
     private final Game game;
     private final Collection<EventListener> gameplayViewEventListeners;
     private final Collection<InputProcessor> gameplayViewInputProcessors;
-    private final TextureManager textureManager;
-    private final ReadOnlyDisplayableGameState gameState;
+    private final ITextureManager textureManager;
+    private final IReadOnlyDisplayableGameState gameState;
     private Stage stage;
 
     GameplayView(Game game, Collection<EventListener> gameplayViewEventListeners,
-            Collection<InputProcessor> gameplayViewInputProcessors,
-            TextureManager textureManager, ReadOnlyDisplayableGameState gameState) {
+                 Collection<InputProcessor> gameplayViewInputProcessors,
+                 ITextureManager textureManager, IReadOnlyDisplayableGameState gameState) {
         this.game = game;
         this.gameplayViewEventListeners = gameplayViewEventListeners;
         this.gameplayViewInputProcessors = gameplayViewInputProcessors;

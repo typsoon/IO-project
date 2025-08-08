@@ -12,16 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import viewmodel.TextureManager;
+import viewmodel.ITextureManager;
 
 public class GameClientView extends ScreenAdapter {
     private final Game game;
-    private final TextureManager textureManager;
+    private final ITextureManager textureManager;
     private final GameClientViewEventListener gameClientViewEventListener;
 
     private Stage stage;
 
-    public GameClientView(final Game game, TextureManager textureManager,
+    public GameClientView(final Game game, ITextureManager textureManager,
             GameClientViewEventListener gameClientViewEventListener2) {
         this.game = game;
         this.textureManager = textureManager;

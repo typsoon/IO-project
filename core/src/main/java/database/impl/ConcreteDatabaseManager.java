@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import database.DatabaseManager;
+import database.IDatabaseManager;
 import network.utils.Credentials;
 
-public class ConcreteDatabaseManager implements DatabaseManager {
+public class ConcreteDatabaseManager implements IDatabaseManager {
     private final Set<Integer> possibleIdVals;
 
     private static record FullUserData(UserId userId, Credentials credentials) {

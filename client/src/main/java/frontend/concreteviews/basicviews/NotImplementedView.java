@@ -10,17 +10,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import viewmodel.View;
-import viewmodel.ViewManager;
+import viewmodel.IView;
+import viewmodel.IViewManager;
 
 //placeholder for views that don't exist yet, goal is to remove all usages
-public class NotImplementedView extends ScreenAdapter implements View {
+public class NotImplementedView extends ScreenAdapter implements IView {
     private final Game game;
-    private final ViewManager viewManager;
+    private final IViewManager viewManager;
 
     private Stage stage;
 
-    public NotImplementedView(final Game game, final ViewManager viewManager) {
+    public NotImplementedView(final Game game, final IViewManager viewManager) {
         this.game = game;
         this.viewManager = viewManager;
     }
