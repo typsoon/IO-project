@@ -1,14 +1,13 @@
 package user;
 
-import lobby.IMatchmakingEngine;
-import room.Room;
-import room.RoomConfig;
-import room.IRoomManager;
-import room.RoomMember;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import room.IRoomManager;
+import room.Room;
+import room.RoomConfig;
+import room.RoomMember;
 
 public class RoomHandle implements IUserRoomHandle, IRoomUserHandle {
     private final IRoomManager roomManager;

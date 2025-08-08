@@ -113,6 +113,8 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                             Logger.getGlobal().severe("Illegal state");
                         }
                     }
+
+                    super.handleMessage(received);
                 }
                 case PortInfoResponse.Payload portInfo -> {
                     try {
@@ -129,7 +131,6 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                                 .submit(new SendableReceiver(tcpSocketWrapper));
 
                         Logger.getGlobal().info("Received port info");
-                        return;
                     } catch (Exception e) {
                         Logger.getGlobal().severe("An error occured after trying to establish tcp and udp connection");
                         throw new IllegalStateException(e);
@@ -139,8 +140,6 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                 default -> {
                 }
             }
-
-            super.handleMessage(received);
         }
     }
 
