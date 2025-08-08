@@ -34,7 +34,7 @@ public class GameEngine implements IGameEngine {
                 }
             }
         }
-        geometryModule.Cycle();
+        geometryModule.cycle();
 
         for (Map.Entry<IPlayerGamesStateSender, Player> entry : players.entrySet()) {
             IPlayerGamesStateSender sender = entry.getKey();

@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
+import frontend.concreteviews.gameclientview.GameClientView;
+import frontend.concreteviews.loginview.LoginView;
 
 import frontend.gamestate.IReadOnlyDisplayableGameState;
 import viewmodel.ITextureManager;
@@ -24,7 +26,7 @@ import viewmodel.ITextureManager;
  * {@link EventListener}s and {@link InputProcessor}s to
  * handle user input
  * 
- * @see LoginScreen
+ * @see LoginView
  * @see GameClientView
  */
 public class GameplayView extends ScreenAdapter {

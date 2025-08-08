@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.ViewWithEventLoop;
 import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactory;
+import frontend.gamestate.DisplayableGameState;
 import frontend.gamestate.IDisplayableGameState;
 import network.client.ClientSideSocketWrapper;
 import viewmodel.ITextureManager;
@@ -19,9 +20,7 @@ public class GameplayViewFactory {
             Game game, IViewManager viewManager, ClientSideSocketWrapper clientSideSocketWrapper,
             ITextureManager textureManager) {
 
-        // TODO: create with factory, injector or constructor (idk if DI will be needed,
-        // it depends on the contents of DisplayableGameState)
-        IDisplayableGameState gameState = null;
+        IDisplayableGameState gameState = new DisplayableGameState();
 
         var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager, clientSideSocketWrapper,
                 gameState);

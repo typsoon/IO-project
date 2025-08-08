@@ -1,8 +1,8 @@
 package game.session;
 
-import network.messages.Sendable;
+import game.utility.ISendable;
 
 @FunctionalInterface
 public interface ISendableReceiver {
-    void sendSendable(Sendable sendable);
+    void sendSendable(ISendable sendable);
 }

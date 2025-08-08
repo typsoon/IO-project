@@ -2,6 +2,7 @@ package network.messages;
 
 import java.io.IOException;
 
+import game.utility.ISendable;
 import messagetraits.MessageTraits;
 import network.messages.utils.DataConsumer;
 
@@ -9,7 +10,7 @@ import network.messages.utils.DataConsumer;
 public sealed abstract class Message permits Message.EncryptedMessage, Message.UDPMessage, Message.TCPMessage {
     public abstract void encodeAndWrite(DataConsumer out) throws IOException;
 
-    public abstract Sendable getSendable();
+    public abstract ISendable getSendable();
 
     public static non-sealed abstract class EncryptedMessage extends Message {
     }

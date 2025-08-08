@@ -105,7 +105,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
     }
 
     @Override
-    public void Cycle() {
+    public void cycle() {
         world.step(timeStep, velocityIterations, positionIterations);
     }
 

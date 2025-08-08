@@ -16,7 +16,7 @@ import network.messages.Message;
 import network.messages.Message.EncryptedMessage;
 import network.messages.Message.TCPMessage;
 import network.messages.Message.UDPMessage;
-import network.messages.Sendable;
+import game.utility.ISendable;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import network.messages.loginstate.LogInResponse;
 import network.messages.loginstate.PortInfoRequest;
@@ -39,7 +39,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     // and new ArrayBlockingQueue(1000)
     // this is important from security reasons
 
-    private final Collection<Sendable> pendingSendables = new ArrayList<>();
+    private final Collection<ISendable> pendingSendables = new ArrayList<>();
     private final ExecutorService executorService = new ForkJoinPool();
     private TokenHolder tokenHolder = new TokenHolder();
     private final ObjectToMessageDecoder objectToMessageDecoder;
@@ -144,8 +144,8 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     }
 
     @Override
-    public Collection<Sendable> getSendables() throws IOException {
-        var answer = new ArrayList<Sendable>();
+    public Collection<ISendable> getSendables() throws IOException {
+        var answer = new ArrayList<ISendable>();
 
         synchronized (pendingSendables) {
             answer.addAll(pendingSendables);

@@ -15,6 +15,5 @@ public interface IGeometryModule {
         return getEntitiesInArea(rectangle.begin(), rectangle.end());
     }
 
-    // TODO: change to fit naming convention
-    void Cycle();
+    void cycle();
 }

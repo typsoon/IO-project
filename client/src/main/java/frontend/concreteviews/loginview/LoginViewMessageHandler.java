@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import network.client.ClientSideSocketWrapper;
-import network.messages.Sendable;
+import game.utility.ISendable;
 import network.messages.loginstate.LogInResponse;
 import utility.ICyclePerformer;
 import viewmodel.IViewManager;
@@ -24,7 +24,7 @@ public class LoginViewMessageHandler implements ICyclePerformer {
         try {
             var sendables = clientSideSocketWrapper.getSendables();
 
-            for (Sendable sendable : sendables) {
+            for (ISendable sendable : sendables) {
                 switch (sendable) {
                     case LogInResponse.Payload logInResponse -> {
 

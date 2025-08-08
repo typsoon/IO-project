@@ -1,6 +1,6 @@
 package network.utils;
 
-import network.messages.Sendable;
+import game.utility.ISendable;
 
-public record Credentials(String login, String password) implements Sendable {
+public record Credentials(String login, String password) implements ISendable {
 }

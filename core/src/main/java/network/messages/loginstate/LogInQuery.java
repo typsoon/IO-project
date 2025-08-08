@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 
 import network.messages.Message.EncryptedMessage;
 import network.messages.MessagesConfig;
-import network.messages.Sendable;
+import game.utility.ISendable;
 import network.messages.utils.DataConsumer;
 import network.utils.Credentials;
 
@@ -36,7 +36,7 @@ public final class LogInQuery extends EncryptedMessage {
     }
 
     @Override
-    public Sendable getSendable() {
+    public ISendable getSendable() {
         return new Credentials(login, password);
     }
 

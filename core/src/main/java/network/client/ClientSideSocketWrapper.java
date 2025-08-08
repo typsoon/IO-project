@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.util.Collection;
 
 import network.messages.Message;
-import network.messages.Sendable;
+import game.utility.ISendable;
 import network.utils.ConnectionData;
 
 public interface ClientSideSocketWrapper extends AutoCloseable {
-    public static enum EstablishConnectionResult {
+    enum EstablishConnectionResult {
         ESTABLISHED, FAILED
     }
 
-    public static class ConnectionEndedException extends Exception {
+    class ConnectionEndedException extends Exception {
     }
 
-    Collection<Sendable> getSendables() throws IOException;
+    Collection<ISendable> getSendables() throws IOException;
 
     /**
      * Will throw IllegalStateException if the sender was not yet connected

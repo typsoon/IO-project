@@ -45,7 +45,7 @@ public class ClientGameManager implements IClientGameManager {
 
     @Override
     public void performCycle() {
-        geometryModule.Cycle();
+        geometryModule.cycle();
         for (Map.Entry<Integer, Integer> entry : timeSinceLastUpdate.entrySet()) {
             int entityId = entry.getKey();
             int time = entry.getValue() + 1;
