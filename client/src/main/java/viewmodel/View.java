@@ -1,6 +1,6 @@
 package viewmodel;
 
-public interface AbstractView {
+public interface View {
     void display();
 
     void hide();

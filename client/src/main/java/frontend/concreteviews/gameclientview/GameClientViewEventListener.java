@@ -11,15 +11,15 @@ import network.client.ClientSideSocketWrapper;
 import network.client.ClientSideSocketWrapper.ConnectionEndedException;
 import network.messages.configurationstate.CreateRoomRequest;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
-import viewmodel.AbstractViewManager;
+import viewmodel.ViewManager;
 
 public class GameClientViewEventListener implements EventListener {
-    private final AbstractViewManager viewManager;
+    private final ViewManager viewManager;
     private final ClientSideSocketWrapper clientSideSocketWrapper;
     private final ObjectToMessageDecoder objectToMessageDecoder;
     private final Logger logger = Logger.getGlobal();
 
-    public GameClientViewEventListener(AbstractViewManager viewManager,
+    public GameClientViewEventListener(ViewManager viewManager,
             ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
         this.viewManager = viewManager;
         this.clientSideSocketWrapper = clientSideSocketWrapper;

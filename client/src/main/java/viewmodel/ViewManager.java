@@ -3,7 +3,7 @@ package viewmodel;
 import network.client.ClientSideSocketWrapper;
 
 //don't use outside package concerning frontend. use AbstractViewManager instead
-public interface AbstractViewManager extends AbstractGeneralViewManager {
+public interface ViewManager extends AbstractGeneralViewManager {
     void start();
 
     void moveToPlayView();
@@ -14,7 +14,7 @@ public interface AbstractViewManager extends AbstractGeneralViewManager {
 
     void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper);
 
-    AbstractViewFactory getViewFactory();
+    ViewFactory getViewFactory();
 
-    AbstractTextureManager getTextureManager();
+    TextureManager getTextureManager();
 }

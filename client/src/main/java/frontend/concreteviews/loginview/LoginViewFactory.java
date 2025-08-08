@@ -4,8 +4,8 @@ import com.badlogic.gdx.Game;
 
 import frontend.ViewWithEventLoop;
 import network.client.ClientSideSocketWrapper;
-import viewmodel.AbstractViewManager;
-import viewmodel.AbstractView;
+import viewmodel.ViewManager;
+import viewmodel.View;
 
 public class LoginViewFactory {
     private final Game game;
@@ -14,7 +14,7 @@ public class LoginViewFactory {
         this.game = game;
     }
 
-    public AbstractView getLoginView(AbstractViewManager viewManager, ClientSideSocketWrapper clientSideSocketWrapper) {
+    public View getLoginView(ViewManager viewManager, ClientSideSocketWrapper clientSideSocketWrapper) {
         var loginView = new LoginView(
                 game,
                 new LoginViewEventListener(viewManager, clientSideSocketWrapper),

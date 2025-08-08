@@ -4,10 +4,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
 import utility.CyclePerformer;
-import viewmodel.AbstractView;
+import viewmodel.View;
 
-//NOTE: this class has 2 responsiblities but one (providing display()) is really simple so I decided not to split it
-public class ViewWithEventLoop implements Screen, AbstractView {
+// NOTE: this class has 2 responsiblities but one (providing display()) is
+// really simple so I decided not to split it
+
+/**
+ * This class delegates all method calls to contained {@link Screen}, the only
+ * difference is {@code render} method - it performs
+ * a cycle of a contained cycle performer before calling render on a contained
+ * {@link Screen}
+ */
+public class ViewWithEventLoop implements Screen, View {
     // public class ViewWithEventLoop extends ScreenAdapter implements AbstractView
     // {
     private final Game game;

@@ -15,21 +15,21 @@ import network.utils.Credentials;
 
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import viewmodel.AbstractViewManager;
-import viewmodel.AbstractTextureManager;
-import viewmodel.AbstractView;
+import viewmodel.ViewManager;
+import viewmodel.TextureManager;
+import viewmodel.View;
 
-public class LoginView extends ScreenAdapter implements AbstractView {
+public class LoginView extends ScreenAdapter implements View {
     private final Game game;
     private final EventListener loginViewEventListener;
-    private final AbstractTextureManager textureManager;
-    private final AbstractViewManager viewManager;
+    private final TextureManager textureManager;
+    private final ViewManager viewManager;
 
     private Stage stage;
 
     // TODO view: refactor to make similar to MainMenuView
     public LoginView(final Game game, final EventListener loginViewEventListener,
-            AbstractTextureManager textureManager, AbstractViewManager viewManager) {
+            TextureManager textureManager, ViewManager viewManager) {
         this.game = game;
         this.textureManager = textureManager;
         this.loginViewEventListener = loginViewEventListener;

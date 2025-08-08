@@ -17,17 +17,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import network.client.ClientSideSocketWrapperFactory;
 import network.utils.ConnectionData;
-import viewmodel.AbstractView;
-import viewmodel.AbstractViewManager;
+import viewmodel.View;
+import viewmodel.ViewManager;
 
-public class PlayView extends ScreenAdapter implements AbstractView {
+public class PlayView extends ScreenAdapter implements View {
     private final Game game;
-    private final AbstractViewManager viewManager;
+    private final ViewManager viewManager;
     private final ClientSideSocketWrapperFactory ClientSideSocketWrapperFactory;
 
     private Stage stage;
 
-    public PlayView(final Game game, final AbstractViewManager viewManager,
+    public PlayView(final Game game, final ViewManager viewManager,
             ClientSideSocketWrapperFactory clientSideSocketWrapperFactory) {
         this.game = game;
         this.viewManager = viewManager;

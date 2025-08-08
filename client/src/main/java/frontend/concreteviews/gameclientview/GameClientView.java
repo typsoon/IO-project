@@ -3,36 +3,29 @@ package frontend.concreteviews.gameclientview;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.ScreenUtils;
-
-import viewmodel.AbstractTextureManager;
-import viewmodel.AbstractView;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.ScreenUtils;
 
-public class GameClientView extends ScreenAdapter implements AbstractView {
+import viewmodel.TextureManager;
+
+public class GameClientView extends ScreenAdapter {
     private final Game game;
-    private final AbstractTextureManager textureManager;
+    private final TextureManager textureManager;
     private final GameClientViewEventListener gameClientViewEventListener;
 
     private Stage stage;
 
-    public GameClientView(final Game game, AbstractTextureManager textureManager,
+    public GameClientView(final Game game, TextureManager textureManager,
             GameClientViewEventListener gameClientViewEventListener2) {
         this.game = game;
         this.textureManager = textureManager;
         this.gameClientViewEventListener = gameClientViewEventListener2;
-    }
-
-    @Override
-    public void display() {
-        game.setScreen(this);
     }
 
     @Override

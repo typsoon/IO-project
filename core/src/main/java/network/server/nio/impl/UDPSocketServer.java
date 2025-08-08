@@ -3,19 +3,19 @@ package network.server.nio.impl;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.AbstractSelectableChannel;
 
 import network.server.nio.NIOSocketServer;
 
 public class UDPSocketServer implements NIOSocketServer {
-    private final ServerSocketChannel serverSocket;
+    private final DatagramChannel serverSocket;
     private final int port;
 
     public UDPSocketServer(int port) throws IOException {
         this.port = port;
-        this.serverSocket = ServerSocketChannel.open();
+        this.serverSocket = DatagramChannel.open();
         this.serverSocket.bind(new InetSocketAddress(port));
         this.serverSocket.configureBlocking(false);
     }

@@ -1,22 +1,27 @@
-package frontend.concreteviews.loginview;
+package frontend.concreteviews.gameplayview.gameplaymanager;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import frontend.gamestate.updater.GameStateUpdater;
 import network.client.ClientSideSocketWrapper;
 import network.messages.Sendable;
-import network.messages.loginstate.LogInResponse;
 import utility.CyclePerformer;
 import viewmodel.ViewManager;
 
-public class LoginViewMessageHandler implements CyclePerformer {
-    private final Logger logger = Logger.getGlobal();
-    private final ClientSideSocketWrapper clientSideSocketWrapper;
+/**
+ * This class receives {@link Sendable}s from the server
+ */
+public class GameplayManager implements CyclePerformer {
     private final ViewManager viewManager;
+    private final ClientSideSocketWrapper clientSideSocketWrapper;
+    private final GameStateUpdater gameStateUpdater;
 
-    public LoginViewMessageHandler(ClientSideSocketWrapper clientSideSocketWrapper, ViewManager viewManager) {
+    public GameplayManager(ClientSideSocketWrapper clientSideSocketWrapper, ViewManager viewManager,
+            GameStateUpdater gameStateUpdater) {
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.viewManager = viewManager;
+        this.gameStateUpdater = gameStateUpdater;
     }
 
     @Override
@@ -26,26 +31,15 @@ public class LoginViewMessageHandler implements CyclePerformer {
 
             for (Sendable sendable : sendables) {
                 switch (sendable) {
-                    case LogInResponse.Payload logInResponse -> {
-
-                        var response_payload = logInResponse.authToken();
-
-                        if (response_payload.isEmpty()) {
-                            logger.info("Invalid credentials");
-                            return;
-                        }
-
-                        logger.info("Succesfully logged in");
-                        viewManager.moveToGameClient(clientSideSocketWrapper);
-                    }
 
                     default -> throw new IllegalStateException(
                             "We should not have received this message right now %s".formatted(sendable));
                 }
             }
         } catch (IOException e) {
+
             Logger.getGlobal().severe("IOException caught!");
         }
-    }
 
+    }
 }

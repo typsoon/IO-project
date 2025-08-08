@@ -2,10 +2,15 @@ package network.server.nio.impl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.channels.spi.AbstractSelectableChannel;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,11 +49,12 @@ import network.server.nio.NIOConnectionManager.SessionConcract;
 import network.server.nio.NIOSSLSocketServer;
 import network.server.nio.NIOSocketServer;
 import network.socketwrappers.SocketTypes.SocketSender;
+import network.messages.utils.DataConsumer;
 
 public class ConcreteNIOConnectionManager<T extends SessionConcract> implements NIOConnectionManager<T> {
 
     private static record ChannelAttachment<T, U extends Message>(T clientSession, Queue<U> messageQueue,
-            BytesAccumulator bytesAccumulator) {
+            BytesAccumulator bytesAccumulator, DataConsumer consumer) {
     }
 
     private static class QueueInserter<T extends Message> implements SocketSender<T> {
@@ -101,7 +107,8 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
         this.sessionCreator = sessionCreator;
         this.authenticationService = authenticationService;
 
-        registerSocketServer(udpServer);
+        // TODO: this is odd - think about this
+        // registerSocketServer(udpServer);
         registerSocketServer(tcpServer);
         registerSocketServer(sslServer);
     }
@@ -137,7 +144,7 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
                 // TODO: think about refactoring these continues out
                 if (key.isReadable()) {
-                    final var clientSocketChannel = (SocketChannel) key.channel();
+                    final var clientSocketChannel = (ReadableByteChannel) key.channel();
 
                     // if user was not authorized yet
                     if (unauthorizedChannels.containsKey(clientSocketChannel)) {
@@ -181,8 +188,8 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
                                     logger.warning(
                                             String.format(
-                                                    "Received message from unauthorized user %s - invalid token %d",
-                                                    clientSocketChannel.getRemoteAddress(), tokenVal));
+                                                    "Received message from unauthorized user - invalid token %d",
+                                                    tokenVal));
 
                                     // TODO: disconnect user
                                     throw new IllegalStateException("Message from unauthorized user");
@@ -210,7 +217,7 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
         return answer;
     }
 
-    private final void handleUnauthorizedUser(final SocketChannel clientSocketChannel, final SelectionKey key)
+    private final void handleUnauthorizedUser(final ReadableByteChannel clientSocketChannel, final SelectionKey key)
             throws IOException {
         // logger.info("I am here 3");
         // FIXME: think this through - this was a bad idea
@@ -242,8 +249,11 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
             final Token token = authenticationService.tryAuth(id, logInQuery.password());
 
             final var session = sessionCreator.getSession(id);
+
+            final var consumer = new ByteChannelDataReceiver((WritableByteChannel) key.channel());
             final var attachment = new ChannelAttachment<T, EncryptedMessage>(session,
-                    new ArrayDeque<>(), bytesAccumulator);
+                    new ArrayDeque<>(), bytesAccumulator, consumer);
+
             final var sslSender = new QueueInserter<EncryptedMessage>(
                     attachment.messageQueue(), key);
             key.attach(attachment);
@@ -270,9 +280,10 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
     private final void sendMessagesToUser(final SelectionKey key) throws IOException {
         synchronized (key) {
-            final var msgQueue = ((ChannelAttachment<T, ?>) key.attachment()).messageQueue;
+            final var attachment = (ChannelAttachment<T, ?>) key.attachment();
+            final var msgQueue = attachment.messageQueue;
+            final var consumer = attachment.consumer;
 
-            final var consumer = new ByteChannelDataReceiver((SocketChannel) key.channel());
             for (final Message msg : msgQueue) {
                 msg.encodeAndWrite(consumer);
                 logger.info(() -> "Sending message %s with payload %s".formatted(msg.getClass().getSimpleName(),
@@ -285,25 +296,38 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
     }
 
     private final void handleIncomingConnection(final SelectionKey key) throws IOException {
-        final var serverSocketChannel = (ServerSocketChannel) key.channel();
-        final var clientSocketChannel = serverSocketChannel.accept();
+        switch (key.channel()) {
+            case ServerSocketChannel serverSocketChannel -> {
+                final var clientSocketChannel = serverSocketChannel.accept();
 
-        // New user connected to SSLServer - mark them as unauthorized
-        if (Objects.equals(serverSocketChannel, sslMessageSender.getServerSocketChannel())) {
-            unauthorizedChannels.put(clientSocketChannel, new SSLSocketBytesAccumulator());
+                // New user connected to SSLServer - mark them as unauthorized
+                if (Objects.equals(serverSocketChannel, sslMessageSender.getServerSocketChannel())) {
+                    unauthorizedChannels.put(clientSocketChannel, new SSLSocketBytesAccumulator());
 
-            sslMessageSender.acceptClient(clientSocketChannel);
+                    sslMessageSender.acceptClient(clientSocketChannel);
+                }
+
+                clientSocketChannel.configureBlocking(false);
+                clientSocketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+
+                logger.info(String.format("Client connected %s", clientSocketChannel.getRemoteAddress()));
+            }
+
+            case DatagramChannel datagramChannel -> {
+
+            }
+
+            default -> {
+                logger.severe("An error occured");
+                throw new IllegalStateException("Illegal type of selected channel %s".formatted(key.channel()));
+            }
         }
 
-        clientSocketChannel.configureBlocking(false);
-        clientSocketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-
-        logger.info(String.format("Client connected %s", clientSocketChannel.getRemoteAddress()));
     }
 
     // Returns true if the connection was succesfully set up
     private final Optional<ReadData> readTokenAndSetUpTCPorUDPconnection(final BytesAccumulator bytesAcc,
-            final SocketChannel clientSocketChannel, final SelectionKey key) throws IOException {
+            final ReadableByteChannel clientSocketChannel, final SelectionKey key) throws IOException {
         final var tokenRes = bytesAcc.accumulateBytes(clientSocketChannel);
 
         if (tokenRes.isEmpty()) {
@@ -316,9 +340,10 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
         final UserId userId = authenticationService.getUser(userTokenVal);
         if (userId == null) {
-            logger.warning(
-                    String.format("Received message from unauthorized user - invalid token %s",
-                            clientSocketChannel.getRemoteAddress()));
+            // logger.warning(
+
+            String.format("Received message from unauthorized user - invalid token %d",
+                    userTokenVal);
             return Optional.empty();
         }
 
@@ -328,12 +353,22 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
         final var session = sessionCreator.getSession(userId);
 
-        final var channel = ((SocketChannel) key.channel()).getLocalAddress();
-        var port = ((InetSocketAddress) channel).getPort();
+        // TODO: this is ugly, change this
+        final var channel = (AbstractSelectableChannel) key.channel();
+        SocketAddress socketAdress = switch (channel) {
+            case SocketChannel socketChannel -> socketChannel.getLocalAddress();
+            case DatagramChannel datagramChannel -> datagramChannel.getLocalAddress();
+            default -> {
+                throw new IllegalStateException(
+                        "Illegal channel type %s".formatted(channel.getClass().getSimpleName()));
+            }
+        };
+        final var port = ((InetSocketAddress) socketAdress).getPort();
 
         if (udpMessageSender.getPort() == port) {
+            var consumer = (DataConsumer) null;
             final var attachment = new ChannelAttachment<T, UDPMessage>(session, new ArrayDeque<>(),
-                    bytesAcc);
+                    bytesAcc, consumer);
             key.attach(attachment);
 
             final var udpSender = new QueueInserter<>(attachment.messageQueue, key);
@@ -341,8 +376,9 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
             return tokenRes;
         } else if (tcpMessageSender.getPort() == port) {
+            final var consumer = new ByteChannelDataReceiver((WritableByteChannel) key.channel());
             final var attachment = new ChannelAttachment<T, TCPMessage>(session, new ArrayDeque<>(),
-                    bytesAcc);
+                    bytesAcc, consumer);
 
             key.attach(attachment);
 
@@ -361,7 +397,7 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
         final var msg = messageDecoder
                 .decodeMessage(new ByteBufferDataProducer(msgByteBuffer.byteBuf()));
 
-        if (msg instanceof Message.EncryptedMessage encryptedMsg) {
+        if (msg instanceof final Message.EncryptedMessage encryptedMsg) {
             final var realType = (ChannelAttachment<T, Message.EncryptedMessage>) attachment;
 
             switch (encryptedMsg) {
@@ -388,5 +424,4 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
     public void registerSocketServer(final NIOSocketServer nioSocketServer) throws IOException {
         nioSocketServer.getServerSocketChannel().register(selector, SelectionKey.OP_ACCEPT);
     }
-
 }

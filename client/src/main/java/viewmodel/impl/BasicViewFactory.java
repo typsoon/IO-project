@@ -8,14 +8,14 @@ import frontend.concreteviews.gameclientview.GameClientViewInjector;
 import frontend.concreteviews.loginview.LoginViewFactory;
 import network.client.ClientSideSocketWrapper;
 import network.client.ClientSideSocketWrapperFactory;
-import viewmodel.AbstractView;
-import viewmodel.AbstractViewFactory;
-import viewmodel.AbstractViewManager;
+import viewmodel.View;
+import viewmodel.ViewFactory;
+import viewmodel.ViewManager;
 
-public class BasicViewFactory implements AbstractViewFactory {
+public class BasicViewFactory implements ViewFactory {
     private final Game game;
     private final ClientSideSocketWrapperFactory clientSideSocketWrapperFactory;
-    AbstractViewManager viewManager;
+    ViewManager viewManager;
 
     BasicViewFactory(Game game, ClientSideSocketWrapperFactory clientSideSocketWrapperFactory) {
         this.game = game;
@@ -23,30 +23,30 @@ public class BasicViewFactory implements AbstractViewFactory {
     }
 
     // TODO hardcoded: remove hardcoded strings, use config instead
-    void setViewManager(AbstractViewManager viewManager) {
+    void setViewManager(ViewManager viewManager) {
         this.viewManager = viewManager;
     }
 
-    public AbstractView getMainMenuView() {
+    public View getMainMenuView() {
         return new MainMenuView(game, viewManager);
     }
 
-    public AbstractView getSettingsView() {
+    public View getSettingsView() {
         return new NotImplementedView(game, viewManager);
     }
 
-    public AbstractView getPlayView() {
+    public View getPlayView() {
         return new PlayView(game, viewManager, clientSideSocketWrapperFactory);
     }
 
     @Override
-    public AbstractView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
+    public View getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
         return new GameClientViewInjector(game, viewManager.getTextureManager(), viewManager)
                 .getGameClientView(clientSideSocketWrapper);
     }
 
     @Override
-    public AbstractView getLoginView(ClientSideSocketWrapper clientSideSocketWrapper) {
+    public View getLoginView(ClientSideSocketWrapper clientSideSocketWrapper) {
         return new LoginViewFactory(game).getLoginView(viewManager, clientSideSocketWrapper);
     }
 }

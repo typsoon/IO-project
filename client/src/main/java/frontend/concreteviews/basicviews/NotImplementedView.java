@@ -10,18 +10,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import viewmodel.AbstractView;
-import viewmodel.AbstractViewManager;
+import viewmodel.View;
+import viewmodel.ViewManager;
 
-            //placeholder for views that don't exist yet, goal is to remove all usages
-public class NotImplementedView extends ScreenAdapter implements AbstractView {
+//placeholder for views that don't exist yet, goal is to remove all usages
+public class NotImplementedView extends ScreenAdapter implements View {
     private final Game game;
-    private final AbstractViewManager viewManager;
+    private final ViewManager viewManager;
 
     private Stage stage;
 
-
-    public NotImplementedView(final Game game, final AbstractViewManager viewManager) {
+    public NotImplementedView(final Game game, final ViewManager viewManager) {
         this.game = game;
         this.viewManager = viewManager;
     }
@@ -30,7 +29,6 @@ public class NotImplementedView extends ScreenAdapter implements AbstractView {
     public void display() {
         game.setScreen(this);
     }
-
 
     @Override
     public void render(final float delta) {
@@ -46,7 +44,7 @@ public class NotImplementedView extends ScreenAdapter implements AbstractView {
 
     @Override
     public void show() {
-        //TODO hardcoded: remove hardcoded strings, use config instead
+        // TODO hardcoded: remove hardcoded strings, use config instead
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
