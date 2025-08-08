@@ -25,11 +25,6 @@ public class BasicViewManager implements IViewManager {
     }
 
     @Override
-    public IViewFactory getViewFactory() {
-        return viewFactory;
-    }
-
-    @Override
     public ITextureManager getTextureManager() {
         return textureManager;
     }
