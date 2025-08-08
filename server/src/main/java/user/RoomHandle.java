@@ -109,19 +109,21 @@ public class RoomHandle implements IUserRoomHandle, IRoomUserHandle {
         roomManager.deleteRoom(room);
     }
 
-    @Override
-    public void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine) {
-        if (room == null || room.getAdmin() != this.user)
-            return;
-        if (room.members().size() > lobbySize)
-            return;
-        matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(), lobbySize);
-    }
-
-    @Override
-    public void createGame(IMatchmakingEngine matchmakingEngine) {
-        if (room == null || room.getAdmin() != this.user)
-            return;
-        matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(), room.members().size());
-    }
+    // @Override
+    // public void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine) {
+    // if (room == null || room.getAdmin() != this.user)
+    // return;
+    // if (room.members().size() > lobbySize)
+    // return;
+    // matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(),
+    // lobbySize);
+    // }
+    //
+    // @Override
+    // public void createGame(IMatchmakingEngine matchmakingEngine) {
+    // if (room == null || room.getAdmin() != this.user)
+    // return;
+    // matchmakingEngine.findGame(room.members().stream().map(RoomMember::user).toList(),
+    // room.members().size());
+    // }
 }
