@@ -2,7 +2,6 @@ package viewmodel.impl;
 
 import network.client.ClientSideSocketWrapper;
 import viewmodel.TextureManager;
-import viewmodel.ViewFactory;
 import viewmodel.ViewManager;
 
 public class BasicViewManager implements ViewManager {
@@ -20,12 +19,8 @@ public class BasicViewManager implements ViewManager {
 
     @Override
     public void start() {
-        viewFactory.getMainMenuView().display();
-    }
-
-    @Override
-    public ViewFactory getViewFactory() {
-        return viewFactory;
+        var activeView = viewFactory.getMainMenuView();
+        activeView.display();
     }
 
     @Override

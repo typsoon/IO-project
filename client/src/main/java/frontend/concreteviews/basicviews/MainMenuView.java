@@ -51,14 +51,14 @@ public class MainMenuView extends ScreenAdapter implements View {
         final Button buttonPlay = viewManager.getTextureManager().getTextButton("Play");
         buttonPlay.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                viewManager.getViewFactory().getPlayView().display();
+                viewManager.moveToPlayView();
             }
         });
 
         final Button buttonSettings = viewManager.getTextureManager().getTextButton("Settings");
         buttonSettings.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                viewManager.getViewFactory().getSettingsView().display();
+                viewManager.moveToPlayView();
             }
         });
 

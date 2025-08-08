@@ -45,6 +45,7 @@ public class ViewWithEventLoop implements Screen, View {
     }
 
     public void hide() {
+        // game.getScreen().pause();
         delegate.hide();
     }
 

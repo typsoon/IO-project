@@ -1,13 +1,12 @@
 package user;
 
-import lobby.IMatchmakingEngine;
-import room.Room;
-import room.RoomConfig;
-import room.RoomMember;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import room.Room;
+import room.RoomConfig;
+import room.RoomMember;
 
 // Interface that allows communication from the user to the room
 public interface IUserRoomHandle {
@@ -31,7 +30,7 @@ public interface IUserRoomHandle {
 
     void deleteRoom();
 
-    void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine);
+    // void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine);
 
-    void createGame(IMatchmakingEngine matchmakingEngine);
+    // void createGame(IMatchmakingEngine matchmakingEngine);
 }

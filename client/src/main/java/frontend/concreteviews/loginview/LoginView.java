@@ -81,7 +81,7 @@ public class LoginView extends ScreenAdapter implements View {
         final Button buttonBack = textureManager.getTextButton("Back");
         buttonBack.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                viewManager.getViewFactory().getPlayView().display();
+                viewManager.moveToPlayView();
             }
         });
 

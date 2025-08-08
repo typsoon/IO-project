@@ -14,7 +14,7 @@ public interface ViewManager extends AbstractGeneralViewManager {
 
     void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper);
 
-    ViewFactory getViewFactory();
+    // ViewFactory getViewFactory();
 
     TextureManager getTextureManager();
 }
