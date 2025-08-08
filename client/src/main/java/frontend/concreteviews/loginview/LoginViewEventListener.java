@@ -9,15 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import network.client.ClientSideSocketWrapper;
 import network.client.ClientSideSocketWrapper.ConnectionEndedException;
 import network.messages.loginstate.LogInQuery;
-import viewmodel.ViewManager;
+import viewmodel.IViewManager;
 
 public class LoginViewEventListener implements EventListener {
-    private final ViewManager viewManager;
+    private final IViewManager viewManager;
     // TODO: maybe remove logging from here
     private final ClientSideSocketWrapper clientSideSocketWrapper;
     private final Logger logger = Logger.getLogger("LoginViewInputAdapter");
 
-    public LoginViewEventListener(final ViewManager viewManager,
+    public LoginViewEventListener(final IViewManager viewManager,
             ClientSideSocketWrapper clientSideSocketWrapper) {
         this.viewManager = viewManager;
         this.clientSideSocketWrapper = clientSideSocketWrapper;

@@ -1,6 +1,6 @@
 package utility;
 
 @FunctionalInterface
-public interface CyclePerformer {
+public interface ICyclePerformer {
     void performCycle();
 }

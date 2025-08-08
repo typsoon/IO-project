@@ -1,6 +1,6 @@
 package network.server;
 
-import database.DatabaseManager.UserId;
+import database.IDatabaseManager.UserId;
 
 public interface AuthenticationService {
 

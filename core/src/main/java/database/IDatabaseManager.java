@@ -1,6 +1,6 @@
 package database;
 
-public interface DatabaseManager {
+public interface IDatabaseManager {
     public static record UserId(int id) {
     }
 

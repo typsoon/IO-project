@@ -6,15 +6,15 @@ import java.util.logging.Logger;
 import network.client.ClientSideSocketWrapper;
 import network.messages.Sendable;
 import network.messages.loginstate.LogInResponse;
-import utility.CyclePerformer;
-import viewmodel.ViewManager;
+import utility.ICyclePerformer;
+import viewmodel.IViewManager;
 
-public class LoginViewMessageHandler implements CyclePerformer {
+public class LoginViewMessageHandler implements ICyclePerformer {
     private final Logger logger = Logger.getGlobal();
     private final ClientSideSocketWrapper clientSideSocketWrapper;
-    private final ViewManager viewManager;
+    private final IViewManager viewManager;
 
-    public LoginViewMessageHandler(ClientSideSocketWrapper clientSideSocketWrapper, ViewManager viewManager) {
+    public LoginViewMessageHandler(ClientSideSocketWrapper clientSideSocketWrapper, IViewManager viewManager) {
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.viewManager = viewManager;
     }

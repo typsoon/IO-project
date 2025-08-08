@@ -24,8 +24,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import database.DatabaseManager;
-import database.DatabaseManager.UserId;
+import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
 import network.messages.Message;
 import network.messages.Message.EncryptedMessage;
 import network.messages.Message.TCPMessage;
@@ -89,10 +89,10 @@ public class ConcreteNIOConnectionManager<T extends SessionConcract> implements 
 
     private final Map<SocketChannel, SSLSocketBytesAccumulator> unauthorizedChannels = new HashMap<>();
 
-    private final DatabaseManager databaseManager;
+    private final IDatabaseManager databaseManager;
     private final AuthenticationService authenticationService;
 
-    public ConcreteNIOConnectionManager(final DatabaseManager databaseManager,
+    public ConcreteNIOConnectionManager(final IDatabaseManager databaseManager,
             final AuthenticationService authenticationService, final NIOSocketServer udpServer,
             final NIOSocketServer tcpServer,
             final NIOSSLSocketServer sslServer, final SessionCreator<T> sessionCreator,

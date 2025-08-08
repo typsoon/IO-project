@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 
-import viewmodel.TextureManager;
+import viewmodel.ITextureManager;
 
-public class BasicTextureManager implements TextureManager {
+public class BasicTextureManager implements ITextureManager {
     private final TextureAtlas atlas;
     private final Skin skin;
     private final FreeTypeFontGenerator generator;

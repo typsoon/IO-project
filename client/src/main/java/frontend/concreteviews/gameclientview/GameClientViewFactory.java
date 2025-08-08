@@ -6,25 +6,25 @@ import com.badlogic.gdx.Game;
 import frontend.ViewWithEventLoop;
 import network.client.ClientSideSocketWrapper;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
-import utility.CyclePerformer;
-import viewmodel.TextureManager;
-import viewmodel.View;
-import viewmodel.ViewManager;
+import utility.ICyclePerformer;
+import viewmodel.ITextureManager;
+import viewmodel.IView;
+import viewmodel.IViewManager;
 
-public class GameClientViewInjector {
+public class GameClientViewFactory {
     private final Game game;
-    private final ViewManager viewManager;
-    private final TextureManager textureManager;
+    private final IViewManager viewManager;
+    private final ITextureManager textureManager;
 
-    public GameClientViewInjector(Game game, TextureManager textureManager, ViewManager viewManager) {
+    public GameClientViewFactory(Game game, ITextureManager textureManager, IViewManager viewManager) {
         this.game = game;
         this.viewManager = viewManager;
         this.textureManager = textureManager;
     }
 
-    public View getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
+    public IView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
         // TODO: make this one
-        CyclePerformer cyclePerformer = () -> {
+        ICyclePerformer cyclePerformer = () -> {
         };
         var objectDecoder = new ConcreteObjectDecoder();
         var eventListener = new GameClientViewEventListener(viewManager, clientSideSocketWrapper, objectDecoder);

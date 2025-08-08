@@ -9,16 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import viewmodel.ViewManager;
-import viewmodel.View;
+import viewmodel.IViewManager;
+import viewmodel.IView;
 
-public class MainMenuView extends ScreenAdapter implements View {
+public class MainMenuView extends ScreenAdapter implements IView {
     private final Game game;
-    private final ViewManager viewManager;
+    private final IViewManager viewManager;
 
     private Stage stage;
 
-    public MainMenuView(final Game game, final ViewManager viewManager) {
+    public MainMenuView(final Game game, final IViewManager viewManager) {
         this.game = game;
         this.viewManager = viewManager;
     }

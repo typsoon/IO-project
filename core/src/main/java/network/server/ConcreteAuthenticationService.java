@@ -6,17 +6,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
-import database.DatabaseManager;
-import database.DatabaseManager.UserId;
+import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
 import java.util.Set;
 
 public class ConcreteAuthenticationService implements AuthenticationService {
-    private final DatabaseManager databaseManager;
+    private final IDatabaseManager databaseManager;
     private final Set<Integer> possibleTokenVals = new HashSet<>();
     private final Map<Integer, UserId> tokenToUserMap = new HashMap<>();
     private final Map<UserId, Set<Token>> userToTokenMap = new HashMap<>();
 
-    public ConcreteAuthenticationService(DatabaseManager databaseManager) {
+    public ConcreteAuthenticationService(IDatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
 
         var randomNum = new SecureRandom().ints().iterator();

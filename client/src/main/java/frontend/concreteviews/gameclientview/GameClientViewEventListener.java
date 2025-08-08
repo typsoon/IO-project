@@ -11,16 +11,16 @@ import network.client.ClientSideSocketWrapper;
 import network.client.ClientSideSocketWrapper.ConnectionEndedException;
 import network.messages.configurationstate.CreateRoomRequest;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
-import viewmodel.ViewManager;
+import viewmodel.IViewManager;
 
 public class GameClientViewEventListener implements EventListener {
-    private final ViewManager viewManager;
+    private final IViewManager viewManager;
     private final ClientSideSocketWrapper clientSideSocketWrapper;
     private final ObjectToMessageDecoder objectToMessageDecoder;
     private final Logger logger = Logger.getGlobal();
 
-    public GameClientViewEventListener(ViewManager viewManager,
-            ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
+    public GameClientViewEventListener(IViewManager viewManager,
+                                       ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
         this.viewManager = viewManager;
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.objectToMessageDecoder = objectToMessageDecoder;

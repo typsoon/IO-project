@@ -3,22 +3,22 @@ package frontend.concreteviews.gameplayview.gameplaymanager;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import frontend.gamestate.updater.GameStateUpdater;
+import frontend.gamestate.updater.IGameStateUpdater;
 import network.client.ClientSideSocketWrapper;
 import network.messages.Sendable;
-import utility.CyclePerformer;
-import viewmodel.ViewManager;
+import utility.ICyclePerformer;
+import viewmodel.IViewManager;
 
 /**
  * This class receives {@link Sendable}s from the server
  */
-public class GameplayManager implements CyclePerformer {
-    private final ViewManager viewManager;
+public class GameplayManager implements ICyclePerformer {
+    private final IViewManager viewManager;
     private final ClientSideSocketWrapper clientSideSocketWrapper;
-    private final GameStateUpdater gameStateUpdater;
+    private final IGameStateUpdater gameStateUpdater;
 
-    public GameplayManager(ClientSideSocketWrapper clientSideSocketWrapper, ViewManager viewManager,
-            GameStateUpdater gameStateUpdater) {
+    public GameplayManager(ClientSideSocketWrapper clientSideSocketWrapper, IViewManager viewManager,
+            IGameStateUpdater gameStateUpdater) {
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.viewManager = viewManager;
         this.gameStateUpdater = gameStateUpdater;
