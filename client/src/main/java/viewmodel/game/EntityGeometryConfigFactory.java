@@ -6,6 +6,9 @@ import game.engine.entities.GeometryConfigID;
 
 import java.util.Map;
 
+
+//TODO this is a temporary solution, should be replaced with a proper configuration system
+//and used both in client and server game engine
 public class EntityGeometryConfigFactory {
     public static EntityGeometryConfig createEntityGeometryConfig(GeometryConfigID geometryConfigID) {
         EntityGeometryConfig config = geometryConfigMap.get(geometryConfigID);

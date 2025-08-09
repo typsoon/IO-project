@@ -5,7 +5,15 @@ import game.engine.modules.IManagingGeometryRepresentation;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
-public record EntityView(IManagingGeometryRepresentation geometryRepresentation, Sprite sprite) implements IEntityView {
+public class RenderableObject {
+    IManagingGeometryRepresentation geometryRepresentation;
+    Sprite sprite; //TODO think about using more generic type
+
+    RenderableObject(IManagingGeometryRepresentation geometryRepresentation, Sprite sprite) {
+        this.geometryRepresentation = geometryRepresentation;
+        this.sprite = sprite;
+    }
+
     public void setPosition(Point2F position) {
         geometryRepresentation.setPosition(position);
         sprite.setPosition(position.x(), position.y());
