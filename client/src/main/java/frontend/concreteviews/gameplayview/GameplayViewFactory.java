@@ -6,7 +6,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import frontend.ViewWithEventLoop;
+import frontend.ViewWithTimedEventLoop;
 import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactory;
 import frontend.gamestate.DisplayableGameState;
 import frontend.gamestate.IDisplayableGameState;
@@ -33,6 +33,6 @@ public class GameplayViewFactory {
 
         var view = new GameplayView(game, listeners, processors, textureManager, gameState);
 
-        return new ViewWithEventLoop(gameplayManager, view, game);
+        return new ViewWithTimedEventLoop(gameplayManager, view, game);
     }
 }

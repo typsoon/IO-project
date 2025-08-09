@@ -5,7 +5,6 @@ import java.util.Map;
 
 import database.IDatabaseManager.UserId;
 import game.engine.PlayerConfig;
-import game.engine.entities.GeometryConfigID;
 import network.impl.ConcreteMessageDispatcher;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.server.nio.NIOConnectionManager.SessionCreator;
@@ -20,7 +19,7 @@ public class ClientDataManager implements SessionCreator<ClientData> {
     public ClientData getSession(UserId address) {
         var dispatcher = new ConcreteMessageDispatcher();
         // TODO: get this from a server
-        var playerConfig = new PlayerConfig(GeometryConfigID.HUMAN);
+        PlayerConfig playerConfig = null;
 
         // TODO: put factory calls here
         IUserRoomHandle userRoomHandle = null;
