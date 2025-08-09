@@ -1,17 +1,19 @@
 package lobby;
 
+import java.util.Collection;
+import java.util.logging.Logger;
+
 import game.actions.IAction;
-import game.session.IActionReceiver;
-import game.session.IPlayerConnector;
-import game.session.PlayerData;
 import game.session.GameSessionManager;
+import game.session.IActionReceiver;
+import game.session.ISubscribablePlayerConnector;
+import game.session.PlayerData;
+import game.utility.ISendable;
 import user.IUserHandle;
 
-import java.util.Collection;
-
-public class Lobby implements IActionReceiver {
+public class Lobby {
     private final Collection<IUserHandle> members;
-    private final GameSessionManager sessionManager;
+    private final IActionReceiver sessionManager;
 
     public Lobby(Collection<IUserHandle> members, GameSessionManager sessionManager) {
         this.members = members;
@@ -24,8 +26,12 @@ public class Lobby implements IActionReceiver {
                 .toList();
     }
 
-    @Override
-    public void sendAction(IPlayerConnector player, IAction action) {
-        sessionManager.sendAction(player, action);
+    void processSendable(ISubscribablePlayerConnector playerConnector, ISendable sendable) {
+        switch (sendable) {
+            case IAction action -> sessionManager.sendAction(playerConnector, action);
+            default -> {
+                Logger.getGlobal().info("Unexpected sendable %s".formatted(sendable));
+            }
+        }
     }
 }

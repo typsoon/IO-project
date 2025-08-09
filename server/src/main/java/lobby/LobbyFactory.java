@@ -1,10 +1,10 @@
 package lobby;
 
+import java.util.Collection;
+
 import game.session.GameSessionFactory;
 import game.session.GameSessionManager;
 import user.IUserHandle;
-
-import java.util.Collection;
 
 public class LobbyFactory {
     public static Lobby createLobby(Collection<IUserHandle> players) {
@@ -13,7 +13,8 @@ public class LobbyFactory {
                 .toList());
         Lobby lobby = new Lobby(players, sessionManager);
         for (IUserHandle player : players) {
-            player.gameStarted(lobby);
+            var subscribableConnector = player.getPlayerData().connector();
+            player.gameStarted(sendable -> lobby.processSendable(subscribableConnector, sendable));
         }
 
         return lobby;

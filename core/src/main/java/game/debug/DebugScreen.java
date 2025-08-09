@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import game.actions.IAction;
 import game.gamestates.IGameState;
 import game.session.IActionReceiver;
-import game.session.IPlayerConnector;
+import game.session.ISubscribablePlayerConnector;
 import game.session.PlayerData;
 import game.actions.Direction;
 import game.actions.PlayerMove;
@@ -45,8 +45,7 @@ public class DebugScreen implements Screen {
         PlayerConfig config = new PlayerConfig(GeometryConfigID.HUMAN);
         List<PlayerData> players = List.of(
                 new PlayerData(player1Connector, config),
-                new PlayerData(player2Connector, config)
-        );
+                new PlayerData(player2Connector, config));
         sessionManager = GameSessionFactory.createGameSessionManager(players);
         sessionManager.startGameLoop();
 
@@ -64,14 +63,12 @@ public class DebugScreen implements Screen {
 
     private void handleInput() {
         Direction dir1 = getDirection(
-                Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D
-        );
+                Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D);
         if (dir1 != null) {
-            player1Connector.sendAction( new PlayerMove(dir1));
+            player1Connector.sendAction(new PlayerMove(dir1));
         }
         Direction dir2 = getDirection(
-                Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT
-        );
+                Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT);
         if (dir2 != null) {
             player2Connector.sendAction(new PlayerMove(dir2));
         }
@@ -82,22 +79,45 @@ public class DebugScreen implements Screen {
         boolean d = Gdx.input.isKeyPressed(down);
         boolean l = Gdx.input.isKeyPressed(left);
         boolean r = Gdx.input.isKeyPressed(right);
-        if (u && r) return Direction.NE;
-        if (u && l) return Direction.NW;
-        if (d && r) return Direction.SE;
-        if (d && l) return Direction.SW;
-        if (u) return Direction.N;
-        if (d) return Direction.S;
-        if (l) return Direction.W;
-        if (r) return Direction.E;
+        if (u && r)
+            return Direction.NE;
+        if (u && l)
+            return Direction.NW;
+        if (d && r)
+            return Direction.SE;
+        if (d && l)
+            return Direction.SW;
+        if (u)
+            return Direction.N;
+        if (d)
+            return Direction.S;
+        if (l)
+            return Direction.W;
+        if (r)
+            return Direction.E;
         return null;
     }
 
-    @Override public void resize(int width, int height) {}
-    @Override public void show() {}
-    @Override public void hide() {}
-    @Override public void pause() {}
-    @Override public void resume() {}
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
     @Override
     public void dispose() {
         debugRenderer.dispose();
@@ -109,22 +129,30 @@ public class DebugScreen implements Screen {
     }
 
     // Local connector for debug input
-    private static class LocalPlayerConnector implements IPlayerConnector {
+    private static class LocalPlayerConnector implements ISubscribablePlayerConnector {
         private IActionReceiver receiver;
+
         @Override
-        public void subscribe(IActionReceiver receiver) { this.receiver = receiver; }
+        public void subscribe(IActionReceiver receiver) {
+            this.receiver = receiver;
+        }
+
         @Override
-        public void unsubscribe(IActionReceiver receiver) { this.receiver = null; }
+        public void unsubscribe(IActionReceiver receiver) {
+            this.receiver = null;
+        }
+
         @Override
-        public void sendGameState(java.util.Collection<IGameState> gameStates) {
-//            for (game.gamestates.GameState gameState : gameStates) {
-//                // For debug, we can just print the game state or handle it as needed
-//                System.out.println("Game State: " + gameState);
-//            }
+        public void sendGameStates(java.util.Collection<IGameState> gameStates) {
+            // for (game.gamestates.GameState gameState : gameStates) {
+            // // For debug, we can just print the game state or handle it as needed
+            // System.out.println("Game State: " + gameState);
+            // }
         }
 
         public void sendAction(IAction action) {
-            if (receiver != null) receiver.sendAction(this, action);
+            if (receiver != null)
+                receiver.sendAction(this, action);
         }
     }
 }

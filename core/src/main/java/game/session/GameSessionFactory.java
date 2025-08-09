@@ -10,9 +10,10 @@ import java.util.Map;
 public class GameSessionFactory {
     public static GameSessionManager createGameSessionManager(Collection<PlayerData> players) {
         GameSessionManager gameSessionManager = new GameSessionManager(players);
-        Map<IPlayerConnector, IPlayerGamesStateSender> playerGameStateSenders = gameSessionManager.getPlayerGameStateSenders();
+        Map<ISubscribablePlayerConnector, IPlayerGamesStateSender> playerGameStateSenders = gameSessionManager
+                .getPlayerGameStateSenders();
         Collection<EnginePlayerData> enginePlayerData = players.stream()
-                .map(player -> new EnginePlayerData(playerGameStateSenders.get(player.connector()),player.config()))
+                .map(player -> new EnginePlayerData(playerGameStateSenders.get(player.connector()), player.config()))
                 .toList();
         IGameEngine gameEngine = GameEngineFactory.createGameEngine(enginePlayerData);
         gameSessionManager.SetupEngine(gameEngine);

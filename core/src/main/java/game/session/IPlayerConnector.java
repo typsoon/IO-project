@@ -1,13 +1,10 @@
 package game.session;
 
-import game.gamestates.IGameState;
-
 import java.util.Collection;
 
+import game.gamestates.IGameState;
+
+@FunctionalInterface
 public interface IPlayerConnector {
-    void subscribe(IActionReceiver receiver);
-
-    void unsubscribe(IActionReceiver receiver);
-
-    void sendGameState(Collection<IGameState> gameStates);
+    void sendGameStates(Collection<IGameState> gameStates);
 }

@@ -1,12 +1,12 @@
 package user;
 
-import game.session.IActionReceiver;
-import game.session.IPlayerConnector;
-import game.session.PlayerData;
 import game.engine.PlayerConfig;
+import game.session.IPlayerConnector;
+import game.session.ISendableConsumer;
+import game.session.PlayerData;
 
 public interface IUserHandle {
-    void gameStarted(IActionReceiver lobby);
+    void gameStarted(ISendableConsumer sendableConsumer);
 
     PlayerConfig getPlayerConfig();
 
