@@ -1,9 +1,12 @@
 package frontend.gamestate.processor;
 
+import frontend.gamestate.IDisplayableGameState;
 import game.engine.modules.IGeometryModule;
 import game.gamestates.EntityState;
 import game.gamestates.IGameState;
-import viewmodel.game.TimedRenderableObjectFactory;
+import game.gamestates.PlayerState;
+import viewmodel.game.RenderableObjectFactory;
+import viewmodel.game.RenderablePlayer;
 import viewmodel.game.TimedRenderableObject;
 
 import java.util.Collection;
@@ -16,14 +19,18 @@ public class GameStateProcessor implements IGameStateProcessor {
     private float accumulatedTime = 0f;
     private final float timeThreshold = 0.5f;
 
-    IGeometryModule geometryModule;
-    TimedRenderableObjectFactory renderableObjectFactory;
+    private final RenderablePlayer player;
 
+    IGeometryModule geometryModule;
+    RenderableObjectFactory renderableObjectFactory;
+    IDisplayableGameState displayableGameState;
     Map<Integer, TimedRenderableObject> entities = new HashMap<>();
 
-    GameStateProcessor(IGeometryModule geometryModule, TimedRenderableObjectFactory objectFactory) {
+    public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory, IDisplayableGameState displayableGameState, RenderablePlayer player) {
         this.geometryModule = geometryModule;
         this.renderableObjectFactory = objectFactory;
+        this.displayableGameState = displayableGameState;
+        this.player = player;
     }
 
     @Override
@@ -34,11 +41,18 @@ public class GameStateProcessor implements IGameStateProcessor {
             accumulatedTime -= TIME_STEP;
         }
         for (IGameState gameState : gameStates) {
-            if (gameState instanceof EntityState entityState) {
-                updateEntityState(entityState);
+            switch (gameState) {
+                case EntityState entityState -> updateEntityState(entityState);
+                case PlayerState playerState -> updatePlayerState(playerState);
+                default -> { }
             }
         }
         cleanupEntities(deltaTime);
+    }
+
+    private void updatePlayerState(PlayerState playerState) {
+        player.setPosition(playerState.position());
+        player.setVelocity(playerState.velocity());
     }
 
     private void updateEntityState(EntityState entityState) {
@@ -50,6 +64,7 @@ public class GameStateProcessor implements IGameStateProcessor {
         } else {
             renderableObject = renderableObjectFactory.createRenderableObject(entityState);
             entities.put(entityState.entityId(), renderableObject);
+            displayableGameState.AddSprite(renderableObject.GetSprite());
         }
         renderableObject.timeSinceUpdate = 0f;
     }
@@ -58,6 +73,7 @@ public class GameStateProcessor implements IGameStateProcessor {
             TimedRenderableObject renderableObject = entry.getValue();
             renderableObject.timeSinceUpdate += deltaTime;
             if (renderableObject.timeSinceUpdate >= timeThreshold) {
+                displayableGameState.RemoveSprite(renderableObject.GetSprite());
                 renderableObject.dispose();
                 return true;
             }

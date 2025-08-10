@@ -32,4 +32,8 @@ public class RenderableObject {
         geometryRepresentation.dispose();
         sprite.getTexture().dispose();
     }
+
+    public Sprite GetSprite() {
+        return sprite;
+    }
 }

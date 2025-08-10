@@ -43,7 +43,8 @@ public class Player implements IMovingEntity {
         return new PlayerState(
                 geometryConfigID,
                 movingGeometryRepresentation.getPosition(),
-                movingGeometryRepresentation.getVelocity()
+                movingGeometryRepresentation.getVelocity(),
+                spriteID
         );
     }
     public Rectangle2F getSightRange() {
