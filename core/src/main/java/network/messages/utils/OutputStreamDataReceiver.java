@@ -31,6 +31,11 @@ public class OutputStreamDataReceiver implements DataConsumer {
         out.write(str.getBytes(charset));
     }
 
+    @Override
+    public void putFloat(float val) throws IOException {
+        out.writeFloat(val);
+    }
+
 }
 
 /**

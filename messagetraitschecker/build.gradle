@@ -8,9 +8,3 @@ dependencies {
 
     implementation("com.palantir.javapoet:javapoet:$javapoetVersion")
 }
-
-// jar {
-//     manifest {
-//         attributes 'Automatic-Module-Name': 'uuu.sigma.processor'
-//     }
-// }

@@ -2,8 +2,9 @@ package game.utility;
 
 public record Point2F(
         float x,
-        float y
-) {
+        float y) {
+    public static final int BYTES = 2 * Float.BYTES;
+
     public Point2F add(Point2F other) {
         return new Point2F(this.x + other.x, this.y + other.y);
     }

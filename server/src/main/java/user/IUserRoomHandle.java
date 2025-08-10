@@ -29,8 +29,4 @@ public interface IUserRoomHandle {
     void kickUser(RoomMember user);
 
     void deleteRoom();
-
-    // void findGame(int lobbySize, IMatchmakingEngine matchmakingEngine);
-
-    // void createGame(IMatchmakingEngine matchmakingEngine);
 }

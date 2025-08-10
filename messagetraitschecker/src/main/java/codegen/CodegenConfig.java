@@ -5,6 +5,7 @@ import static com.palantir.javapoet.TypeName.BYTE;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.palantir.javapoet.ClassName;
 import com.palantir.javapoet.TypeName;
 
 public class CodegenConfig {
@@ -49,6 +50,12 @@ public class CodegenConfig {
         typeToTypeData.put(TypeName.INT, new TypeNameData("putInt($N)", "getInt()", Integer.BYTES));
         typeToTypeData.put(TypeName.get(String.class),
                 new TypeNameData("putString($N)", "getString()", DYNAMIC_SIZE));
+
+        typeToTypeData.put(ClassName.bestGuess("Point2F"),
+                new TypeNameData("putPoint2F($N)", "getPoint2F()", 2 * Float.BYTES));
+
+        typeToTypeData.put(ClassName.bestGuess("Vector2F"),
+                new TypeNameData("putVector2F($N)", "getVector2F()", 2 * Float.BYTES));
     }
 
 }

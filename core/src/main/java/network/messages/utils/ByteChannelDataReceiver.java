@@ -42,4 +42,12 @@ public class ByteChannelDataReceiver implements DataConsumer {
 
         out.write(byteBuf);
     }
+
+    @Override
+    public void putFloat(float val) throws IOException {
+        var buf = ByteBuffer.allocate(Float.BYTES)
+                .putFloat(val)
+                .flip();
+        out.write(buf);
+    }
 }

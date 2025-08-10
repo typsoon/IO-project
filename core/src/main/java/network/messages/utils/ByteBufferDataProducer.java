@@ -37,4 +37,9 @@ public class ByteBufferDataProducer implements DataProducer {
         return new String(strBytes, charset);
     }
 
+    @Override
+    public float getFloat() throws IOException {
+        return byteBuffer.getFloat();
+    }
+
 }

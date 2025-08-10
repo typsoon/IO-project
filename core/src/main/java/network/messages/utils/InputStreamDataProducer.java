@@ -32,6 +32,11 @@ public class InputStreamDataProducer implements DataProducer {
         in.readFully(strBytes);
         return new String(strBytes, charset);
     }
+
+    @Override
+    public float getFloat() throws IOException {
+        return in.readFloat();
+    }
 }
 
 /**

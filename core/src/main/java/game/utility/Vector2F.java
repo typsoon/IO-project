@@ -2,8 +2,10 @@ package game.utility;
 
 public record Vector2F(
         float x,
-        float y
-) {
+        float y) {
+
+    public static final int BYTES = 2 * Float.BYTES;
+
     public Vector2F add(Vector2F other) {
         return new Vector2F(this.x + other.x, this.y + other.y);
     }
@@ -22,7 +24,8 @@ public record Vector2F(
 
     public Vector2F normalize() {
         float len = length();
-        if (len == 0) return new Vector2F(0, 0);
+        if (len == 0)
+            return new Vector2F(0, 0);
         return new Vector2F(x / len, y / len);
     }
 }
