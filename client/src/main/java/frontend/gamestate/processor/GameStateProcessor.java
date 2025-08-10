@@ -53,15 +53,15 @@ public class GameStateProcessor implements IGameStateProcessor {
         }
         renderableObject.timeSinceUpdate = 0f;
     }
-    private void cleanupEntities(float deltaTime)
-    {
-        for (Map.Entry<Integer, TimedRenderableObject> entry : entities.entrySet()) {
+    private void cleanupEntities(float deltaTime) {
+        entities.entrySet().removeIf(entry -> {
             TimedRenderableObject renderableObject = entry.getValue();
             renderableObject.timeSinceUpdate += deltaTime;
             if (renderableObject.timeSinceUpdate >= timeThreshold) {
                 renderableObject.dispose();
-                entities.remove(entry.getKey());
+                return true;
             }
-        }
+            return false;
+        });
     }
 }
