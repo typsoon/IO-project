@@ -5,7 +5,7 @@ import game.session.IPlayerConnector;
 import game.session.ISendableConsumer;
 import game.session.PlayerData;
 
-public interface IUserHandle {
+public interface IMatchmakingUserHandle {
     void gameStarted(ISendableConsumer sendableConsumer);
 
     PlayerConfig getPlayerConfig();

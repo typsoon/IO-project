@@ -9,20 +9,20 @@ import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
 import game.session.PlayerData;
 import game.utility.ISendable;
-import user.IUserHandle;
+import user.IMatchmakingUserHandle;
 
 public class Lobby {
-    private final Collection<IUserHandle> members;
+    private final Collection<IMatchmakingUserHandle> members;
     private final IActionReceiver sessionManager;
 
-    public Lobby(Collection<IUserHandle> members, GameSessionManager sessionManager) {
+    public Lobby(Collection<IMatchmakingUserHandle> members, GameSessionManager sessionManager) {
         this.members = members;
         this.sessionManager = sessionManager;
     }
 
     public Collection<PlayerData> getPlayerData() {
         return members.stream()
-                .map(IUserHandle::getPlayerData)
+                .map(IMatchmakingUserHandle::getPlayerData)
                 .toList();
     }
 

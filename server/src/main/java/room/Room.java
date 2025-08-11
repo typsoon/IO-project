@@ -1,6 +1,7 @@
 package room;
 
-import user.IUserHandle;
+import user.IMatchmakingUserHandle;
+import user.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.Collection;
 public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomConfig) {
 
     public Room(RoomMember admin, RoomConfig roomConfig) {
-        this(new ArrayList<>(), new Admin(admin.user()), roomConfig);
+        this(new ArrayList<>(), new Admin(admin.userInfo()), roomConfig);
         this.members().add(admin);
     }
 
@@ -26,47 +27,60 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
         return roomConfig.password() != null;
     }
 
-    public IUserHandle getAdmin() {
-        return admin.admin();
-    }
-
     public void setAdmin(RoomMember newAdmin) {
         if (members.contains(newAdmin)) {
-            admin.changeAdmin(newAdmin.user());
+            admin.changeAdmin(newAdmin.userInfo());
         }
+    }
+
+    public boolean isAdmin(RoomMember user) {
+        return admin.admin().equals(user.userInfo());
     }
 
     public void addMember(RoomMember member) {
         if (members.size() < roomConfig.maxPlayers()) {
             members.add(member);
+            member.roomsUserHandle().joinRoomCommand(this);
         }
-        else throw new IllegalStateException("Room is full"); // TODO: Handle this case properly
     }
 
     public void removeMember(RoomMember member) {
         if (members.remove(member)) {
-            member.userHandle().leaveRoom();
-            if (members.isEmpty()) {
-                return;
-            }
-            if (admin.admin().equals(member.user())) {
-                admin.changeAdmin(members.iterator().next().user());
+            member.roomsUserHandle().leaveRoomCommand();
+            if (members.isEmpty()) return;
+            if (isAdmin(member)) {
+                admin.changeAdmin(members.iterator().next().userInfo());
             }
         }
     }
 
-    public static class Admin {
-        private IUserHandle admin;
+    public void removeAllMembers() {
+        for (RoomMember member : members) {
+            member.roomsUserHandle().leaveRoomCommand();
+        }
+        members.clear();
+    }
 
-        public Admin(IUserHandle admin) {
+    public boolean isFull() {
+        return members.size() == roomConfig.maxPlayers();
+    }
+
+    public boolean isEmpty() {
+        return members.isEmpty();
+    }
+
+    public static class Admin {
+        private UserInfo admin;
+
+        public Admin(UserInfo admin) {
             this.admin = admin;
         }
 
-        public IUserHandle admin() {
+        public UserInfo admin() {
             return admin;
         }
 
-        public void changeAdmin(IUserHandle admin) {
+        public void changeAdmin(UserInfo admin) {
             this.admin = admin;
         }
     }

@@ -1,19 +1,19 @@
 package user;
 
 public interface IMatchmakingHandle {
-    public static enum JoinGameRequestResult {
-        REQUEST_SUCCESSFULL,
+    enum JoinGameRequestResult {
+        REQUEST_SUCCESSFUL,
         ALREADY_IN_ROOM,
         // ...
     }
 
-    public static record MatchmakingParameters() {
+    record MatchmakingParameters() {
     }
 
     JoinGameRequestResult findGame(MatchmakingParameters matchmakingParameters);
 
     /**
-     * @{code true} if game lookup was in progress
+     * {@code true} if game lookup was in progress
      */
     boolean interruptGameLookup();
 }

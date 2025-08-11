@@ -12,9 +12,9 @@ import network.MessageDispatcher;
 import network.messages.Message;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import network.server.nio.NIOConnectionManager.SessionConcract;
-import user.IUserHandle;
+import user.IMatchmakingUserHandle;
 
-public class ClientData implements SessionConcract, IUserHandle {
+public class ClientData implements SessionConcract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
     private ISendableConsumer sendableReceiver;
     private final PlayerConfig playerConfig;

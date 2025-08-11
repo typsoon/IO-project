@@ -4,11 +4,27 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IRoomManager {
-    Optional<Room> createRoom(RoomConfig roomConfig, RoomMember user);
+    enum RoomRequest {
+        SUCCESSFUL,
+        FAILED,
+        NOT_AUTHORIZED,
+    }
 
-    Optional<Room> getRoom(String roomName);
+    RoomRequest createRoom(RoomMember user, RoomConfig roomConfig);
 
-    void deleteRoom(Room room);
+    RoomRequest deleteRoom(RoomMember user);
+
+    RoomRequest joinRoom(RoomMember user, Room room);
+
+    RoomRequest joinRoom(RoomMember user, Room room, String password);
+
+    RoomRequest leaveRoom(RoomMember user);
+
+    RoomRequest changeAdmin(RoomMember user, RoomMember newAdmin);
+
+    RoomRequest kickUser(RoomMember user, RoomMember kickedUser);
 
     List<Room> listRooms();
+
+    Optional<Room> getRoom(String roomName);
 }

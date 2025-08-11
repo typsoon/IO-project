@@ -10,7 +10,7 @@ import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import session.receivers.ConfigurationStateConsumerFactory;
 import user.IMatchmakingHandle;
-import user.IUserRoomHandle;
+import user.IUsersRoomHandle;
 
 public class ClientDataManager implements SessionCreator<ClientData> {
     Map<UserId, ClientData> activeClientsData = new HashMap<>();
@@ -22,7 +22,7 @@ public class ClientDataManager implements SessionCreator<ClientData> {
         PlayerConfig playerConfig = null;
 
         // TODO: put factory calls here
-        IUserRoomHandle userRoomHandle = null;
+        IUsersRoomHandle userRoomHandle = null;
         IMatchmakingHandle matchmakingHandle = null;
 
         var configurationStateConsumer = new ConfigurationStateConsumerFactory()
