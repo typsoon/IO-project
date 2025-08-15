@@ -11,10 +11,10 @@ import game.session.ISendableConsumer;
 import network.MessageDispatcher;
 import network.messages.Message;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
-import network.server.nio.NIOConnectionManager.SessionConcract;
+import network.server.nio.NIOConnectionManager.SessionContract;
 import user.IMatchmakingUserHandle;
 
-public class ClientData implements SessionConcract, IMatchmakingUserHandle {
+public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
     private ISendableConsumer sendableReceiver;
     private final PlayerConfig playerConfig;

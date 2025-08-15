@@ -15,7 +15,7 @@ public class Lobby {
     private final Collection<IMatchmakingUserHandle> members;
     private final IActionReceiver sessionManager;
 
-    public Lobby(Collection<IMatchmakingUserHandle> members, GameSessionManager sessionManager) {
+    public Lobby(Collection<IMatchmakingUserHandle> members, IActionReceiver sessionManager) {
         this.members = members;
         this.sessionManager = sessionManager;
     }

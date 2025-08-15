@@ -24,6 +24,8 @@ public interface IRoomManager {
 
     RoomRequest kickUser(RoomMember user, RoomMember kickedUser);
 
+    RoomRequest createGame(RoomMember user);
+
     List<Room> listRooms();
 
     Optional<Room> getRoom(String roomName);

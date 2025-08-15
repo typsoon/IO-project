@@ -25,6 +25,8 @@ public interface IUsersRoomHandle {
 
     RoomRequest kickUserRequest(RoomMember user);
 
+    RoomRequest createGameRequest();
+
     List<Room> getPublicRooms();
 
     Optional<Room> getRoom(String roomName);

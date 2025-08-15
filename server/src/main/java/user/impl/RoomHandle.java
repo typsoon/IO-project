@@ -6,34 +6,36 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+import user.UserState.State;
 import room.IRoomManager;
 import room.IRoomManager.RoomRequest;
 import room.Room;
 import room.RoomConfig;
 import room.RoomMember;
-import user.IRoomsUserHandle;
-import user.IMatchmakingUserHandle;
-import user.IUsersRoomHandle;
-import user.UserInfo;
+import user.*;
 
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     private final IRoomManager roomManager;
     private final RoomMember member;
     private Room room = null;
+    private final UserState userState;
 
-    RoomHandle(IRoomManager roomManager, UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle) {
+    RoomHandle(IRoomManager roomManager, UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle, UserState userState) {
         this.roomManager = roomManager;
         this.member = new RoomMember(userInfo, matchmakingUserHandle, this);
+        this.userState = userState;
     }
 
     @Override
     public void leaveRoomCommand() {
         this.room = null;
+        userState.state = State.DEFAULT;
     }
 
     @Override
     public void joinRoomCommand(Room room) {
         this.room = room;
+        userState.state = State.IN_ROOM;
     }
 
     @Override
@@ -74,6 +76,11 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     @Override
     public RoomRequest kickUserRequest(RoomMember user) {
         return roomManager.kickUser(member, user);
+    }
+
+    @Override
+    public RoomRequest createGameRequest() {
+        return roomManager.createGame(member);
     }
 
     @Override

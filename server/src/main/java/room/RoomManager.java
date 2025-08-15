@@ -1,11 +1,21 @@
 package room;
 
+import lobby.IMatchmakingEngine;
+import user.IMatchmakingUserHandle;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RoomManager implements IRoomManager {
+    private final IMatchmakingEngine matchmakingEngine;
     private final List<Room> rooms = new ArrayList<>();
+
+    public RoomManager(IMatchmakingEngine matchmakingEngine) {
+        this.matchmakingEngine = matchmakingEngine;
+    }
 
     @Override
     public RoomRequest createRoom(RoomMember user, RoomConfig roomConfig) {
@@ -67,6 +77,19 @@ public class RoomManager implements IRoomManager {
         if (!room.isAdmin(user)) return RoomRequest.NOT_AUTHORIZED;
         if (!room.members().contains(kickedUser)) return RoomRequest.NOT_AUTHORIZED;
         room.removeMember(kickedUser);
+        return RoomRequest.SUCCESSFUL;
+    }
+
+    @Override
+    public RoomRequest createGame(RoomMember user) {
+        if (user.roomsUserHandle().getRoom().isEmpty()) return RoomRequest.FAILED;
+        var room = user.roomsUserHandle().getRoom().get();
+        if (!room.isAdmin(user)) return RoomRequest.NOT_AUTHORIZED;
+
+        // TODO: add checking match parameter validity or smth
+        int numMembers = room.members().size();
+        Collection<IMatchmakingUserHandle> members = room.members().stream().map(RoomMember::matchmakingUserHandle).toList();
+        matchmakingEngine.findGame(members, numMembers);
         return RoomRequest.SUCCESSFUL;
     }
 

@@ -1,6 +1,6 @@
 package user;
 
-public interface IMatchmakingHandle {
+public interface IUsersMatchmakingHandle {
     enum JoinGameRequestResult {
         REQUEST_SUCCESSFUL,
         ALREADY_IN_ROOM,

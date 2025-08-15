@@ -9,7 +9,7 @@ import network.impl.ConcreteMessageDispatcher;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import session.receivers.ConfigurationStateConsumerFactory;
-import user.IMatchmakingHandle;
+import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
 
 public class ClientDataManager implements SessionCreator<ClientData> {
@@ -23,7 +23,7 @@ public class ClientDataManager implements SessionCreator<ClientData> {
 
         // TODO: put factory calls here
         IUsersRoomHandle userRoomHandle = null;
-        IMatchmakingHandle matchmakingHandle = null;
+        IUsersMatchmakingHandle matchmakingHandle = null;
 
         var configurationStateConsumer = new ConfigurationStateConsumerFactory()
                 .getConfigurationStateConsumer(userRoomHandle, matchmakingHandle);

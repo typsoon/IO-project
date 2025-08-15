@@ -5,7 +5,7 @@ import java.io.IOException;
 import database.impl.ConcreteDatabaseManager;
 import network.server.ConcreteAuthenticationService;
 import network.server.nio.NIOConnectionManager;
-import network.server.nio.NIOConnectionManager.SessionConcract;
+import network.server.nio.NIOConnectionManager.SessionContract;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import network.server.nio.NIOConnectionManagerFactory;
 import network.server.nio.NIOSSLSocketServer;
@@ -14,8 +14,8 @@ import network.messages.defaultmessage.ConcreteObjectDecoder;
 public class NIOConnectionManagerFactoryImpl implements NIOConnectionManagerFactory {
 
     @Override
-    public <T extends SessionConcract> NIOConnectionManager<T> getConnectionManager(SessionCreator<T> sessionCreator,
-            int sslServerPort, int udpServerPort, int tcpServerPort) throws IOException {
+    public <T extends SessionContract> NIOConnectionManager<T> getConnectionManager(SessionCreator<T> sessionCreator,
+                                                                                    int sslServerPort, int udpServerPort, int tcpServerPort) throws IOException {
 
         var udpServer = new UDPSocketServer(udpServerPort);
         var tcpServer = new TCPSocketServer(tcpServerPort);
