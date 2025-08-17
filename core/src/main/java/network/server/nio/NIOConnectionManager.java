@@ -7,8 +7,8 @@ import database.IDatabaseManager.UserId;
 import network.MessageDispatcher;
 import network.messages.Message;
 
-public interface NIOConnectionManager<T extends NIOConnectionManager.SessionConcract> {
-    public static interface SessionConcract {
+public interface NIOConnectionManager<T extends NIOConnectionManager.SessionContract> {
+    public static interface SessionContract {
         MessageDispatcher getMessageDispatcher();
     }
 
@@ -16,11 +16,10 @@ public interface NIOConnectionManager<T extends NIOConnectionManager.SessionConc
     // Message> message) {
     // }
 
-    public static record ClientAndTheirMessage<T>(T client,
-            Message message) {
+    public static record ClientAndTheirMessage<T>(T client, Message message) {
     }
 
-    public static interface SessionCreator<T extends SessionConcract> {
+    public static interface SessionCreator<T extends SessionContract> {
         // T getUDPSession(UserId address);
 
         // T getTCPSession(UserId address);

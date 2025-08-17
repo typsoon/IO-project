@@ -9,8 +9,8 @@ import network.impl.ConcreteMessageDispatcher;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import session.receivers.ConfigurationStateConsumerFactory;
-import user.IMatchmakingHandle;
-import user.IUserRoomHandle;
+import user.IUsersMatchmakingHandle;
+import user.IUsersRoomHandle;
 
 public class ClientDataManager implements SessionCreator<ClientData> {
     Map<UserId, ClientData> activeClientsData = new HashMap<>();
@@ -22,8 +22,8 @@ public class ClientDataManager implements SessionCreator<ClientData> {
         PlayerConfig playerConfig = null;
 
         // TODO: put factory calls here
-        IUserRoomHandle userRoomHandle = null;
-        IMatchmakingHandle matchmakingHandle = null;
+        IUsersRoomHandle userRoomHandle = null;
+        IUsersMatchmakingHandle matchmakingHandle = null;
 
         var configurationStateConsumer = new ConfigurationStateConsumerFactory()
                 .getConfigurationStateConsumer(userRoomHandle, matchmakingHandle);

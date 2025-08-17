@@ -45,13 +45,13 @@ import network.server.nio.BytesAccumulator;
 import network.server.nio.BytesAccumulator.ReadData;
 import network.server.nio.BytesAccumulator.WhatWasRead;
 import network.server.nio.NIOConnectionManager;
-import network.server.nio.NIOConnectionManager.SessionConcract;
+import network.server.nio.NIOConnectionManager.SessionContract;
 import network.server.nio.NIOSSLSocketServer;
 import network.server.nio.NIOSocketServer;
 import network.socketwrappers.SocketTypes.SocketSender;
 import network.messages.utils.DataConsumer;
 
-public class ConcreteNIOConnectionManager<T extends SessionConcract> implements NIOConnectionManager<T> {
+public class ConcreteNIOConnectionManager<T extends SessionContract> implements NIOConnectionManager<T> {
 
     private static record ChannelAttachment<T, U extends Message>(T clientSession, Queue<U> messageQueue,
             BytesAccumulator bytesAccumulator, DataConsumer consumer) {

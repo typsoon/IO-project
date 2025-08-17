@@ -1,8 +1,8 @@
 package user.impl;
 
-import user.IMatchmakingHandle;
+import user.IUsersMatchmakingHandle;
 
-public class DummyMatchmakingHandle implements IMatchmakingHandle {
+public class DummyUsersMatchmakingHandle implements IUsersMatchmakingHandle {
 
     @Override
     public JoinGameRequestResult findGame(MatchmakingParameters matchmakingParameters) {

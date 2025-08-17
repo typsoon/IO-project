@@ -1,7 +1,8 @@
 package room;
 
-import user.IRoomUserHandle;
-import user.IUserHandle;
+import user.IRoomsUserHandle;
+import user.IMatchmakingUserHandle;
+import user.UserInfo;
 
-public record RoomMember(IUserHandle user, IRoomUserHandle userHandle) {
+public record RoomMember(UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle, IRoomsUserHandle roomsUserHandle) {
 }

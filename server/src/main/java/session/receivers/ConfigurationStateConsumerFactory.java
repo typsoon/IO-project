@@ -1,12 +1,12 @@
 package session.receivers;
 
-import user.IMatchmakingHandle;
-import user.IUserRoomHandle;
+import user.IUsersMatchmakingHandle;
+import user.IUsersRoomHandle;
 
 public class ConfigurationStateConsumerFactory {
 
-    public ConfigurationStateConsumer getConfigurationStateConsumer(IUserRoomHandle userRoomHandle,
-            IMatchmakingHandle matchmakingHandle) {
+    public ConfigurationStateConsumer getConfigurationStateConsumer(IUsersRoomHandle userRoomHandle,
+                                                                    IUsersMatchmakingHandle matchmakingHandle) {
         return new ConfigurationStateConsumer(userRoomHandle, matchmakingHandle);
     }
 }

@@ -1,11 +1,11 @@
 package lobby;
 
-import user.IUserHandle;
+import user.IMatchmakingUserHandle;
 
 import java.util.Collection;
 
 public interface IMatchmakingEngine {
-    void findGame(IUserHandle user, int lobbySize);
+    void findGame(IMatchmakingUserHandle user, int lobbySize);
 
-    void findGame(Collection<IUserHandle> room, int lobbySize);
+    void findGame(Collection<IMatchmakingUserHandle> room, int lobbySize);
 }

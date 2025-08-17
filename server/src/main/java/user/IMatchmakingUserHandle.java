@@ -5,7 +5,9 @@ import game.session.IPlayerConnector;
 import game.session.ISendableConsumer;
 import game.session.PlayerData;
 
-public interface IUserHandle {
+import java.time.Duration;
+
+public interface IMatchmakingUserHandle {
     void gameStarted(ISendableConsumer sendableConsumer);
 
     PlayerConfig getPlayerConfig();

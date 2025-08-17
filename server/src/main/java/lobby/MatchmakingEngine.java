@@ -1,6 +1,6 @@
 package lobby;
 
-import user.IUserHandle;
+import user.IMatchmakingUserHandle;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,13 +11,13 @@ public class MatchmakingEngine implements IMatchmakingEngine {
     private final List<LobbyBuilder> pendingLobbies = new ArrayList<>();
 
     @Override
-    public void findGame(IUserHandle user, int lobbySize) {
+    public void findGame(IMatchmakingUserHandle user, int lobbySize) {
         LobbyBuilder lobbyBuilder = findOrCreateLobbyBuilder(lobbySize, 1);
         addUserToLobby(user, lobbyBuilder);
     }
 
     @Override
-    public void findGame(Collection<IUserHandle> users, int lobbySize) {
+    public void findGame(Collection<IMatchmakingUserHandle> users, int lobbySize) {
         LobbyBuilder lobbyBuilder = findOrCreateLobbyBuilder(lobbySize, users.size());
         users.forEach(user -> addUserToLobby(user, lobbyBuilder));
     }
@@ -33,7 +33,7 @@ public class MatchmakingEngine implements IMatchmakingEngine {
         return newBuilder;
     }
 
-    private void addUserToLobby(IUserHandle user, LobbyBuilder lobbyBuilder) {
+    private void addUserToLobby(IMatchmakingUserHandle user, LobbyBuilder lobbyBuilder) {
         lobbyBuilder.addPlayer(user);
         if (lobbyBuilder.full()) {
             Lobby lobby = lobbyBuilder.build();
