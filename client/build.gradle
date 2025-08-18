@@ -1,7 +1,24 @@
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+
+buildscript {
+  dependencies {
+      classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
 plugins {
   // TODO: Change this to not be java-library
     id 'java-library'
     // id 'java'
+}
+
+ext {
+  snakeyamlVersion = "2.4"
+  assetsDirName = "assets"
+  atlasName = "graphicsAtlas"
+  graphicsDirName = "graphics"
+
+  texturePacker = [ "../$assetsDirName/$graphicsDirName/", "../$assetsDirName/$graphicsDirName/", "$atlasName" ]
 }
 
 dependencies {
@@ -9,10 +26,24 @@ dependencies {
     api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-
+    api "org.yaml:snakeyaml:$snakeyamlVersion"
     // implementaion "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 }
 
-sourceSets.main.resources.srcDirs = ["../assets"]
+def inputDir = project.file(texturePacker[0]).absolutePath
+def outputDir = project.file(texturePacker[1]).absolutePath
+def atlasName = texturePacker[2]
 
+tasks.register('texturePacker') {
+    group = 'Custom'
+    description = 'Packs graphics folder into an atlas.'
 
+    doLast {
+
+        logger.lifecycle("Packing textures: $inputDir -> $outputDir/$atlasName")
+
+        TexturePacker.process(inputDir, outputDir, atlasName)
+    }
+}
+
+sourceSets.main.resources.srcDirs = ["../$assetsDirName"]
