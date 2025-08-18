@@ -6,6 +6,7 @@ import game.engine.entities.SpriteID;
 public record DrawableInfo<T extends Enum<T>>(
         SpriteID entityGroupID,
         Enum<T> state,
+        float stateTime,
         // TODO: Modifiers modifiers,
         float x, float y, float width, float height,
         float originX, float originY,

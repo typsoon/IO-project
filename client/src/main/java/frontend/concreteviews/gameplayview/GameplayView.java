@@ -12,9 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameclientview.GameClientView;
 import frontend.concreteviews.loginview.LoginView;
-
 import frontend.gamestate.IReadOnlyDisplayableGameState;
 import viewmodel.ITextureManager;
 
@@ -35,16 +36,21 @@ public class GameplayView extends ScreenAdapter {
     private final Collection<InputProcessor> gameplayViewInputProcessors;
     private final ITextureManager textureManager;
     private final IReadOnlyDisplayableGameState gameState;
+
+    private final EntitiesDrawer entitiesDrawer;
+
     private Stage stage;
 
     GameplayView(Game game, Collection<EventListener> gameplayViewEventListeners,
-                 Collection<InputProcessor> gameplayViewInputProcessors,
-                 ITextureManager textureManager, IReadOnlyDisplayableGameState gameState) {
+            Collection<InputProcessor> gameplayViewInputProcessors,
+            ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
+            TexturesProvider texturesProvider) {
         this.game = game;
         this.gameplayViewEventListeners = gameplayViewEventListeners;
         this.gameplayViewInputProcessors = gameplayViewInputProcessors;
         this.textureManager = textureManager;
         this.gameState = gameState;
+        this.entitiesDrawer = new EntitiesDrawer(texturesProvider);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.ViewWithTimedEventLoop;
+import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactory;
 import frontend.gamestate.DisplayableGameState;
 import frontend.gamestate.processor.GameStateProcessor;
@@ -21,17 +22,18 @@ import viewmodel.game.RenderablePlayer;
 import viewmodel.game.SpriteFactory;
 
 public class GameplayViewFactory {
-    IView getGameplayView(
+    public IView getGameplayView(
             Game game, IViewManager viewManager, ClientSideSocketWrapper clientSideSocketWrapper,
-            ITextureManager textureManager, PlayerConfig playerConfig) {
+            ITextureManager textureManager, PlayerConfig playerConfig, TexturesProvider texturesProvider) {
 
-        //rethink this
+        // rethink this
         GeometryModule geometryModule = new GeometryModule();
         SpriteFactory spriteFactory = new SpriteFactory();
-        RenderableObjectFactory objectFactory = new RenderableObjectFactory(geometryModule,spriteFactory);
+        RenderableObjectFactory objectFactory = new RenderableObjectFactory(geometryModule, spriteFactory);
         RenderablePlayer player = objectFactory.createRenderablePlayer(playerConfig);
         DisplayableGameState gameState = new DisplayableGameState(player);
-        GameStateProcessor gameStateProcessor = new GameStateProcessor(geometryModule, objectFactory,gameState, player);
+        GameStateProcessor gameStateProcessor = new GameStateProcessor(geometryModule, objectFactory, gameState,
+                player);
 
         var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager, clientSideSocketWrapper,
                 gameStateProcessor);
@@ -42,7 +44,7 @@ public class GameplayViewFactory {
         // see libgdx docs
         var processors = new ArrayList<InputProcessor>();
 
-        var view = new GameplayView(game, listeners, processors, textureManager, gameState);
+        var view = new GameplayView(game, listeners, processors, textureManager, gameState, texturesProvider);
 
         return new ViewWithTimedEventLoop(gameplayManager, view, game);
     }
