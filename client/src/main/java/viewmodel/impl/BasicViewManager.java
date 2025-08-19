@@ -2,7 +2,6 @@ package viewmodel.impl;
 
 import network.client.ClientSideSocketWrapper;
 import viewmodel.ITextureManager;
-import viewmodel.IViewFactory;
 import viewmodel.IViewManager;
 
 public class BasicViewManager implements IViewManager {

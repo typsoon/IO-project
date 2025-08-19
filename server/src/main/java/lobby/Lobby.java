@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import game.actions.IAction;
-import game.session.GameSessionManager;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
 import game.session.PlayerData;
