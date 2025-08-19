@@ -32,4 +32,16 @@ public class DisplayableGameState implements IDisplayableGameState{
     public Collection<IPlayerData> getPlayerData() {
         return playerData;
     }
+    @Override
+    public void AddPlayer(IPlayerData player) {
+        if (player != null) {
+            playerData.add(player);
+        }
+    }
+    @Override
+    public void RemovePlayer(IPlayerData player) {
+        if (player != null) {
+            playerData.remove(player);
+        }
+    }
 }
