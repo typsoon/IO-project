@@ -55,6 +55,7 @@ public class GameStateProcessor implements IGameStateProcessor {
     private void updatePlayerState(PlayerState playerState) {
         player.setPosition(playerState.position());
         player.setVelocity(playerState.velocity());
+        player.setRotation(playerState.rotation());
     }
 
     private void updateEntityState(EntityState entityState) {
@@ -63,6 +64,7 @@ public class GameStateProcessor implements IGameStateProcessor {
             renderableObject = entities.get(entityState.entityId());
             renderableObject.setPosition(entityState.position());
             renderableObject.setVelocity(entityState.velocity());
+            renderableObject.setRotation(entityState.rotation());
         } else {
             renderableObject = renderableObjectFactory.createRenderableObject(entityState);
             entities.put(entityState.entityId(), renderableObject);

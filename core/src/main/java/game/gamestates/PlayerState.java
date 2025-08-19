@@ -11,6 +11,7 @@ public record PlayerState(
         GeometryConfigID geometryConfigId,
         Point2F position,
         Vector2F velocity,
+        float rotation,
         EntityGroupID entityGroupId,
         EntityAction action
         //this will hold more information than entity state

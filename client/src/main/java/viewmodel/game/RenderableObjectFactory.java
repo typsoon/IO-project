@@ -24,7 +24,7 @@ public class RenderableObjectFactory {
         DrawableInfo drawableInfo = new DrawableInfo(entityState.entityGroupId(),EntityVisibleState.Standing);
         TimedRenderableObject renderableObject = new TimedRenderableObject(geometryRepresentation, drawableInfo);
         renderableObject.setPosition(entityState.position());
-//        renderableObject.setRotation(entityState.rotation()); TODO: complete EntityState content
+        renderableObject.setRotation(entityState.rotation());
         renderableObject.setVelocity(entityState.velocity());
         return renderableObject;
     }

@@ -11,6 +11,7 @@ public record EntityState(
         GeometryConfigID geometryConfigID,
         Point2F position,
         Vector2F velocity,
+        float rotation,
         EntityGroupID entityGroupId,
         EntityAction action
         // there should be what entity is holding, for example

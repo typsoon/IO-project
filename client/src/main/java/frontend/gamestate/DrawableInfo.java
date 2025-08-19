@@ -18,7 +18,7 @@ public class DrawableInfo{
         this.state = state;
         stateTime = 0;
         x = 0; y = 0; width = 0; height = 0;
-        originX = 0; originY = 0;
+        originX = 0; originY = 0;//TODO check what should be here
         scaleX = 1; scaleY = 1;
         rotation = 0;
     }

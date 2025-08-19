@@ -36,6 +36,7 @@ public class Player implements IMovingEntity {
                 geometryConfigID,
                 movingGeometryRepresentation.getPosition(),
                 movingGeometryRepresentation.getVelocity(),
+                movingGeometryRepresentation.getRotation(),
                 entityGroupID,
                 EntityAction.Idle
         );
@@ -46,6 +47,7 @@ public class Player implements IMovingEntity {
                 geometryConfigID,
                 movingGeometryRepresentation.getPosition(),
                 movingGeometryRepresentation.getVelocity(),
+                movingGeometryRepresentation.getRotation(),
                 entityGroupID,
                 EntityAction.Idle
         );

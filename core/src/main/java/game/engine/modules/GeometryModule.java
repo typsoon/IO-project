@@ -66,6 +66,10 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
                 return new Vector2F(velocity.x, velocity.y);
             }
             @Override
+            public float getRotation() {
+                return body.getAngle();
+            }
+            @Override
             public void move(float dx, float dy) {
 //                body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);
                 body.setLinearVelocity(dx, dy);
