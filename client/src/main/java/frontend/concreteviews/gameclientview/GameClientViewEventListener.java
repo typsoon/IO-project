@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
 import network.client.ClientSideSocketWrapper;
-import network.client.ClientSideSocketWrapper.ConnectionEndedException;
+import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.configurationstate.CreateRoomRequest;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import viewmodel.IViewManager;
@@ -20,7 +20,7 @@ public class GameClientViewEventListener implements EventListener {
     private final Logger logger = Logger.getGlobal();
 
     public GameClientViewEventListener(IViewManager viewManager,
-                                       ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
+            ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
         this.viewManager = viewManager;
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.objectToMessageDecoder = objectToMessageDecoder;

@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import network.client.ClientSideSocketWrapper;
-import network.client.ClientSideSocketWrapper.ConnectionEndedException;
+import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.loginstate.LogInQuery;
 import viewmodel.IViewManager;
 

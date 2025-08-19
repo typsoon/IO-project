@@ -1,3 +1,5 @@
+# TODO: remove dashes
+
 human_basic:
   - idle_front: 0.0
   - idle_back: 0.0

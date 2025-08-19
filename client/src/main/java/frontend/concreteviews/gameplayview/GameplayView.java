@@ -58,6 +58,9 @@ public class GameplayView extends ScreenAdapter {
         ScreenUtils.clear(0, 0, 0, 0);
         stage.act(delta);
         stage.draw();
+
+        var drawableInfos = gameState.getSpritesReadonly();
+        entitiesDrawer.drawEntities(drawableInfos);
     }
 
     @Override

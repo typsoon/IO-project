@@ -13,12 +13,11 @@ plugins {
 }
 
 ext {
-  snakeyamlVersion = "2.4"
-  assetsDirName = "assets"
+  // snakeyamlVersion = "2.4"
   atlasName = "graphicsAtlas"
   graphicsDirName = "graphics"
 
-  texturePacker = [ "../$assetsDirName/$graphicsDirName/", "../$assetsDirName/$graphicsDirName/", "$atlasName" ]
+  texturePacker = [ "../$resourcesDirName/$graphicsDirName/", "../$resourcesDirName/$graphicsDirName/", "$atlasName" ]
 }
 
 dependencies {
@@ -46,4 +45,4 @@ tasks.register('texturePacker') {
     }
 }
 
-sourceSets.main.resources.srcDirs = ["../$assetsDirName"]
+sourceSets.main.resources.srcDirs = ["../$resourcesDirName"]

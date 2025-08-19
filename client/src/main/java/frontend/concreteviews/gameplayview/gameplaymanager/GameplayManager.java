@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import frontend.gamestate.processor.IGameStateProcessor;
-import network.client.ClientSideSocketWrapper;
-import game.utility.ISendable;
 import game.gamestates.IGameState;
+import game.utility.ISendable;
+import network.client.DuplexSocketWrapper;
 import utility.ICycleTimedPerformer;
 import viewmodel.IViewManager;
 
@@ -17,10 +17,10 @@ import viewmodel.IViewManager;
  */
 public class GameplayManager implements ICycleTimedPerformer {
     private final IViewManager viewManager;
-    private final ClientSideSocketWrapper clientSideSocketWrapper;
+    private final DuplexSocketWrapper clientSideSocketWrapper;
     private final IGameStateProcessor gameStateProcessor;
 
-    public GameplayManager(ClientSideSocketWrapper clientSideSocketWrapper, IViewManager viewManager,
+    public GameplayManager(DuplexSocketWrapper clientSideSocketWrapper, IViewManager viewManager,
             IGameStateProcessor gameStateProcessor) {
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.viewManager = viewManager;

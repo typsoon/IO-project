@@ -13,6 +13,8 @@ subprojects {
     ext {
       // gdxVersion = '1.13.1'
       gdxVersion = '1.12.1'
+      snakeyamlVersion = "2.4"
+      resourcesDirName = "assets"
     }
 
     dependencies {

@@ -5,6 +5,9 @@ plugins {
 
 dependencies {
     implementation project(':client')
+    //TODO: maybe remove this. This should not be needed
+    implementation project(':core')
+
     api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 
@@ -13,6 +16,16 @@ dependencies {
 
 application {
   mainClass = 'DesktopLauncher'
+}
+
+tasks.register("dummylauncher", JavaExec) {
+    group = 'Mocking the game'
+    description = 'Running the game with no server connection or configuration phase'
+
+    // group = ApplicationPlugin.APPLICATION_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+
+    mainClass = 'dummylaunchers.DummyGameLauncher'
 }
 
 run {
