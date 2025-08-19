@@ -33,6 +33,7 @@ class GameLauncher extends Game {
         var sendablesSentToClient = new ArrayList<ISendable>();
         IPlayerConnector dummyPlayerConnector = gameStates -> {
             synchronized (sendablesSentToClient) {
+                Logger.getGlobal().info("Game states sent %s".formatted(gameStates));
                 sendablesSentToClient.addAll(gameStates);
             }
         };

@@ -34,31 +34,35 @@ public class EntityGeometryConfigFactory {
     // default space for resources in java is src/main/resources not assets/
     private static EntityGeometryConfig loadConfig(GeometryConfigID id) {
         String filename = CONFIG_PATH + id.name().toLowerCase() + ".yaml";
-        File file = new File(filename);
+        var file = EntityGeometryConfigFactory.class.getClassLoader().getResourceAsStream(filename);
 
-        if (!file.exists()) {
-            logger.warning("File not found: " + file.getAbsolutePath());
+        if (file == null) {
+            logger.warning("File not found: " + filename);
             return DEFAULT_CONFIG;
         }
 
         Yaml yaml = new Yaml();
-        try (InputStream in = new FileInputStream(file)) {
-            Map<String, Object> map = yaml.load(in);
-            return new EntityGeometryConfig(
-                    getFloat(map, "width", DEFAULT_CONFIG.width()),
-                    getFloat(map, "height", DEFAULT_CONFIG.height()),
-                    getBodyType(map, "bodyType", DEFAULT_CONFIG.bodyType()),
-                    getBoolean(map, "isRotatable", DEFAULT_CONFIG.isRotatable()),
-                    getFloat(map, "friction", DEFAULT_CONFIG.friction()),
-                    getFloat(map, "restitution", DEFAULT_CONFIG.restitution()),
-                    getFloat(map, "density", DEFAULT_CONFIG.density()),
-                    getFloat(map, "linearDamping", DEFAULT_CONFIG.linearDamping()),
-                    getFloat(map, "angularDamping", DEFAULT_CONFIG.angularDamping()));
-        } catch (Exception e) {
-            logger.warning("Error while loading file " + file.getAbsolutePath() + ": " + e.getMessage());
-            return DEFAULT_CONFIG;
-        }
+        // try (InputStream in = new FileInputStream(file)) {
+        // Map<String, Object> map = yaml.load(in);
+        Map<String, Object> map = yaml.load(file);
+        return new EntityGeometryConfig(
+                getFloat(map, "width", DEFAULT_CONFIG.width()),
+                getFloat(map, "height", DEFAULT_CONFIG.height()),
+                getBodyType(map, "bodyType", DEFAULT_CONFIG.bodyType()),
+                getBoolean(map, "isRotatable", DEFAULT_CONFIG.isRotatable()),
+                getFloat(map, "friction", DEFAULT_CONFIG.friction()),
+                getFloat(map, "restitution", DEFAULT_CONFIG.restitution()),
+                getFloat(map, "density", DEFAULT_CONFIG.density()),
+                getFloat(map, "linearDamping", DEFAULT_CONFIG.linearDamping()),
+                getFloat(map, "angularDamping", DEFAULT_CONFIG.angularDamping()));
     }
+
+    // catch (Exception e) {
+    // logger.warning("Error while loading file " + file.getAbsolutePath() + ": " +
+    // e.getMessage());
+    // return DEFAULT_CONFIG;
+    // }
+    // }
 
     private static float getFloat(Map<String, Object> map, String key, float defaultValue) {
         Object val = map.get(key);
