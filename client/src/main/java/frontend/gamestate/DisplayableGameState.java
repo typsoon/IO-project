@@ -1,36 +1,35 @@
 package frontend.gamestate;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import viewmodel.game.IPlayerData;
 
 import java.util.Collection;
 
 public class DisplayableGameState implements IDisplayableGameState{
-    Collection<Sprite> sprites;
-    IPlayerData playerData;
-    public DisplayableGameState(IPlayerData playerData) {
-        sprites = new java.util.ArrayList<>(); //ToDo: use a more specific collection type if needed
-        this.playerData = playerData;
+    Collection<DrawableInfo> drawableInfos;
+    Collection<IPlayerData> playerData;
+    public DisplayableGameState() {
+        drawableInfos = new java.util.ArrayList<>(); //ToDo: use a more specific collection type if needed
+        playerData = new java.util.ArrayList<>();
     }
     @Override
-    public Collection<Sprite> getSpritesReadonly() {
-        return java.util.Collections.unmodifiableCollection(sprites);
+    public Collection<DrawableInfo> getSpritesReadonly() {
+        return java.util.Collections.unmodifiableCollection(drawableInfos);
     }
 
     @Override
-    public void AddSprite(Sprite sprite) {
-        if (sprite != null) {
-            sprites.add(sprite);
+    public void AddDrawable(DrawableInfo drawableInfo) {
+        if (drawableInfo != null) {
+            drawableInfos.add(drawableInfo);
         }
     }
     @Override
-    public void RemoveSprite(Sprite sprite) {
-        if (sprite != null) {
-            sprites.remove(sprite);
+    public void RemoveDrawable(DrawableInfo drawableInfo) {
+        if (drawableInfo != null) {
+            drawableInfos.remove(drawableInfo);
         }
     }
     @Override
-    public IPlayerData getPlayerData() {
+    public Collection<IPlayerData> getPlayerData() {
         return playerData;
     }
 }

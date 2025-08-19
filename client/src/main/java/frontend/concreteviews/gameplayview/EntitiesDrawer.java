@@ -15,19 +15,19 @@ public class EntitiesDrawer {
         this.texturesProvider = texturesProvider;
     }
 
-    void drawEntities(Collection<DrawableInfo<?>> drawables) {
+    void drawEntities(Collection<DrawableInfo> drawables) {
         spriteBatch.begin();
-        for (DrawableInfo<?> drawableInfo : drawables) {
-            var textureRegion = texturesProvider.getTextureRegion(drawableInfo.entityGroupID(),
-                    drawableInfo.state(), drawableInfo.stateTime());
+        for (DrawableInfo drawableInfo : drawables) {
+            var textureRegion = texturesProvider.getTextureRegion(drawableInfo.getEntityGroupID(),
+                    drawableInfo.getState(), drawableInfo.getStateTime());
 
             spriteBatch.draw(textureRegion,
-                    drawableInfo.x(), drawableInfo.y(),
-                    drawableInfo.originX(), drawableInfo.originY(),
-                    drawableInfo.width(), drawableInfo.height(),
-                    drawableInfo.scaleX(),
-                    drawableInfo.scaleY(),
-                    drawableInfo.rotation());
+                    drawableInfo.getX(), drawableInfo.getY(),
+                    drawableInfo.getOriginX(), drawableInfo.getOriginY(),
+                    drawableInfo.getWidth(), drawableInfo.getHeight(),
+                    drawableInfo.getScaleX(),
+                    drawableInfo.getScaleY(),
+                    drawableInfo.getRotation());
         }
 
         spriteBatch.end();

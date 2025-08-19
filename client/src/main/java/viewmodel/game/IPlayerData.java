@@ -1,9 +1,9 @@
 package viewmodel.game;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import frontend.gamestate.DrawableInfo;
 
 public interface IPlayerData {
     int getHpValue();
     int getMaxHpValue();
-    Sprite getSprite();
+    DrawableInfo getDrawableInfo();
 }

@@ -10,33 +10,21 @@ import frontend.ViewWithTimedEventLoop;
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactory;
 import frontend.gamestate.DisplayableGameState;
-import frontend.gamestate.processor.GameStateProcessor;
 import game.engine.PlayerConfig;
-import game.engine.modules.GeometryModule;
 import network.client.ClientSideSocketWrapper;
 import viewmodel.ITextureManager;
 import viewmodel.IView;
 import viewmodel.IViewManager;
-import viewmodel.game.RenderableObjectFactory;
-import viewmodel.game.RenderablePlayer;
-import viewmodel.game.SpriteFactory;
 
 public class GameplayViewFactory {
     public IView getGameplayView(
             Game game, IViewManager viewManager, ClientSideSocketWrapper clientSideSocketWrapper,
             ITextureManager textureManager, PlayerConfig playerConfig, TexturesProvider texturesProvider) {
 
-        // rethink this
-        GeometryModule geometryModule = new GeometryModule();
-        SpriteFactory spriteFactory = new SpriteFactory();
-        RenderableObjectFactory objectFactory = new RenderableObjectFactory(geometryModule, spriteFactory);
-        RenderablePlayer player = objectFactory.createRenderablePlayer(playerConfig);
-        DisplayableGameState gameState = new DisplayableGameState(player);
-        GameStateProcessor gameStateProcessor = new GameStateProcessor(geometryModule, objectFactory, gameState,
-                player);
 
-        var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager, clientSideSocketWrapper,
-                gameStateProcessor);
+        DisplayableGameState gameState = new DisplayableGameState();
+
+        var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager, clientSideSocketWrapper,gameState,playerConfig);
 
         // see other screens (Login, GameClient) for clues about how these work
         var listeners = new ArrayList<EventListener>();

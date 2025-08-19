@@ -12,7 +12,7 @@ import game.utility.Vector2F;
 public class Player implements IMovingEntity {
     private final int entityId;
     private final GeometryConfigID geometryConfigID;
-    private final SpriteID spriteID;
+    private final EntityGroupID entityGroupID;
     private final IMovingGeometryRepresentation movingGeometryRepresentation;
 
     //should be from file or config
@@ -23,7 +23,7 @@ public class Player implements IMovingEntity {
         this.movingGeometryRepresentation = movingGeometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
-        this.spriteID = config.spriteID();
+        this.entityGroupID = config.entityGroupID();
     }
     @Override
     public void move(Direction direction) {
@@ -36,15 +36,18 @@ public class Player implements IMovingEntity {
                 geometryConfigID,
                 movingGeometryRepresentation.getPosition(),
                 movingGeometryRepresentation.getVelocity(),
-                spriteID
+                entityGroupID,
+                EntityAction.Idle
         );
     }
     public PlayerState getPlayerState() {
         return new PlayerState(
+                entityId,
                 geometryConfigID,
                 movingGeometryRepresentation.getPosition(),
                 movingGeometryRepresentation.getVelocity(),
-                spriteID
+                entityGroupID,
+                EntityAction.Idle
         );
     }
     public Rectangle2F getSightRange() {

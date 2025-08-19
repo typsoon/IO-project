@@ -1,13 +1,20 @@
 package frontend.concreteviews.gameplayview.gameplaymanager;
 
+import frontend.gamestate.DisplayableGameState;
 import frontend.gamestate.processor.GameStateProcessor;
+import frontend.gamestate.processor.GameStateProcessorFactory;
+import game.engine.PlayerConfig;
 import network.client.ClientSideSocketWrapper;
 import viewmodel.IViewManager;
 
 public class GameplayManagerFactory {
     public GameplayManager getGameplayManager(IViewManager viewManager,
                                               ClientSideSocketWrapper clientSideSocketWrapper,
-                                              GameStateProcessor processor){
-        return new GameplayManager(clientSideSocketWrapper, viewManager, processor);
+                                              DisplayableGameState gameState,
+                                              PlayerConfig playerConfig) {
+
+        GameStateProcessor gameStateProcessor = new GameStateProcessorFactory().getGameStateProcessor(gameState,playerConfig);
+
+        return new GameplayManager(clientSideSocketWrapper, viewManager, gameStateProcessor);
     }
 }

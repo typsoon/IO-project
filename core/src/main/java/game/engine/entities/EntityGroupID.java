@@ -1,5 +1,5 @@
 package game.engine.entities;
 
-public enum SpriteID {
+public enum EntityGroupID {
     HUMAN_BASIC
 }

@@ -1,17 +1,17 @@
 package viewmodel.game;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import frontend.gamestate.DrawableInfo;
+import frontend.gamestate.EntityVisibleState;
 import game.engine.PlayerConfig;
+import game.engine.entities.EntityGroupID;
 import game.engine.modules.IGeometryFactory;
 import game.gamestates.EntityState;
 
 public class RenderableObjectFactory {
     private final IGeometryFactory geometryFactory;
-    private final ISpriteFactory spriteFactory;
 
-    public RenderableObjectFactory(IGeometryFactory geometryFactory, ISpriteFactory spriteFactory) {
+    public RenderableObjectFactory(IGeometryFactory geometryFactory) {
         this.geometryFactory = geometryFactory;
-        this.spriteFactory = spriteFactory;
     }
 
     public TimedRenderableObject createRenderableObject(EntityState entityState) {
@@ -21,8 +21,8 @@ public class RenderableObjectFactory {
                 entityState.position().x(),
                 entityState.position().y()
         );
-        Sprite sprite = spriteFactory.createSprite(entityState.spriteID());
-        TimedRenderableObject renderableObject = new TimedRenderableObject(geometryRepresentation, sprite);
+        DrawableInfo drawableInfo = new DrawableInfo(entityState.entityGroupId(),EntityVisibleState.Standing);
+        TimedRenderableObject renderableObject = new TimedRenderableObject(geometryRepresentation, drawableInfo);
         renderableObject.setPosition(entityState.position());
 //        renderableObject.setRotation(entityState.rotation()); TODO: complete EntityState content
         renderableObject.setVelocity(entityState.velocity());
@@ -35,7 +35,8 @@ public class RenderableObjectFactory {
                 geometryConfig,
                 0, 0
         );
-        Sprite sprite = spriteFactory.createSprite(playerConfig.spriteID());
-        return new RenderablePlayer(playerConfig, geometryRepresentation, sprite);
+        DrawableInfo drawableInfo = new DrawableInfo(playerConfig.entityGroupID(), EntityVisibleState.Standing);
+        drawableInfo.setEntityGroupID(EntityGroupID.HUMAN_BASIC);
+        return new RenderablePlayer(playerConfig, geometryRepresentation, drawableInfo);
     }
 }

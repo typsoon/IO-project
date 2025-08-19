@@ -11,27 +11,27 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import frontend.assetsloading.TexturesProvider;
-import game.engine.entities.SpriteID;
+import game.engine.entities.EntityGroupID;
 
 public class AtlasLoader implements TexturesProvider {
-    static record StateEntry(String stateName, Float frameDuration) {
+    record StateEntry(String stateName, Float frameDuration) {
     }
 
-    static record EntityTextureData(
+    record EntityTextureData(
             String textureGroupData,
             List<StateEntry> stateEntries) {
-    };
+    }
 
     private final static String atlasPath = "graphics/graphicsAtlas.atlas";
     private final static String entitiesDataPath = "graphics/entitygroups/entities.yaml";
     private final static TextureAtlas atlas;
 
     // TODO: make this an enummap
-    private final static EnumMap<SpriteID, Function<Float, TextureRegion>[]> mapper;
+    private final static EnumMap<EntityGroupID, Function<Float, TextureRegion>[]> mapper;
 
     private final static String atlasAdressesPrefix = "entitygroups";
 
-    private final static String getAdress(String entityGroupID, String stateName) {
+    private static String getAdress(String entityGroupID, String stateName) {
         return "%s/%s/%s".formatted(atlasAdressesPrefix, entityGroupID.toLowerCase(), stateName.toLowerCase());
     }
 
@@ -39,8 +39,8 @@ public class AtlasLoader implements TexturesProvider {
         atlas = new TextureAtlas(Gdx.files.internal(atlasPath));
         var entitiesDataMap = YamlEntitiesDataParser.getNameToTextureDataMap(entitiesDataPath);
 
-        mapper = new EnumMap<>(SpriteID.class);
-        for (var enumVal : SpriteID.values()) {
+        mapper = new EnumMap<>(EntityGroupID.class);
+        for (var enumVal : EntityGroupID.values()) {
             var data = entitiesDataMap.get(enumVal.name().toLowerCase());
             if (data == null) {
                 throw new IllegalStateException("There is no data about %s in entities file".formatted(enumVal));
@@ -78,7 +78,7 @@ public class AtlasLoader implements TexturesProvider {
     }
 
     @Override
-    public <T extends Enum<T>> TextureRegion getTextureRegion(SpriteID groupID, Enum<T> state, float stateTime) {
+    public <T extends Enum<T>> TextureRegion getTextureRegion(EntityGroupID groupID, Enum<T> state, float stateTime) {
         return mapper.get(groupID)[state.ordinal()].apply(stateTime);
     }
 }

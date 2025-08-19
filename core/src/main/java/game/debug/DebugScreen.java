@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import game.actions.IAction;
-import game.engine.entities.SpriteID;
+import game.engine.entities.EntityGroupID;
 import game.gamestates.IGameState;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
@@ -43,7 +43,7 @@ public class DebugScreen implements Screen {
         player2Connector = new LocalPlayerConnector();
 
         // Create session manager
-        PlayerConfig config = new PlayerConfig(GeometryConfigID.HUMAN, SpriteID.HUMAN_BASIC);
+        PlayerConfig config = new PlayerConfig(GeometryConfigID.HUMAN, EntityGroupID.HUMAN_BASIC);
         List<PlayerData> players = List.of(
                 new PlayerData(player1Connector, config),
                 new PlayerData(player2Connector, config));

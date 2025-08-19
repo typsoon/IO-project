@@ -1,6 +1,7 @@
 package frontend.gamestate.processor;
 
 import frontend.gamestate.IDisplayableGameState;
+import game.engine.PlayerConfig;
 import game.engine.modules.IGeometryModule;
 import game.gamestates.EntityState;
 import game.gamestates.IGameState;
@@ -26,11 +27,11 @@ public class GameStateProcessor implements IGameStateProcessor {
     IDisplayableGameState displayableGameState;
     Map<Integer, TimedRenderableObject> entities = new HashMap<>();
 
-    public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory, IDisplayableGameState displayableGameState, RenderablePlayer player) {
+    public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory, IDisplayableGameState displayableGameState, PlayerConfig playerConfig) {
         this.geometryModule = geometryModule;
         this.renderableObjectFactory = objectFactory;
         this.displayableGameState = displayableGameState;
-        this.player = player;
+        this.player = objectFactory.createRenderablePlayer(playerConfig);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class GameStateProcessor implements IGameStateProcessor {
         } else {
             renderableObject = renderableObjectFactory.createRenderableObject(entityState);
             entities.put(entityState.entityId(), renderableObject);
-            displayableGameState.AddSprite(renderableObject.GetSprite());
+            displayableGameState.AddDrawable(renderableObject.GetDrawable());
         }
         renderableObject.timeSinceUpdate = 0f;
     }
@@ -73,7 +74,7 @@ public class GameStateProcessor implements IGameStateProcessor {
             TimedRenderableObject renderableObject = entry.getValue();
             renderableObject.timeSinceUpdate += deltaTime;
             if (renderableObject.timeSinceUpdate >= timeThreshold) {
-                displayableGameState.RemoveSprite(renderableObject.GetSprite());
+                displayableGameState.RemoveDrawable(renderableObject.GetDrawable());
                 renderableObject.dispose();
                 return true;
             }

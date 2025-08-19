@@ -16,7 +16,6 @@ public interface ClientSideSocketWrapper extends AutoCloseable {
     }
 
     Collection<ISendable> getSendables() throws IOException;
-
     /**
      * Will throw IllegalStateException if the sender was not yet connected
      */
