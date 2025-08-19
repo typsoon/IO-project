@@ -39,6 +39,7 @@ import network.messages.loginstate.PortInfoRequest;
 import network.messages.loginstate.PortInfoResponse;
 import network.messages.utils.ByteBufferDataProducer;
 import network.messages.utils.ByteChannelDataReceiver;
+import network.messages.utils.DataConsumer;
 import network.server.AuthenticationService;
 import network.server.AuthenticationService.Token;
 import network.server.nio.BytesAccumulator;
@@ -49,7 +50,6 @@ import network.server.nio.NIOConnectionManager.SessionContract;
 import network.server.nio.NIOSSLSocketServer;
 import network.server.nio.NIOSocketServer;
 import network.socketwrappers.SocketTypes.SocketSender;
-import network.messages.utils.DataConsumer;
 
 public class ConcreteNIOConnectionManager<T extends SessionContract> implements NIOConnectionManager<T> {
 
@@ -165,6 +165,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
                     } else {
                         // Read incoming bytes
+                        @SuppressWarnings("unchecked")
                         final var attachment = (ChannelAttachment<T, ? extends Message>) key.attachment();
                         msgByteBuffer = attachment.bytesAccumulator.accumulateBytes(clientSocketChannel);
                     }
@@ -175,6 +176,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                     }
 
                     // Handle read bytes
+                    @SuppressWarnings("unchecked")
                     final var attachment = (ChannelAttachment<T, ? extends Message>) key.attachment();
 
                     while (!msgByteBuffer.isEmpty()) {
@@ -280,6 +282,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
     private final void sendMessagesToUser(final SelectionKey key) throws IOException {
         synchronized (key) {
+
+            @SuppressWarnings("unchecked")
             final var attachment = (ChannelAttachment<T, ?>) key.attachment();
             final var msgQueue = attachment.messageQueue;
             final var consumer = attachment.consumer;
@@ -398,6 +402,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 .decodeMessage(new ByteBufferDataProducer(msgByteBuffer.byteBuf()));
 
         if (msg instanceof final Message.EncryptedMessage encryptedMsg) {
+
+            @SuppressWarnings("unchecked")
             final var realType = (ChannelAttachment<T, Message.EncryptedMessage>) attachment;
 
             switch (encryptedMsg) {
