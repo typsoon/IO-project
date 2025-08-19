@@ -1,5 +1,9 @@
 package network.messages.utils;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,9 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import game.utility.Point2F;
+import game.utility.Vector2F;
 
 public class ByteBufferDataProducerTest {
     private ByteBufferDataProducer testedProducer;
@@ -40,7 +43,7 @@ public class ByteBufferDataProducerTest {
     class getByteTests {
         @BeforeEach
         void init() {
-            prepareDataTableAndIn(new byte[]{42});
+            prepareDataTableAndIn(new byte[] { 42 });
         }
 
         // @Disabled
@@ -112,6 +115,52 @@ public class ByteBufferDataProducerTest {
         void getStringGivesCorrectString() throws IOException {
             String decodedString = testedProducer.getString();
             assertEquals(CorrectlyEncodedData.string, decodedString);
+        }
+    }
+
+    @Nested
+    class getPoint2FTests {
+        @BeforeEach
+        void init() {
+            prepareDataTableAndIn(CorrectlyEncodedData.encodedPoint2F);
+        }
+
+        // @Disabled
+        // @Test
+        // void getStringShouldThrowOnInvalidBuffer() {
+        //
+        // }
+        //
+        @Test
+        void getPoint2FDoesntThrowForNoReason() {
+            assertDoesNotThrow(testedProducer::getPoint2F,
+                    "Get string should not throw without a reason");
+        }
+
+        @Test
+        void getPoint2FGivesCorrectResult() throws IOException {
+            Point2F decodedPoint2F = testedProducer.getPoint2F();
+            assertEquals(CorrectlyEncodedData.point2F, decodedPoint2F);
+        }
+    }
+
+    @Nested
+    class getVector2FTests {
+        @BeforeEach
+        void init() {
+            prepareDataTableAndIn(CorrectlyEncodedData.encodedVector2F);
+        }
+
+        @Test
+        void getVector2FDoesntThrowForNoReason() {
+            assertDoesNotThrow(testedProducer::getVector2F,
+                    "Get vector should not throw without a reason");
+        }
+
+        @Test
+        void getVector2FGivesCorrectResult() throws IOException {
+            Vector2F decodedVector2F = testedProducer.getVector2F();
+            assertEquals(CorrectlyEncodedData.vector2F, decodedVector2F);
         }
     }
 }
