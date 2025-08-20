@@ -21,7 +21,7 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final ObjectToMessageDecoder objectToMessageDecoder;
 
     public ClientData(MessageDispatcher messageDispatcher, ISendableConsumer sendableReceiver,
-            PlayerConfig playerConfig, ObjectToMessageDecoder objectToMessageDecoder) {
+                      PlayerConfig playerConfig, ObjectToMessageDecoder objectToMessageDecoder) {
         this.messageDispatcher = messageDispatcher;
         this.sendableReceiver = Objects.requireNonNull(sendableReceiver);
         this.playerConfig = playerConfig;
@@ -45,6 +45,16 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     }
 
     @Override
+    public void confirmGameStart(ISendableConsumer sendableConsumer) {
+
+    }
+
+    @Override
+    public void unregisterConsumer() {
+
+    }
+
+    @Override
     public PlayerConfig getPlayerConfig() {
         return playerConfig;
     }
@@ -57,9 +67,11 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
                     var msg = objectToMessageDecoder.decodeFromRecord(gameState);
                     messageDispatcher.dispatchMessage(msg);
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 Logger.getGlobal().severe("An IOException caught");
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Logger.getGlobal().severe("An unpredictable error occured");
             }
         };
