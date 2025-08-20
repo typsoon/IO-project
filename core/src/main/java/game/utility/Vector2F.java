@@ -6,6 +6,10 @@ public record Vector2F(
 
     public static final int BYTES = 2 * Float.BYTES;
 
+    public Vector2F(Point2F point) {
+        this(point.x(), point.y());
+    }
+
     public Vector2F add(Vector2F other) {
         return new Vector2F(this.x + other.x, this.y + other.y);
     }

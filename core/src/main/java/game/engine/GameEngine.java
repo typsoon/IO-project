@@ -23,7 +23,7 @@ public class GameEngine implements IGameEngine {
     private final Collection<Closeable> resourcesToClose;
 
     @Override
-    public void PerformCycle(Collection<Event> events) {
+    public void performCycle(Collection<Event> events) {
         for (Event event : events) {
             Player player = players.get(event.playerGamesStateSender());
             if (player != null) {

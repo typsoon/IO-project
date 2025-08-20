@@ -32,8 +32,8 @@ public class GameStateProcessor implements IGameStateProcessor {
         this.renderableObjectFactory = objectFactory;
         this.displayableGameState = displayableGameState;
         this.player = objectFactory.createRenderablePlayer(playerConfig);
-        this.displayableGameState.AddPlayer(player);
-        this.displayableGameState.AddDrawable(player.getDrawableInfo());
+        this.displayableGameState.addPlayer(player);
+        this.displayableGameState.addDrawable(player.getDrawableInfo());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GameStateProcessor implements IGameStateProcessor {
         } else {
             renderableObject = renderableObjectFactory.createRenderableObject(entityState);
             entities.put(entityState.entityId(), renderableObject);
-            displayableGameState.AddDrawable(renderableObject.GetDrawable());
+            displayableGameState.addDrawable(renderableObject.getDrawable());
         }
         renderableObject.timeSinceUpdate = 0f;
     }
@@ -78,7 +78,7 @@ public class GameStateProcessor implements IGameStateProcessor {
             TimedRenderableObject renderableObject = entry.getValue();
             renderableObject.timeSinceUpdate += deltaTime;
             if (renderableObject.timeSinceUpdate >= timeThreshold) {
-                displayableGameState.RemoveDrawable(renderableObject.GetDrawable());
+                displayableGameState.removeDrawable(renderableObject.getDrawable());
                 renderableObject.dispose();
                 return true;
             }

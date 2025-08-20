@@ -51,7 +51,7 @@ public class GameSessionManager implements IActionReceiver, Closeable {
             while ((event = eventQueue.poll()) != null) {
                 eventsToProcess.add(event);
             }
-            gameEngine.PerformCycle(eventsToProcess);
+            gameEngine.performCycle(eventsToProcess);
         } catch (Exception e) {
             // TODO: handle exceptions properly, maybe log them
             e.printStackTrace();

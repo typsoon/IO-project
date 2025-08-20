@@ -34,7 +34,7 @@ public class RenderableObject implements Disposable {
         geometryRepresentation.dispose();
     }
 
-    public DrawableInfo GetDrawable() {
+    public DrawableInfo getDrawable() {
         return drawableInfo;
     }
 }

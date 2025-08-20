@@ -19,14 +19,14 @@ public class DisplayableGameState implements IDisplayableGameState {
     }
 
     @Override
-    public void AddDrawable(DrawableInfo drawableInfo) {
+    public void addDrawable(DrawableInfo drawableInfo) {
         if (drawableInfo != null) {
             drawableInfos.add(drawableInfo);
         }
     }
 
     @Override
-    public void RemoveDrawable(DrawableInfo drawableInfo) {
+    public void removeDrawable(DrawableInfo drawableInfo) {
         if (drawableInfo != null) {
             drawableInfos.remove(drawableInfo);
         }
@@ -38,14 +38,14 @@ public class DisplayableGameState implements IDisplayableGameState {
     }
 
     @Override
-    public void AddPlayer(IPlayerData player) {
+    public void addPlayer(IPlayerData player) {
         if (player != null) {
             playerData.add(player);
         }
     }
 
     @Override
-    public void RemovePlayer(IPlayerData player) {
+    public void removePlayer(IPlayerData player) {
         if (player != null) {
             playerData.remove(player);
         }

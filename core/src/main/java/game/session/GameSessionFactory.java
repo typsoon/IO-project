@@ -16,7 +16,7 @@ public class GameSessionFactory {
                 .map(player -> new EnginePlayerData(playerGameStateSenders.get(player.connector()), player.config()))
                 .toList();
         IGameEngine gameEngine = GameEngineFactory.createGameEngine(enginePlayerData);
-        gameSessionManager.SetupEngine(gameEngine);
+        gameSessionManager.setupEngine(gameEngine);
         return gameSessionManager;
     }
 }
