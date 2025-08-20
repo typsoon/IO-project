@@ -2,11 +2,12 @@ package user;
 
 public class UserState {
     public enum State {
-        DEFAULT,
+        IDLE,
         IN_ROOM,
-        IN_QUEUE,
-        IN_GAME
+        SEARCHING,
+        MATCHED_PENDING_CONFIRM,
+        IN_LOBBY
     }
 
-    public State state = State.DEFAULT;
+    public State state = State.IDLE;
 }
