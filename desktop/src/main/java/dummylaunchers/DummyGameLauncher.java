@@ -12,7 +12,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import frontend.assetsloading.TexturesProvider;
 import frontend.assetsloading.impl.AtlasLoader;
 import frontend.concreteviews.gameplayview.GameplayViewFactory;
 import game.engine.PlayerConfig;

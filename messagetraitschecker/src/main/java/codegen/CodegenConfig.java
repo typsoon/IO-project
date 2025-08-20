@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
 
 public class CodegenConfig {
+    public static final boolean UNKNOWN_TYPE_MEANS_ENUM = true;
     public static final String generatedClassNameFormat = "%sGenerated";
 
     public static final String consumerParName = "consumer";
@@ -32,6 +34,9 @@ public class CodegenConfig {
     public static record TypeNameData(
             String consumerMethod, String producerMethod,
             int size) {
+        public int size() {
+            return size;
+        };
     }
 
     public static final String answerVarName = "answer";
@@ -51,11 +56,34 @@ public class CodegenConfig {
         typeToTypeData.put(TypeName.get(String.class),
                 new TypeNameData("putString($N)", "getString()", DYNAMIC_SIZE));
 
-        typeToTypeData.put(ClassName.bestGuess("Point2F"),
+        // FIXME: this is ugly - it depends on file structure
+        typeToTypeData.put(ClassName.bestGuess("game.utility.Point2F"),
                 new TypeNameData("putPoint2F($N)", "getPoint2F()", 2 * Float.BYTES));
-
-        typeToTypeData.put(ClassName.bestGuess("Vector2F"),
+        typeToTypeData.put(ClassName.bestGuess("game.utility.Vector2F"),
                 new TypeNameData("putVector2F($N)", "getVector2F()", 2 * Float.BYTES));
+
     }
 
+    static final TypeNameData getTypeNameData(FieldSpec field) {
+        var mappedVal = typeToTypeData.get(field.type());
+
+        // TODO: fixme, how to check if that is an enum, It's possible that a separate
+        // annotation will be needed to
+        // mark enums that can be passed in messages
+        // && field.type().getClass().isEnum())
+        if (UNKNOWN_TYPE_MEANS_ENUM) {
+            if (mappedVal == null) {
+                mappedVal = new CodegenConfig.TypeNameData("putEnum($N)",
+                        "getEnum(%s.values())".formatted(field.type()),
+                        Integer.BYTES);
+            }
+        } else {
+            if (mappedVal == null) {
+                throw new IllegalStateException(
+                        "Unsupported type: %s, not found among keys %s".formatted(field.type(),
+                                typeToTypeData.keySet()));
+            }
+        }
+        return mappedVal;
+    }
 }

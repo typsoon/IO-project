@@ -2,6 +2,7 @@ package codegen;
 
 import static codegen.CodegenConfig.decodeFromRecordMethodName;
 import static codegen.CodegenConfig.decodeFromRecordParName;
+import static codegen.CodegenConfig.getTypeNameData;
 import static codegen.CodegenConfig.typeToTypeData;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -36,7 +37,7 @@ public class ProducerGenerator {
                 .returns(ClassName.get(messageTypeMirror.asType()));
 
         fieldSpecs.forEach(field -> {
-            var mappedVal = typeToTypeData.get(field.type());
+            var mappedVal = getTypeNameData(field);
 
             args.add("$L");
             formatArgs.add(CodeBlock.of("$N.$L", CodegenConfig.producerParName, mappedVal.producerMethod()));

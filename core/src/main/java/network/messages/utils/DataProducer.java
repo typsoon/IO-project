@@ -21,4 +21,8 @@ public interface DataProducer {
     default Vector2F getVector2F() throws IOException {
         return new Vector2F(getFloat(), getFloat());
     }
+
+    default <T extends Enum<T>> T getEnum(T[] values) throws IOException {
+        return values[getInt()];
+    }
 }

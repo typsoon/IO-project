@@ -23,4 +23,8 @@ public interface DataConsumer {
         putFloat(vector.x());
         putFloat(vector.y());
     };
+
+    default <T extends Enum<T>> void putEnum(T enumVar) throws IOException {
+        putInt(enumVar.ordinal());
+    }
 }

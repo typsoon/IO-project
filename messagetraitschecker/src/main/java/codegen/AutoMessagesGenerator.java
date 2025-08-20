@@ -4,6 +4,7 @@ import static codegen.CodegenConfig.DYNAMIC_SIZE;
 import static codegen.CodegenConfig.MESSAGE_SIZE_TYPE;
 import static codegen.CodegenConfig.answerVarName;
 import static codegen.CodegenConfig.getDynamicSizeMethodName;
+import static codegen.CodegenConfig.getTypeNameData;
 import static codegen.CodegenConfig.staticSizeFieldName;
 import static codegen.CodegenConfig.typeToTypeData;
 import static com.palantir.javapoet.TypeName.BYTE;
@@ -42,10 +43,7 @@ public class AutoMessagesGenerator {
         byte staticSize = CodegenConfig.MESSAGE_CODE_SIZE;
 
         for (FieldSpec field : fieldSpecs) {
-            var mappedVal = CodegenConfig.typeToTypeData.get(field.type());
-            if (mappedVal == null) {
-                throw new IllegalStateException("Unsupported type: %s".formatted(field));
-            }
+            var mappedVal = getTypeNameData(field);
 
             if (mappedVal.size() != DYNAMIC_SIZE) {
                 staticSize += mappedVal.size();
@@ -90,7 +88,7 @@ public class AutoMessagesGenerator {
         var calculateDynamicSizeBlockBuilder = CodeBlock.builder();
 
         for (FieldSpec field : fieldSpecs) {
-            var mappedVal = typeToTypeData.get(field.type());
+            var mappedVal = getTypeNameData(field);
 
             if (mappedVal.size() == DYNAMIC_SIZE) {
                 initialDynamicSizeVal += CodegenConfig.STRING_SIZE_VALUE_SIZE;
@@ -127,10 +125,7 @@ public class AutoMessagesGenerator {
                         CodeBlock.of(byteTypeNameData.consumerMethod(), CodegenConfig.idFieldName));
 
         fieldSpecs.forEach(field -> {
-            var mappedVal = typeToTypeData.get(field.type());
-            if (mappedVal == null) {
-                throw new IllegalStateException("Unsupported type: %s".formatted(field));
-            }
+            var mappedVal = getTypeNameData(field);
 
             methodBuilder.addStatement("$N.$L", consumerParName,
                     CodeBlock.of(mappedVal.consumerMethod(), field.name()).toString());
@@ -161,7 +156,9 @@ public class AutoMessagesGenerator {
 
         var fieldSpecs = GenericTypeUtils.getFieldSpecs(templateArgTypeMirror, processingEnv);
         var constructor = getConstructor(fieldSpecs);
+
         var encodeAndWrite = getEncodeAndWrite(fieldSpecs, consumerProducer.consumerQualifiedName());
+
         var getDynamicSize = getGetDynamicSize(fieldSpecs);
 
         var staticSize = getStaticSize(fieldSpecs);
