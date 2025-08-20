@@ -29,7 +29,7 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     @Override
     public void leaveRoomCommand() {
         this.room = null;
-        userState.state = State.DEFAULT;
+        userState.state = State.IDLE;
     }
 
     @Override

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class RoomManager implements IRoomManager {
     private final IMatchmakingEngine matchmakingEngine;
@@ -87,9 +86,8 @@ public class RoomManager implements IRoomManager {
         if (!room.isAdmin(user)) return RoomRequest.NOT_AUTHORIZED;
 
         // TODO: add checking match parameter validity or smth
-        int numMembers = room.members().size();
         Collection<IMatchmakingUserHandle> members = room.members().stream().map(RoomMember::matchmakingUserHandle).toList();
-        matchmakingEngine.findGame(members, numMembers);
+        matchmakingEngine.createGame(members);
         return RoomRequest.SUCCESSFUL;
     }
 

@@ -17,8 +17,8 @@ public class MatchmakingEngine implements IMatchmakingEngine {
     }
 
     @Override
-    public void findGame(Collection<IMatchmakingUserHandle> users, int lobbySize) {
-        LobbyBuilder lobbyBuilder = findOrCreateLobbyBuilder(lobbySize, users.size());
+    public void createGame(Collection<IMatchmakingUserHandle> users) {
+        LobbyBuilder lobbyBuilder = findOrCreateLobbyBuilder(users.size(), users.size());
         users.forEach(user -> addUserToLobby(user, lobbyBuilder));
     }
 
