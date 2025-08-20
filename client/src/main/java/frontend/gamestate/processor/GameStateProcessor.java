@@ -33,6 +33,7 @@ public class GameStateProcessor implements IGameStateProcessor {
         this.displayableGameState = displayableGameState;
         this.player = objectFactory.createRenderablePlayer(playerConfig);
         this.displayableGameState.AddPlayer(player);
+        this.displayableGameState.AddDrawable(player.getDrawableInfo());
     }
 
     @Override
