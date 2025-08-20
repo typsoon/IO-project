@@ -27,6 +27,10 @@ public class RenderableObjectFactory {
         renderableObject.setPosition(entityState.position());
         renderableObject.setRotation(entityState.rotation());
         renderableObject.setVelocity(entityState.velocity());
+
+        drawableInfo.setWidth(geometryConfig.width());
+        drawableInfo.setHeight(geometryConfig.height());
+
         return renderableObject;
     }
 
@@ -37,6 +41,8 @@ public class RenderableObjectFactory {
                 0, 0
         );
         DrawableInfo drawableInfo = new DrawableInfo(playerConfig.entityGroupID(), EntityVisibleState.Standing);
+        drawableInfo.setWidth(geometryConfig.width());
+        drawableInfo.setHeight(geometryConfig.height());
         drawableInfo.setEntityGroupID(EntityGroupID.HUMAN_BASIC);
         return new RenderablePlayer(playerConfig, geometryRepresentation, drawableInfo);
     }
