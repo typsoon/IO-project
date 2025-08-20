@@ -64,6 +64,7 @@ public class GameSessionManager implements IActionReceiver, Closeable {
 
     protected void setupEngine(IGameEngine gameEngine) {
         this.gameEngine = gameEngine;
+        startGameLoop();
     }
 
     protected GameSessionManager(Collection<PlayerData> players) {
@@ -73,7 +74,6 @@ public class GameSessionManager implements IActionReceiver, Closeable {
             playerGameStateSenders.put(player.connector(),
                     gameState -> playerGameStateQueues.get(player.connector()).add(gameState));
         }
-        startGameLoop();
     }
 
     @Override
