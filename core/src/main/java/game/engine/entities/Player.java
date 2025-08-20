@@ -48,7 +48,8 @@ public class Player implements IEntity {
                 geometryRepresentation.getVelocity(),
                 geometryRepresentation.getRotation(),
                 entityGroupID,
-                EntityAction.Idle
+                EntityAction.Idle,
+                sightRange
         );
     }
     public Rectangle2F getSightRange() {

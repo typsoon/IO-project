@@ -13,6 +13,7 @@ public record PlayerState(
         Vector2F velocity,
         float rotation,
         EntityGroupID entityGroupId,
-        EntityAction action
+        EntityAction action,
+        Vector2F sightRange
         //this will hold more information than entity state
 ) implements IGameState { }

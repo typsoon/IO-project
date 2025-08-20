@@ -57,6 +57,8 @@ public class GameStateProcessor implements IGameStateProcessor {
         player.setPosition(playerState.position());
         player.setVelocity(playerState.velocity());
         player.setRotation(playerState.rotation());
+
+        player.setRange(playerState.sightRange());
     }
 
     private void updateEntityState(EntityState entityState) {
