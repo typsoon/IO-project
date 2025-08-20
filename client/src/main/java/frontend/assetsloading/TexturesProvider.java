@@ -2,8 +2,9 @@ package frontend.assetsloading;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import frontend.gamestate.EntityVisibleState;
 import game.engine.entities.EntityGroupID;
 
 public interface TexturesProvider {
-    <T extends Enum<T>> TextureRegion getTextureRegion(EntityGroupID groupID, Enum<T> state, float stateTime);
+    TextureRegion getTextureRegion(EntityGroupID groupID, EntityVisibleState state, float stateTime);
 }

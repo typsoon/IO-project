@@ -3,23 +3,33 @@ package frontend.gamestate;
 import game.engine.entities.EntityGroupID;
 
 // TODO: Consider whether using the Enum's ordinal instead of the Enum itself would be better.
-public class DrawableInfo{
+public class DrawableInfo {
     EntityGroupID entityGroupID;
     EntityVisibleState state;
     float stateTime;
     // TODO: Modifiers modifiers,
-    float x; float y; float width; float height;
-    float originX; float originY;
-    float scaleX; float scaleY;
+    float x;
+    float y;
+    float width;
+    float height;
+    float originX;
+    float originY;
+    float scaleX;
+    float scaleY;
     float rotation;
 
-    public DrawableInfo(EntityGroupID entityGroupID, EntityVisibleState state){
+    public DrawableInfo(EntityGroupID entityGroupID, EntityVisibleState state) {
         this.entityGroupID = entityGroupID;
         this.state = state;
         stateTime = 0;
-        x = 0; y = 0; width = 0; height = 0;
-        originX = 0; originY = 0;//TODO check what should be here
-        scaleX = 1; scaleY = 1;
+        x = 0;
+        y = 0;
+        width = 0;
+        height = 0;
+        originX = 0;
+        originY = 0;// TODO check what should be here
+        scaleX = 1;
+        scaleY = 1;
         rotation = 0;
     }
 
@@ -117,5 +127,67 @@ public class DrawableInfo{
 
     public void setEntityGroupID(EntityGroupID entityGroupID) {
         this.entityGroupID = entityGroupID;
+    }
+
+    @Override
+    public String toString() {
+        return "DrawableInfo [entityGroupID=" + entityGroupID + ", state=" + state + ", stateTime=" + stateTime + ", x="
+                + x + ", y=" + y + ", width=" + width + ", height=" + height + ", originX=" + originX + ", originY="
+                + originY + ", scaleX=" + scaleX + ", scaleY=" + scaleY + ", rotation=" + rotation + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((entityGroupID == null) ? 0 : entityGroupID.hashCode());
+        result = prime * result + ((state == null) ? 0 : state.hashCode());
+        result = prime * result + Float.floatToIntBits(stateTime);
+        result = prime * result + Float.floatToIntBits(x);
+        result = prime * result + Float.floatToIntBits(y);
+        result = prime * result + Float.floatToIntBits(width);
+        result = prime * result + Float.floatToIntBits(height);
+        result = prime * result + Float.floatToIntBits(originX);
+        result = prime * result + Float.floatToIntBits(originY);
+        result = prime * result + Float.floatToIntBits(scaleX);
+        result = prime * result + Float.floatToIntBits(scaleY);
+        result = prime * result + Float.floatToIntBits(rotation);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DrawableInfo other = (DrawableInfo) obj;
+        if (entityGroupID != other.entityGroupID)
+            return false;
+        if (state != other.state)
+            return false;
+        if (Float.floatToIntBits(stateTime) != Float.floatToIntBits(other.stateTime))
+            return false;
+        if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
+            return false;
+        if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))
+            return false;
+        if (Float.floatToIntBits(width) != Float.floatToIntBits(other.width))
+            return false;
+        if (Float.floatToIntBits(height) != Float.floatToIntBits(other.height))
+            return false;
+        if (Float.floatToIntBits(originX) != Float.floatToIntBits(other.originX))
+            return false;
+        if (Float.floatToIntBits(originY) != Float.floatToIntBits(other.originY))
+            return false;
+        if (Float.floatToIntBits(scaleX) != Float.floatToIntBits(other.scaleX))
+            return false;
+        if (Float.floatToIntBits(scaleY) != Float.floatToIntBits(other.scaleY))
+            return false;
+        if (Float.floatToIntBits(rotation) != Float.floatToIntBits(other.rotation))
+            return false;
+        return true;
     }
 }

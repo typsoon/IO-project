@@ -15,9 +15,9 @@ public class Player implements IEntity {
     private final EntityGroupID entityGroupID;
     private final IManagingGeometryRepresentation geometryRepresentation;
 
-    //should be from file or config
+    // should be from file or config
     private final float speed = 8f;
-    private final Vector2F sightRange = new Vector2F(100, 100);
+    private final Vector2F sightRange = new Vector2F(30, 30);
 
     public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId) {
         this.geometryRepresentation = geometryRepresentation;
@@ -25,9 +25,11 @@ public class Player implements IEntity {
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
     }
+
     public void move(Direction direction) {
         geometryRepresentation.move(direction.vector().multiply(speed));
     }
+
     @Override
     public EntityState getEntityState() {
         return new EntityState(
@@ -37,9 +39,9 @@ public class Player implements IEntity {
                 geometryRepresentation.getVelocity(),
                 geometryRepresentation.getRotation(),
                 entityGroupID,
-                EntityAction.Idle
-        );
+                EntityAction.Idle);
     }
+
     public PlayerState getPlayerState() {
         return new PlayerState(
                 entityId,
@@ -49,15 +51,15 @@ public class Player implements IEntity {
                 geometryRepresentation.getRotation(),
                 entityGroupID,
                 EntityAction.Idle,
-                sightRange
-        );
+                sightRange);
     }
+
     public Rectangle2F getSightRange() {
         return new Rectangle2F(
                 geometryRepresentation.getPosition().subtract(sightRange),
-                geometryRepresentation.getPosition().add(sightRange)
-        );
+                geometryRepresentation.getPosition().add(sightRange));
     }
+
     @Override
     public IGeometryRepresentation geometryRepresentation() {
         return geometryRepresentation;

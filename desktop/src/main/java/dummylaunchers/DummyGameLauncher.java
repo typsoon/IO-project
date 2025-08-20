@@ -23,7 +23,6 @@ import game.session.PlayerData;
 import game.utility.ISendable;
 import viewmodel.ITextureManager;
 import viewmodel.impl.BasicTextureManager;
-import game.session.GameSessionManager;
 
 class GameLauncher extends Game {
     @Override
@@ -33,12 +32,12 @@ class GameLauncher extends Game {
         var sendablesSentToClient = new ArrayList<ISendable>();
         IPlayerConnector dummyPlayerConnector = gameStates -> {
             synchronized (sendablesSentToClient) {
-                Logger.getGlobal().info("Game states sent %s".formatted(gameStates));
+                Logger.getGlobal().finer("Game states sent %s".formatted(gameStates));
                 sendablesSentToClient.addAll(gameStates);
             }
         };
         var dummyPlayerData = new PlayerData(dummyPlayerConnector, playerConfig);
-        GameSessionManager sessionManager = GameSessionFactory.createGameSessionManager(List.of(dummyPlayerData));
+        GameSessionFactory.createGameSessionManager(List.of(dummyPlayerData));
 
         var dummySocketWrapper = new Utility.DummySocketWrapper(sendablesSentToClient);
         var viewManager = new Utility.NoInteractionViewManager();
@@ -67,7 +66,7 @@ public class DummyGameLauncher {
     public static void main(final String[] arg) {
         var applog = Logger.getGlobal();
         Handler systemOut = new ConsoleHandler();
-        var level = Level.FINEST;
+        var level = Level.INFO;
         systemOut.setLevel(level);
         applog.addHandler(systemOut);
         applog.setLevel(level);

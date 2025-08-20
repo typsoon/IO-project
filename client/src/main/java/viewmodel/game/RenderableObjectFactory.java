@@ -20,9 +20,8 @@ public class RenderableObjectFactory {
         var geometryRepresentation = geometryFactory.createGeometryRepresentation(
                 geometryConfig,
                 entityState.position().x(),
-                entityState.position().y()
-        );
-        DrawableInfo drawableInfo = new DrawableInfo(entityState.entityGroupId(),EntityVisibleState.Standing);
+                entityState.position().y());
+        DrawableInfo drawableInfo = new DrawableInfo(entityState.entityGroupId(), EntityVisibleState.IDLE_FRONT);
         TimedRenderableObject renderableObject = new TimedRenderableObject(geometryRepresentation, drawableInfo);
         renderableObject.setPosition(entityState.position());
         renderableObject.setRotation(entityState.rotation());
@@ -38,9 +37,8 @@ public class RenderableObjectFactory {
         var geometryConfig = EntityGeometryConfigFactory.createEntityGeometryConfig(playerConfig.geometryConfigID());
         var geometryRepresentation = geometryFactory.createGeometryRepresentation(
                 geometryConfig,
-                0, 0
-        );
-        DrawableInfo drawableInfo = new DrawableInfo(playerConfig.entityGroupID(), EntityVisibleState.Standing);
+                0, 0);
+        DrawableInfo drawableInfo = new DrawableInfo(playerConfig.entityGroupID(), EntityVisibleState.IDLE_FRONT);
         drawableInfo.setWidth(geometryConfig.width());
         drawableInfo.setHeight(geometryConfig.height());
         drawableInfo.setEntityGroupID(EntityGroupID.HUMAN_BASIC);

@@ -1,7 +1,8 @@
 package frontend.gamestate;
 
 public enum EntityVisibleState {
-    Walking,
-    Running,
-    Standing,
+    IDLE_FRONT,
+    IDLE_BACK,
+    // Running,
+    // Standing,
 }

@@ -16,8 +16,9 @@ ext {
   // snakeyamlVersion = "2.4"
   atlasName = "graphicsAtlas"
   graphicsDirName = "graphics"
+  atlasdataDirName = "atlasdata"
 
-  texturePacker = [ "../$resourcesDirName/$graphicsDirName/", "../$resourcesDirName/$graphicsDirName/", "$atlasName" ]
+  texturePacker = [ "../$resourcesDirName/$graphicsDirName/", "../$resourcesDirName/$graphicsDirName/$atlasdataDirName/", "$atlasName" ]
 }
 
 dependencies {

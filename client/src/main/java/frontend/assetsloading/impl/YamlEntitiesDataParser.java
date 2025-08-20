@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -22,18 +21,19 @@ public class YamlEntitiesDataParser {
 
         Map<String, List<LinkedHashMap<String, Double>>> data = yaml.load(inputStream);
 
-        var logger = Logger.getGlobal();
-        var stringBuilder = new StringBuilder();
-        for (var entry : data.entrySet()) {
-            stringBuilder.append("Category: " + entry.getKey() + '\n');
-            for (var animation : entry.getValue()) {
-                for (var animEntry : animation.entrySet()) {
-                    stringBuilder.append("  " + animEntry.getKey() + " = " + animEntry.getValue() + '\n');
-                }
-            }
-        }
-        logger.info(stringBuilder.toString());
-
+        // var logger = Logger.getGlobal();
+        // var stringBuilder = new StringBuilder();
+        // for (var entry : data.entrySet()) {
+        // stringBuilder.append("Category: " + entry.getKey() + '\n');
+        // for (var animation : entry.getValue()) {
+        // for (var animEntry : animation.entrySet()) {
+        // stringBuilder.append(" " + animEntry.getKey() + " = " + animEntry.getValue()
+        // + '\n');
+        // }
+        // }
+        // }
+        // logger.info(stringBuilder.toString());
+        //
         Map<String, EntityTextureData> answer = new HashMap<>();
 
         for (var range : data.entrySet()) {

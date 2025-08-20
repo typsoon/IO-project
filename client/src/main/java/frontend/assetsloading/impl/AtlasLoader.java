@@ -2,6 +2,7 @@ package frontend.assetsloading.impl;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import com.badlogic.gdx.Gdx;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import frontend.assetsloading.TexturesProvider;
+import frontend.gamestate.EntityVisibleState;
 import game.engine.entities.EntityGroupID;
 
 public class AtlasLoader implements TexturesProvider {
@@ -22,12 +24,12 @@ public class AtlasLoader implements TexturesProvider {
             List<StateEntry> stateEntries) {
     }
 
-    private final static String atlasPath = "graphics/graphicsAtlas.atlas";
+    private final static String atlasPath = "graphics/atlasdata/graphicsAtlas.atlas";
     private final static String entitiesDataPath = "graphics/entitygroups/entities.yaml";
     private final static TextureAtlas atlas;
 
     // TODO: make this an enummap
-    private final static EnumMap<EntityGroupID, Function<Float, TextureRegion>[]> mapper;
+    private final static EnumMap<EntityGroupID, EnumMap<EntityVisibleState, Function<Float, TextureRegion>>> mapper;
 
     private final static String atlasAdressesPrefix = "entitygroups";
 
@@ -46,13 +48,17 @@ public class AtlasLoader implements TexturesProvider {
                 throw new IllegalStateException("There is no data about %s in entities file".formatted(enumVal));
             }
 
-            @SuppressWarnings("unchecked")
-            var list = (Function<Float, TextureRegion>[]) new Function[data.stateEntries
-                    .size()];
-            mapper.put(enumVal, list);
+            var map = new EnumMap<EntityVisibleState, Function<Float, TextureRegion>>(EntityVisibleState.class);
+            mapper.put(enumVal, map);
 
-            for (int i = 0; i < data.stateEntries.size(); i++) {
-                var entry = data.stateEntries.get(i);
+            for (var entry : data.stateEntries) {
+                // NOTE: checking whether the stateEntry even exists in our enum
+                EntityVisibleState state;
+                try {
+                    state = EntityVisibleState.valueOf(entry.stateName.toUpperCase());
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
 
                 var adress = getAdress(enumVal.name(), entry.stateName);
                 if (entry.frameDuration != 0) {
@@ -64,21 +70,21 @@ public class AtlasLoader implements TexturesProvider {
                     if (regions.isEmpty()) {
                         throw new IllegalStateException("No matching regions found for adress %s".formatted(adress));
                     }
-                    list[i] = stateTime -> animation.getKeyFrame(stateTime);
+                    map.put(state, stateTime -> animation.getKeyFrame(stateTime));
                 } else {
                     var region = atlas.findRegion(adress);
 
                     if (region == null) {
                         throw new IllegalStateException("No matching region found for adress %s".formatted(adress));
                     }
-                    list[i] = stateTime -> region;
+                    map.put(state, stateTime -> region);
                 }
             }
         }
     }
 
     @Override
-    public <T extends Enum<T>> TextureRegion getTextureRegion(EntityGroupID groupID, Enum<T> state, float stateTime) {
-        return mapper.get(groupID)[state.ordinal()].apply(stateTime);
+    public TextureRegion getTextureRegion(EntityGroupID groupID, EntityVisibleState state, float stateTime) {
+        return Objects.requireNonNull(mapper.get(groupID).get(state)).apply(stateTime);
     }
 }
