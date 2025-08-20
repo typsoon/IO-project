@@ -39,7 +39,6 @@ class GameLauncher extends Game {
         };
         var dummyPlayerData = new PlayerData(dummyPlayerConnector, playerConfig);
         GameSessionManager sessionManager = GameSessionFactory.createGameSessionManager(List.of(dummyPlayerData));
-        sessionManager.startGameLoop();
 
         var dummySocketWrapper = new Utility.DummySocketWrapper(sendablesSentToClient);
         var viewManager = new Utility.NoInteractionViewManager();
