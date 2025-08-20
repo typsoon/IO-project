@@ -8,6 +8,10 @@ import game.session.PlayerData;
 public interface IMatchmakingUserHandle {
     void gameStarted(ISendableConsumer sendableConsumer);
 
+    void confirmGameStart(ISendableConsumer sendableConsumer);
+
+    void unregisterConsumer();
+
     PlayerConfig getPlayerConfig();
 
     IPlayerConnector getPlayerConnector();
