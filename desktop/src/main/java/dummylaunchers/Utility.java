@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Logger;
 
+import game.actions.IAction;
+import game.session.IActionReceiver;
+import game.session.ISubscribablePlayerConnector;
 import game.utility.ISendable;
 import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper;
@@ -15,9 +19,14 @@ import viewmodel.IViewManager;
 public class Utility {
     public static class DummySocketWrapper implements DuplexSocketWrapper {
         private final Collection<ISendable> pendingSendables;
+        private final ISubscribablePlayerConnector playerConnector;
+        private final IActionReceiver actionReceiver;
 
-        public DummySocketWrapper(Collection<ISendable> pendingSendables) {
+        public DummySocketWrapper(Collection<ISendable> pendingSendables, IActionReceiver actionReceiver,
+                ISubscribablePlayerConnector playerConnector) {
             this.pendingSendables = pendingSendables;
+            this.playerConnector = playerConnector;
+            this.actionReceiver = actionReceiver;
         }
 
         @Override
@@ -34,8 +43,11 @@ public class Utility {
 
         @Override
         public void dispatchMessage(Message message) throws IOException, ConnectionEndedException {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'dispatchMessage'");
+            if (message.getSendable() instanceof IAction action) {
+                actionReceiver.sendAction(playerConnector, action);
+            } else {
+                Logger.getGlobal().severe("That was not an IAction");
+            }
         }
     }
 

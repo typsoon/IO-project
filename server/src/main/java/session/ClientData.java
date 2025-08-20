@@ -19,11 +19,14 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private ISendableConsumer sendableReceiver;
     private final PlayerConfig playerConfig;
     private final ObjectToMessageDecoder objectToMessageDecoder;
+    private final ISendableConsumer defaultSendableReceiver;
 
     public ClientData(MessageDispatcher messageDispatcher, ISendableConsumer sendableReceiver,
-                      PlayerConfig playerConfig, ObjectToMessageDecoder objectToMessageDecoder) {
+            PlayerConfig playerConfig, ObjectToMessageDecoder objectToMessageDecoder) {
         this.messageDispatcher = messageDispatcher;
         this.sendableReceiver = Objects.requireNonNull(sendableReceiver);
+        this.defaultSendableReceiver = sendableReceiver;
+
         this.playerConfig = playerConfig;
         this.objectToMessageDecoder = objectToMessageDecoder;
     }
@@ -46,12 +49,12 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
 
     @Override
     public void confirmGameStart(ISendableConsumer sendableConsumer) {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
-    public void unregisterConsumer() {
-
+    public void moveToDefaultState() {
+        sendableReceiver = defaultSendableReceiver;
     }
 
     @Override
@@ -67,14 +70,11 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
                     var msg = objectToMessageDecoder.decodeFromRecord(gameState);
                     messageDispatcher.dispatchMessage(msg);
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 Logger.getGlobal().severe("An IOException caught");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Logger.getGlobal().severe("An unpredictable error occured");
             }
         };
     }
-
 }

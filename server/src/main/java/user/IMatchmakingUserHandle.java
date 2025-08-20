@@ -10,7 +10,7 @@ public interface IMatchmakingUserHandle {
 
     void confirmGameStart(ISendableConsumer sendableConsumer);
 
-    void unregisterConsumer();
+    void moveToDefaultState();
 
     PlayerConfig getPlayerConfig();
 

@@ -37,9 +37,11 @@ class GameLauncher extends Game {
             }
         };
         var dummyPlayerData = new PlayerData(dummyPlayerConnector, playerConfig);
-        GameSessionFactory.createGameSessionManager(List.of(dummyPlayerData));
 
-        var dummySocketWrapper = new Utility.DummySocketWrapper(sendablesSentToClient);
+        var gameSessionManager = GameSessionFactory.createGameSessionManager(List.of(dummyPlayerData));
+
+        var dummySocketWrapper = new Utility.DummySocketWrapper(sendablesSentToClient, gameSessionManager,
+                dummyPlayerData.connector());
         var viewManager = new Utility.NoInteractionViewManager();
 
         Constructor<? extends ITextureManager> basicTexManagerConstructor = null;
