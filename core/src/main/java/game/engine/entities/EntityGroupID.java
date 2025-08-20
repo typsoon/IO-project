@@ -1,5 +1,6 @@
 package game.engine.entities;
 
 public enum EntityGroupID {
-    HUMAN_BASIC
+    HUMAN_BASIC,
+    CHICKEN
 }

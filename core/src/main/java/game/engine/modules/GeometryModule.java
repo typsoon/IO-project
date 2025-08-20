@@ -19,6 +19,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
     private final int velocityIterations;
     private final int positionIterations;
 
+    //if map performance is an issue we can use setUserData (using Object)
     private final Map<Body, IManagingGeometryRepresentation> geometryRepresentationMap = new HashMap<>();
 
     public GeometryModule(float timeStep, int velocityIterations, int positionIterations ) {

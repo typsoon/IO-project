@@ -1,26 +1,27 @@
 package game.engine;
 
-import game.engine.entities.IEntity;
+import game.engine.entities.*;
 import game.engine.modules.IGeometryRepresentation;
 import game.session.IPlayerGamesStateSender;
 import game.actions.PlayerMove;
 import game.actions.PlayerSlotUse;
-import game.engine.entities.EntityFactory;
 import game.engine.modules.IGeometryModule;
-import game.engine.entities.Player;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-public class GameEngine implements IGameEngine {
+public class GameEngine implements IGameEngine, IWorldView {
 
     private final IGeometryModule geometryModule;
     private final EntityFactory entityFactory;
     private final Map<IPlayerGamesStateSender, Player> players = new java.util.HashMap<>();
     private final Map<IGeometryRepresentation, IEntity> entities = new java.util.HashMap<>();
     private final Collection<Closeable> resourcesToClose;
+
+    private final IAIEntity chicken;
+
 
     @Override
     public void performCycle(Collection<Event> events) {
@@ -34,6 +35,7 @@ public class GameEngine implements IGameEngine {
                 }
             }
         }
+        chicken.think(this);
         geometryModule.cycle();
 
         for (Map.Entry<IPlayerGamesStateSender, Player> entry : players.entrySet()) {
@@ -47,7 +49,11 @@ public class GameEngine implements IGameEngine {
             }
         }
     }
-
+    public Collection<IEntity> getEntitiesInArea(float x,float y,float width, float height) {
+        return geometryModule.getEntitiesInArea(x,y,width,height).stream()
+                .map(entities::get)
+                .toList();
+    }
     protected GameEngine(Collection<EnginePlayerData> players, IGeometryModule geometryModule, EntityFactory entityFactory, Collection<Closeable> resourcesToClose) {
         this.geometryModule = geometryModule;
         this.entityFactory = entityFactory;
@@ -57,6 +63,8 @@ public class GameEngine implements IGameEngine {
             entities.put(player.geometryRepresentation(), player);
             this.players.put(playerData.playerGamesStateSender(), player);
         }
+        chicken = entityFactory.createChicken(0, 0);
+        entities.put(chicken.geometryRepresentation(), chicken);
     }
     @Override
     public void close() throws IOException{
