@@ -1,6 +1,8 @@
 package game.engine.entities;
 
 import game.actions.Direction;
+import game.actions.PlayerMove;
+import game.engine.IWorldView;
 import game.engine.PlayerConfig;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
@@ -9,11 +11,12 @@ import game.gamestates.PlayerState;
 import game.utility.Rectangle2F;
 import game.utility.Vector2F;
 
-public class Player implements IEntity {
+public class Player implements IAIEntity {
     private final int entityId;
     private final GeometryConfigID geometryConfigID;
     private final EntityGroupID entityGroupID;
     private final IManagingGeometryRepresentation geometryRepresentation;
+    private final MoveSet moveset = new MoveSet();
 
     // should be from file or config
     private final float speed = 8f;
@@ -24,9 +27,19 @@ public class Player implements IEntity {
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
+        moveset.move = new PlayerMove(Direction.NONE);
     }
 
-    public void move(Direction direction) {
+    public MoveSet getMoveSet(){
+        return moveset;
+    }
+
+    @Override
+    public void think(IWorldView view) {
+        move(moveset.move.direction());
+    }
+
+    private void move(Direction direction) {
         geometryRepresentation.move(direction.vector().multiply(speed));
     }
 

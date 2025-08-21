@@ -22,22 +22,27 @@ public class GameEngine implements IGameEngine, IWorldView {
     private final Map<IGeometryRepresentation, IEntity> entities = new java.util.HashMap<>();
     private final Collection<Closeable> resourcesToClose;
 
+    private final Collection<IAIEntity> thinkers = new java.util.ArrayList<>();
+
     private final IAIEntity chicken;
 
     @Override
     public void performCycle(Collection<Event> events) {
         for (Event event : events) {
             Player player = players.get(event.playerGamesStateSender());
+
             if (player != null) {
+                MoveSet moveSet = player.getMoveSet();
                 switch (event.action()) {
-                    case PlayerMove playerMove -> player.move(playerMove.direction());
+                    case PlayerMove playerMove -> moveSet.move = playerMove;
                     case PlayerSlotUse playerSlotUse ->
                         throw new UnsupportedOperationException("PlayerSlotUse handling not implemented");
                     default -> throw new IllegalArgumentException("Unknown action: " + event.action());
                 }
             }
         }
-        chicken.think(this);
+
+        thinkers.forEach(thinker -> thinker.think(this));
         geometryModule.cycle();
 
         for (Map.Entry<IPlayerGamesStateSender, Player> entry : players.entrySet()) {
@@ -69,9 +74,12 @@ public class GameEngine implements IGameEngine, IWorldView {
             Player player = entityFactory.createPlayer(playerData.playerConfig(), 0, 0);
             entities.put(player.geometryRepresentation(), player);
             this.players.put(playerData.playerGamesStateSender(), player);
+            thinkers.add(player);
         }
+
         chicken = entityFactory.createChicken(0, 0);
         entities.put(chicken.geometryRepresentation(), chicken);
+        thinkers.add(chicken);
 
     }
 
