@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -83,9 +84,44 @@ public class GameplayView extends ScreenAdapter {
         // EntityVisibleState.IDLE_FRONT, 0);
     }
 
+
+    //this in only for debug
+    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private void grid(){
+        shapeRenderer.setProjectionMatrix(gameCamera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+
+
+        float camX = gameCamera.position.x;
+        float camY = gameCamera.position.y;
+
+        Vector2F rangeOfView = getVisibilityRange();
+
+        int gridSize = 2;
+        float worldWidth = rangeOfView.x();
+        float worldHeight = rangeOfView.y();
+        int startX = (int)(camX - worldWidth/2) / gridSize * gridSize;
+        int endX   = (int)(camX + worldWidth/2);
+
+        int startY = (int)(camY - worldHeight/2) / gridSize * gridSize;
+        int endY   = (int)(camY + worldHeight/2);
+
+        for (int x = startX; x < endX; x += gridSize) {
+            shapeRenderer.line(x, camY - worldHeight/2, x, camY + worldHeight/2);
+        }
+        for (int y = startY; y < endY; y += gridSize) {
+            shapeRenderer.line(camX - worldWidth/2, y, camX + worldWidth/2, y);
+        }
+
+        shapeRenderer.end();
+    }
+
+
     @Override
     public void render(final float delta) {
         ScreenUtils.clear(0, 0, 0, 0);
+
         stage.act(delta);
         stage.draw();
 
@@ -95,6 +131,11 @@ public class GameplayView extends ScreenAdapter {
         var rangeOfView = getVisibilityRange();
         viewport.setWorldSize(rangeOfView.x(), rangeOfView.y());
         viewport.apply();
+
+
+        //this is for debug puposes, to see the grid
+        grid();
+
 
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
