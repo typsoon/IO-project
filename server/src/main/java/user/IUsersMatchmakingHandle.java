@@ -1,5 +1,7 @@
 package user;
 
+import matchmaking.MatchmakingParameters;
+
 public interface IUsersMatchmakingHandle {
     enum JoinGameRequestResult {
         REQUEST_SUCCESSFUL,
@@ -7,13 +9,7 @@ public interface IUsersMatchmakingHandle {
         // ...
     }
 
-    record MatchmakingParameters() {
-    }
-
     JoinGameRequestResult findGame(MatchmakingParameters matchmakingParameters);
 
-    /**
-     * {@code true} if game lookup was in progress
-     */
     boolean interruptGameLookup();
 }

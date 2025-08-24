@@ -1,41 +1,39 @@
 package user.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-
-import user.UserState.State;
 import room.IRoomManager;
 import room.IRoomManager.RoomRequest;
 import room.Room;
 import room.RoomConfig;
 import room.RoomMember;
 import user.*;
+import user.UserState.State;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     private final IRoomManager roomManager;
     private final RoomMember member;
     private Room room = null;
-    private final UserState userState;
 
-    RoomHandle(IRoomManager roomManager, UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle, UserState userState) {
+    RoomHandle(IRoomManager roomManager, IUserView userView,
+               IMatchmakingUserHandle matchmakingUserHandle, UserState userState) {
         this.roomManager = roomManager;
-        this.member = new RoomMember(userInfo, matchmakingUserHandle, this);
-        this.userState = userState;
+        this.member = new RoomMember(userView, matchmakingUserHandle, this, userState);
     }
 
     @Override
     public void leaveRoomCommand() {
         this.room = null;
-        userState.state = State.IDLE;
+        this.member.userState().state = State.DEFAULT;
     }
 
     @Override
     public void joinRoomCommand(Room room) {
         this.room = room;
-        userState.state = State.IN_ROOM;
+        this.member.userState().state = State.IN_ROOM;
     }
 
     @Override

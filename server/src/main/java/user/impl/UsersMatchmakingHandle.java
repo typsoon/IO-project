@@ -1,30 +1,29 @@
 package user.impl;
 
-import lobby.IMatchmakingEngine;
-import user.IMatchmakingUserHandle;
+import matchmaking.IMatchmakingEngine;
+import matchmaking.MatchmakingParameters;
+import matchmaking.lobby.LobbyMember;
 import user.IUsersMatchmakingHandle;
 import user.UserState;
 
 public class UsersMatchmakingHandle implements IUsersMatchmakingHandle {
     private final IMatchmakingEngine matchmakingEngine;
-    private final UserState userState;
-    private final IMatchmakingUserHandle matchmakingUserHandle;
+    private final LobbyMember member;
 
-    UsersMatchmakingHandle(IMatchmakingEngine matchmakingEngine, UserState userState, IMatchmakingUserHandle matchmakingUserHandle) {
+    UsersMatchmakingHandle(IMatchmakingEngine matchmakingEngine, LobbyMember member) {
         this.matchmakingEngine = matchmakingEngine;
-        this.userState = userState;
-        this.matchmakingUserHandle = matchmakingUserHandle;
+        this.member = member;
     }
 
     @Override
     public JoinGameRequestResult findGame(MatchmakingParameters matchmakingParameters) {
-        if (userState.state == UserState.State.IN_ROOM) return JoinGameRequestResult.ALREADY_IN_ROOM;
-        matchmakingEngine.findGame(matchmakingUserHandle, 5); // TODO: wiadomo co
+        if (member.userState().state == UserState.State.IN_ROOM) return JoinGameRequestResult.ALREADY_IN_ROOM;
+        matchmakingEngine.findGame(member, matchmakingParameters);
         return JoinGameRequestResult.REQUEST_SUCCESSFUL;
     }
 
     @Override
     public boolean interruptGameLookup() {
-        return false;
+        return matchmakingEngine.interruptSearch(member.userView().id());
     }
 }

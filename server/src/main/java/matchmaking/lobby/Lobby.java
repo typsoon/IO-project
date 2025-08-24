@@ -1,7 +1,4 @@
-package lobby;
-
-import java.util.Collection;
-import java.util.logging.Logger;
+package matchmaking.lobby;
 
 import game.actions.IAction;
 import game.session.IActionReceiver;
@@ -10,17 +7,21 @@ import game.session.PlayerData;
 import game.utility.ISendable;
 import user.IMatchmakingUserHandle;
 
+import java.util.Collection;
+import java.util.logging.Logger;
+
 public class Lobby {
-    private final Collection<IMatchmakingUserHandle> members;
+    private final Collection<LobbyMember> members;
     private final IActionReceiver sessionManager;
 
-    public Lobby(Collection<IMatchmakingUserHandle> members, IActionReceiver sessionManager) {
+    public Lobby(Collection<LobbyMember> members, IActionReceiver sessionManager) {
         this.members = members;
         this.sessionManager = sessionManager;
     }
 
     public Collection<PlayerData> getPlayerData() {
         return members.stream()
+                .map(LobbyMember::matchmakingUserHandle)
                 .map(IMatchmakingUserHandle::getPlayerData)
                 .toList();
     }

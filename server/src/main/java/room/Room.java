@@ -1,7 +1,6 @@
 package room;
 
-import user.IMatchmakingUserHandle;
-import user.UserInfo;
+import user.IUserView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +8,7 @@ import java.util.Collection;
 public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomConfig) {
 
     public Room(RoomMember admin, RoomConfig roomConfig) {
-        this(new ArrayList<>(), new Admin(admin.userInfo()), roomConfig);
+        this(new ArrayList<>(), new Admin(admin.userView()), roomConfig);
         this.members().add(admin);
     }
 
@@ -29,12 +28,12 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
 
     public void setAdmin(RoomMember newAdmin) {
         if (members.contains(newAdmin)) {
-            admin.changeAdmin(newAdmin.userInfo());
+            admin.changeAdmin(newAdmin.userView());
         }
     }
 
     public boolean isAdmin(RoomMember user) {
-        return admin.admin().equals(user.userInfo());
+        return admin.admin().equals(user.userView());
     }
 
     public void addMember(RoomMember member) {
@@ -49,7 +48,7 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
             member.roomsUserHandle().leaveRoomCommand();
             if (members.isEmpty()) return;
             if (isAdmin(member)) {
-                admin.changeAdmin(members.iterator().next().userInfo());
+                admin.changeAdmin(members.iterator().next().userView());
             }
         }
     }
@@ -70,17 +69,17 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
     }
 
     public static class Admin {
-        private UserInfo admin;
+        private IUserView admin;
 
-        public Admin(UserInfo admin) {
+        public Admin(IUserView admin) {
             this.admin = admin;
         }
 
-        public UserInfo admin() {
+        public IUserView admin() {
             return admin;
         }
 
-        public void changeAdmin(UserInfo admin) {
+        public void changeAdmin(IUserView admin) {
             this.admin = admin;
         }
     }

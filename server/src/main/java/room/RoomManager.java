@@ -1,7 +1,8 @@
 package room;
 
-import lobby.IMatchmakingEngine;
-import user.IMatchmakingUserHandle;
+import matchmaking.IMatchmakingEngine;
+import matchmaking.MatchmakingParameters;
+import matchmaking.lobby.LobbyMember;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +66,7 @@ public class RoomManager implements IRoomManager {
         var room = user.roomsUserHandle().getRoom().get();
         if (!room.isAdmin(user)) return RoomRequest.NOT_AUTHORIZED;
         if (!room.members().contains(newAdmin)) return RoomRequest.NOT_AUTHORIZED;
-        room.admin().changeAdmin(newAdmin.userInfo());
+        room.admin().changeAdmin(newAdmin.userView());
         return RoomRequest.SUCCESSFUL;
     }
 
@@ -85,9 +86,8 @@ public class RoomManager implements IRoomManager {
         var room = user.roomsUserHandle().getRoom().get();
         if (!room.isAdmin(user)) return RoomRequest.NOT_AUTHORIZED;
 
-        // TODO: add checking match parameter validity or smth
-        Collection<IMatchmakingUserHandle> members = room.members().stream().map(RoomMember::matchmakingUserHandle).toList();
-        matchmakingEngine.createGame(members);
+        Collection<LobbyMember> members = room.members().stream().map(RoomMember::getLobbyMember).toList();
+        matchmakingEngine.createGame(members, new MatchmakingParameters(members.size()));
         return RoomRequest.SUCCESSFUL;
     }
 

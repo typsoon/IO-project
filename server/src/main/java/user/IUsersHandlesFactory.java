@@ -1,5 +1,5 @@
 package user;
 
 public interface IUsersHandlesFactory {
-    UsersHandles getUsersHandles(UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle);
+    UsersHandles getUsersHandles(IUserView userView, IMatchmakingUserHandle matchmakingUserHandle);
 }

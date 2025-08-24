@@ -1,6 +1,7 @@
 package user.impl;
 
-import lobby.IMatchmakingEngine;
+import matchmaking.IMatchmakingEngine;
+import matchmaking.lobby.LobbyMember;
 import room.IRoomManager;
 import user.*;
 
@@ -14,10 +15,11 @@ public class UsersHandlesFactory implements IUsersHandlesFactory {
     }
 
     @Override
-    public UsersHandles getUsersHandles(UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle) {
+    public UsersHandles getUsersHandles(IUserView userView, IMatchmakingUserHandle matchmakingUserHandle) {
         var userState = new UserState();
-        IUsersRoomHandle roomHandle = new RoomHandle(roomManager, userInfo, matchmakingUserHandle, userState);
-        IUsersMatchmakingHandle matchmakingHandle = new UsersMatchmakingHandle(matchmakingEngine, userState, matchmakingUserHandle);
+        IUsersRoomHandle roomHandle = new RoomHandle(roomManager, userView, matchmakingUserHandle, userState);
+        IUsersMatchmakingHandle matchmakingHandle = new UsersMatchmakingHandle(matchmakingEngine,
+                new LobbyMember(userView, matchmakingUserHandle, userState));
         return new UsersHandles(roomHandle, matchmakingHandle);
     }
 }

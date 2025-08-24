@@ -1,8 +1,15 @@
 package room;
 
-import user.IRoomsUserHandle;
+import matchmaking.lobby.LobbyMember;
 import user.IMatchmakingUserHandle;
-import user.UserInfo;
+import user.IRoomsUserHandle;
+import user.IUserView;
+import user.UserState;
 
-public record RoomMember(UserInfo userInfo, IMatchmakingUserHandle matchmakingUserHandle, IRoomsUserHandle roomsUserHandle) {
+public record RoomMember(IUserView userView,
+                         IMatchmakingUserHandle matchmakingUserHandle,
+                         IRoomsUserHandle roomsUserHandle,
+                         UserState userState) {
+
+    public LobbyMember getLobbyMember() { return new LobbyMember(userView, matchmakingUserHandle, userState); }
 }
