@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -14,6 +15,7 @@ import game.utility.Vector2F;
 
 public class GeometryModule implements IGeometryModule, IGeometryFactory, Closeable {
 
+    private static final Logger LOGGER = Logger.getLogger(GeometryModule.class.getName());
     private final World world = new World(new Vector2(0,0), true);
     private final float timeStep;
     private final int velocityIterations;
@@ -57,40 +59,56 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
         body.createFixture(fixtureDef);
         shape.dispose();
         IManagingGeometryRepresentation geometryRepresentation = new IManagingGeometryRepresentation() {
+            private boolean disposed = false;
+            private void checkDisposed(String methodName) {
+                if (disposed) {
+                    LOGGER.warning("Warning: called " + methodName + " on disposed geometry.");
+                }
+            }
             @Override
             public Point2F getPosition() {
+                if (disposed) { checkDisposed("getPosition"); return new Point2F(0, 0); }
                 return new Point2F(body.getPosition().x, body.getPosition().y);
             }
             @Override
             public Vector2F getVelocity() {
+                if (disposed) { checkDisposed("getVelocity"); return new Vector2F(0, 0); }
                 Vector2 velocity = body.getLinearVelocity();
                 return new Vector2F(velocity.x, velocity.y);
             }
             @Override
             public float getRotation() {
+                if (disposed) { checkDisposed("getRotation"); return 0; }
                 return body.getAngle();
             }
             @Override
             public void move(float dx, float dy) {
+                if (disposed) { checkDisposed("move"); return; }
 //                body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);
                 body.setLinearVelocity(dx, dy);
             }
             @Override
             public void setPosition(float x, float y) {
+                if (disposed) { checkDisposed("setPosition"); return; }
                 body.setTransform(x, y, body.getAngle());
             }
             @Override
             public void setVelocity(float vx, float vy) {
+                if (disposed) { checkDisposed("setVelocity"); return; }
                 body.setLinearVelocity(vx, vy);
             }
             @Override
             public void setRotation(float angle) {
+                if (disposed) { checkDisposed("setRotation"); return; }
                 body.setTransform(body.getPosition(), angle);
             }
             @Override
             public void dispose() {
-                world.destroyBody(body);
-                geometryRepresentationMap.remove(body);
+                if (!disposed) {
+                    disposed = true;
+                    world.destroyBody(body);
+                    geometryRepresentationMap.remove(body);
+                }
             }
         };
         geometryRepresentationMap.put(body, geometryRepresentation);
@@ -99,13 +117,34 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
 
     @Override
     public Collection<IMovingGeometryRepresentation> getEntitiesInArea(float x, float y, float width, float height) {
+
         Collection<IMovingGeometryRepresentation> entitiesInArea = new ArrayList<>();
         world.QueryAABB(
                 fixture -> {
-                    entitiesInArea.add(geometryRepresentationMap.get(fixture.getBody()));
+                    if(geometryRepresentationMap.get(fixture.getBody())!=null)
+                        entitiesInArea.add(geometryRepresentationMap.get(fixture.getBody()));
                     return true;
                 },
                 x, y, x + width, y + height);
+        //debuging purposes
+//        BodyDef bodyDef = new BodyDef();
+//        bodyDef.type = BodyDef.BodyType.StaticBody;
+//        bodyDef.position.set(x + width / 2f, y + height / 2f); // center of AABB
+//
+//        Body debugBody = world.createBody(bodyDef);
+//
+//        PolygonShape shape = new PolygonShape();
+//        shape.setAsBox(width / 2f, height / 2f); // half-width/half-height
+//
+//        FixtureDef fixtureDef = new FixtureDef();
+//        fixtureDef.shape = shape;
+//        fixtureDef.isSensor = true; // nie wpływa na kolizje
+//        fixtureDef.density = 0;
+//
+//        debugBody.createFixture(fixtureDef);
+//        shape.dispose();
+
+
         return entitiesInArea;
     }
 

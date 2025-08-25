@@ -6,20 +6,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import game.actions.IAction;
+import game.actions.*;
 import game.engine.entities.EntityGroupID;
 import game.gamestates.IGameState;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
 import game.session.PlayerData;
-import game.actions.Direction;
-import game.actions.PlayerMove;
 import game.engine.GameEngine;
 import game.engine.PlayerConfig;
 import game.engine.entities.GeometryConfigID;
 import game.engine.modules.GeometryModule;
 import game.session.GameSessionFactory;
 import game.session.GameSessionManager;
+import game.utility.Vector2F;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,6 +67,10 @@ public class DebugScreen implements Screen {
         if (dir1 != null) {
             player1Connector.sendAction(new PlayerMove(dir1));
         }
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            player2Connector.sendAction(new PlayerSlotUse(UsageType.LEFT_CLICK,
+                    new Vector2F(0,0), 0));
+        }
         Direction dir2 = getDirection(
                 Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT);
         if (dir2 != null) {
@@ -96,7 +99,7 @@ public class DebugScreen implements Screen {
             return Direction.W;
         if (r)
             return Direction.E;
-        return null;
+        return Direction.NONE;
     }
 
     @Override

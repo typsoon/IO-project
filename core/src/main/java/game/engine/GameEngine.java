@@ -24,7 +24,6 @@ public class GameEngine implements IGameEngine, IWorldView {
 
     private final Collection<IAIEntity> thinkers = new java.util.ArrayList<>();
 
-    private final IAIEntity chicken;
 
     @Override
     public void performCycle(Collection<Event> events) {
@@ -35,14 +34,14 @@ public class GameEngine implements IGameEngine, IWorldView {
                 MoveSet moveSet = player.getMoveSet();
                 switch (event.action()) {
                     case PlayerMove playerMove -> moveSet.move = playerMove;
-                    case PlayerSlotUse playerSlotUse ->
-                        throw new UnsupportedOperationException("PlayerSlotUse handling not implemented");
+                    case PlayerSlotUse playerSlotUse -> moveSet.slotUse = playerSlotUse;
                     default -> throw new IllegalArgumentException("Unknown action: " + event.action());
                 }
             }
         }
-
-        thinkers.forEach(thinker -> thinker.think(this));
+        //this is quick fix
+        Collection<IAIEntity> thinkersCopy = new java.util.ArrayList<>(thinkers);
+        thinkersCopy.forEach(thinker -> thinker.think(this));
         geometryModule.cycle();
 
         for (Map.Entry<IPlayerGamesStateSender, Player> entry : players.entrySet()) {
@@ -70,16 +69,28 @@ public class GameEngine implements IGameEngine, IWorldView {
         this.geometryModule = geometryModule;
         this.entityFactory = entityFactory;
         this.resourcesToClose = resourcesToClose;
+
+        //probably should be done by a decorator ObservableEntityFactory but building process would be complex
+        entityFactory.setCallbacks(
+                entity -> entities.put(entity.geometryRepresentation(), entity),
+                thinkers::add,
+                entity -> {
+                    entities.remove(entity.geometryRepresentation());
+                    if (entity instanceof IAIEntity aiEntity) {
+                        thinkers.remove(aiEntity);
+                    }
+                });
+
         for (EnginePlayerData playerData : players) {
             Player player = entityFactory.createPlayer(playerData.playerConfig(), 0, 0);
-            entities.put(player.geometryRepresentation(), player);
             this.players.put(playerData.playerGamesStateSender(), player);
-            thinkers.add(player);
         }
 
-        chicken = entityFactory.createChicken(0, 0);
-        entities.put(chicken.geometryRepresentation(), chicken);
-        thinkers.add(chicken);
+        entityFactory.createChicken(0, 0);
+        entityFactory.createChicken(0, 0);
+        entityFactory.createChicken(0, 0);
+        entityFactory.createChicken(0, 0);
+        entityFactory.createChicken(0, 0);
 
     }
 
