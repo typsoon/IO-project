@@ -1,5 +1,7 @@
 package matchmaking.pool;
 
+import matchmaking.MatchmakingParameters;
+
 public interface IMatchmakingPoolFactory {
-    IMatchmakingPool createPool();
+    IMatchmakingPool createPool(MatchmakingParameters matchmakingParameters);
 }

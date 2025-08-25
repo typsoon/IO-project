@@ -20,8 +20,8 @@ public class MatchmakingEngine implements IMatchmakingEngine {
     private final Consumer<PendingLobby> pendingLobbyConsumer;
     private final IMatchmakingPoolFactory matchmakingPoolFactory;
 
-    public MatchmakingEngine(Consumer<PendingLobby> pendingLobbyConsumer,
-                             IMatchmakingPoolFactory matchmakingPoolFactory) {
+    MatchmakingEngine(Consumer<PendingLobby> pendingLobbyConsumer,
+                      IMatchmakingPoolFactory matchmakingPoolFactory) {
         this.pendingLobbyConsumer = pendingLobbyConsumer;
         this.matchmakingPoolFactory = matchmakingPoolFactory;
     }
@@ -55,6 +55,7 @@ public class MatchmakingEngine implements IMatchmakingEngine {
     }
 
     private IMatchmakingPool getPool(MatchmakingParameters parameters) {
-        return pools.computeIfAbsent(parameters, k -> matchmakingPoolFactory.createPool());
+        return pools.computeIfAbsent(parameters,
+                k -> matchmakingPoolFactory.createPool(parameters));
     }
 }
