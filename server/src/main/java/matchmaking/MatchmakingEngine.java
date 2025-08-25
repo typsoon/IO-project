@@ -1,62 +1,60 @@
 package matchmaking;
 
-import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
 import matchmaking.lobby.Lobby;
-import matchmaking.lobby.LobbyBuilder;
 import matchmaking.lobby.LobbyMember;
+import matchmaking.lobby.PendingLobby;
+import matchmaking.pool.IMatchmakingPool;
+import matchmaking.pool.IMatchmakingPoolFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class MatchmakingEngine implements IMatchmakingEngine {
     private final List<Lobby> lobbies = new ArrayList<>();
-    private final List<LobbyBuilder> pendingLobbies = new ArrayList<>();
 
-//    @Override
-//    public void findGame(IMatchmakingUserHandle user, int lobbySize) {
-//        LobbyBuilder lobbyBuilder = findOrCreateLobbyBuilder(lobbySize, 1);
-//        addUserToLobby(user, lobbyBuilder);
-//    }
-//
-//    @Override
-//    public void createGame(Collection<IMatchmakingUserHandle> users) {
-//        LobbyBuilder lobbyBuilder = findOrCreateLobbyBuilder(users.size(), users.size());
-//        users.forEach(user -> addUserToLobby(user, lobbyBuilder));
-//    }
-//
-//    private LobbyBuilder findOrCreateLobbyBuilder(int lobbySize, int requiredCapacity) {
-//        for (LobbyBuilder builder : pendingLobbies) {
-//            if (builder.lobbySize() == lobbySize && builder.capacityLeft() >= requiredCapacity) {
-//                return builder;
-//            }
-//        }
-//        LobbyBuilder newBuilder = new LobbyBuilder(lobbySize);
-//        pendingLobbies.add(newBuilder);
-//        return newBuilder;
-//    }
-//
-//    private void addUserToLobby(IMatchmakingUserHandle user, LobbyBuilder lobbyBuilder) {
-//        lobbyBuilder.addPlayer(user);
-//        if (lobbyBuilder.full()) {
-//            Lobby lobby = lobbyBuilder.build();
-//            lobbies.add(lobby);
-//            pendingLobbies.remove(lobbyBuilder);
-//        }
-//    }
+    private final Map<MatchmakingParameters, IMatchmakingPool> pools = new ConcurrentHashMap<>();
+    private final Map<UserId, Set<MatchmakingParameters>> activeSearches = new ConcurrentHashMap<>();
+
+    private final Consumer<PendingLobby> pendingLobbyConsumer;
+    private final IMatchmakingPoolFactory matchmakingPoolFactory;
+
+    public MatchmakingEngine(Consumer<PendingLobby> pendingLobbyConsumer,
+                             IMatchmakingPoolFactory matchmakingPoolFactory) {
+        this.pendingLobbyConsumer = pendingLobbyConsumer;
+        this.matchmakingPoolFactory = matchmakingPoolFactory;
+    }
 
     @Override
     public void findGame(LobbyMember user, MatchmakingParameters matchmakingParameters) {
-
+        var pool = getPool(matchmakingParameters);
+        pool.add(user);
+        activeSearches.computeIfAbsent(user.userView().id(),
+                k -> new HashSet<>()).add(matchmakingParameters);
+        var maybePendingLobby = pool.tryFormLobby();
+        maybePendingLobby.ifPresent(pendingLobbyConsumer);
     }
 
     @Override
     public void createGame(Collection<LobbyMember> room, MatchmakingParameters matchmakingParameters) {
-
+        var pendingLobby = new PendingLobby(room, matchmakingParameters);
+        pendingLobbyConsumer.accept(pendingLobby);
     }
 
     @Override
-    public boolean interruptSearch(IDatabaseManager.UserId userId) {
-        return false;
+    public boolean interruptSearch(UserId userId) { // TODO: this looks shady
+        var paramsSet = activeSearches.remove(userId);
+        if (paramsSet == null) return false;
+        boolean removed = false;
+        for (var params : paramsSet) {
+            var pool = getPool(params);
+            removed |= pool.remove(userId);
+        }
+        return removed;
+    }
+
+    private IMatchmakingPool getPool(MatchmakingParameters parameters) {
+        return pools.computeIfAbsent(parameters, k -> matchmakingPoolFactory.createPool());
     }
 }
