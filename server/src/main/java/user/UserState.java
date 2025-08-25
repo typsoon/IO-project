@@ -1,6 +1,14 @@
 package user;
 
 public class UserState {
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public enum State {
         DEFAULT,
         IN_ROOM,
@@ -9,5 +17,5 @@ public class UserState {
         IN_LOBBY
     }
 
-    public State state = State.DEFAULT;
+    private State state = State.DEFAULT;
 }

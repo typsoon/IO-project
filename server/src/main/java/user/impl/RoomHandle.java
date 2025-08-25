@@ -27,13 +27,13 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     @Override
     public void leaveRoomCommand() {
         this.room = null;
-        this.member.userState().state = State.DEFAULT;
+        this.member.userState().setState(State.DEFAULT);
     }
 
     @Override
     public void joinRoomCommand(Room room) {
         this.room = room;
-        this.member.userState().state = State.IN_ROOM;
+        this.member.userState().setState(State.IN_ROOM);
     }
 
     @Override

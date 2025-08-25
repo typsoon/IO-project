@@ -17,7 +17,7 @@ public class UsersMatchmakingHandle implements IUsersMatchmakingHandle {
 
     @Override
     public JoinGameRequestResult findGame(MatchmakingParameters matchmakingParameters) {
-        if (member.userState().state == UserState.State.IN_ROOM) return JoinGameRequestResult.ALREADY_IN_ROOM;
+        if (member.userState().getState() == UserState.State.IN_ROOM) return JoinGameRequestResult.ALREADY_IN_ROOM;
         matchmakingEngine.findGame(member, matchmakingParameters);
         return JoinGameRequestResult.REQUEST_SUCCESSFUL;
     }
