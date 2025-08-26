@@ -58,4 +58,10 @@ public class MatchmakingEngine implements IMatchmakingEngine {
         return pools.computeIfAbsent(parameters,
                 k -> matchmakingPoolFactory.createPool(parameters));
     }
+
+    public void finalizeLobby(Lobby lobby) {
+        synchronized (lobbies) {
+            lobbies.add(lobby);
+        }
+    }
 }
