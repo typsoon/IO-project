@@ -8,15 +8,18 @@ import game.utility.ISendable;
 import user.IMatchmakingUserHandle;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class Lobby {
+    private final UUID lobbyId;
     private final Collection<LobbyMember> members;
     private final IActionReceiver sessionManager;
 
-    public Lobby(Collection<LobbyMember> members, IActionReceiver sessionManager) {
+    public Lobby(Collection<LobbyMember> members, IActionReceiver sessionManager, UUID lobbyId) {
         this.members = members;
         this.sessionManager = sessionManager;
+        this.lobbyId = lobbyId;
     }
 
     public Collection<PlayerData> getPlayerData() {
