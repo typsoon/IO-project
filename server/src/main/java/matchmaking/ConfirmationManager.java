@@ -9,6 +9,7 @@ import matchmaking.lobby.LobbyMember;
 import matchmaking.lobby.PendingLobby;
 import network.messages.userstate.GameConfirmation;
 import user.IUserView;
+import user.UserState;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -46,6 +47,9 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
 
     @Override
     public void accept(PendingLobby pendingLobby) {
+        for (var member : pendingLobby.members()) {
+            member.userState().setState(UserState.State.MATCHED_PENDING_CONFIRM);
+        }
         UUID pid = UUID.randomUUID();
         ActivePending activePending = new ActivePending(pid, pendingLobby, Instant.now());
         if (activePendings.putIfAbsent(pid, activePending) != null) return; // very unlikely
@@ -176,6 +180,9 @@ class ActivePending {
 
     Lobby finalizeLobby() {
         if (!isFinal()) throw new IllegalStateException("Cannot finalize lobby before all responses are in");
+        for (var member : pendingLobby.members()) {
+            member.userState().setState(UserState.State.IN_LOBBY);
+        }
         return LobbyFactory.create(pendingLobby, lobbyId);
     }
 

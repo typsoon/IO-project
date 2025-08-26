@@ -6,6 +6,7 @@ import matchmaking.lobby.LobbyMember;
 import matchmaking.lobby.PendingLobby;
 import matchmaking.pool.IMatchmakingPool;
 import matchmaking.pool.IMatchmakingPoolFactory;
+import user.UserState;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +35,7 @@ public class MatchmakingEngine implements IMatchmakingEngine {
                 k -> new HashSet<>()).add(matchmakingParameters);
         var maybePendingLobby = pool.tryFormLobby();
         maybePendingLobby.ifPresent(pendingLobbyConsumer);
+        user.userState().setState(UserState.State.SEARCHING);
     }
 
     @Override
