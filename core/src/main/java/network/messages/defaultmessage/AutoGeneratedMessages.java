@@ -4,14 +4,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 
+import game.utility.ISendable;
 import messagetraits.AutoMessageTraits;
 import network.messages.Message;
 import network.messages.Message.EncryptedMessage;
 import network.messages.Message.TCPMessage;
 import network.messages.Message.UDPMessage;
-import game.utility.ISendable;
-import game.utility.Point2F;
-import game.utility.Vector2F;
 import network.messages.utils.DataConsumer;
 import network.messages.utils.DataProducer;
 

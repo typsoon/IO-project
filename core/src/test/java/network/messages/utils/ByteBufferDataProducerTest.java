@@ -2,12 +2,10 @@ package network.messages.utils;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
 import java.security.SecureRandom;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +31,7 @@ public class ByteBufferDataProducerTest {
 
         byteBuf.flip();
 
-        var readableByteStream = mock(ReadableByteChannel.class);
+        // var readableByteStream = mock(ReadableByteChannel.class);
 
         testedProducer = assertDoesNotThrow(() -> new ByteBufferDataProducer(byteBuf),
                 "Initializing producer shouldn't throw for no reason");

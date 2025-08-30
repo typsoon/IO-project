@@ -1,7 +1,6 @@
 package frontend.concreteviews.gameplayview;
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;

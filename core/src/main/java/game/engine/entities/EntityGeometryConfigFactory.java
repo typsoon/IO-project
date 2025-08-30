@@ -1,13 +1,10 @@
 package game.engine.entities;
 
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.yaml.snakeyaml.Yaml;
 
 public class EntityGeometryConfigFactory {
 

@@ -16,6 +16,7 @@ import viewmodel.IViewManager;
  * This class receives {@link ISendable}s from the server
  */
 public class GameplayManager implements ICycleTimedPerformer {
+    @SuppressWarnings("unused")
     private final IViewManager viewManager;
     private final DuplexSocketWrapper clientSideSocketWrapper;
     private final IGameStateProcessor gameStateProcessor;

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import viewmodel.ITextureManager;
 
 public class GameClientView extends ScreenAdapter {
+    @SuppressWarnings("unused")
     private final Game game;
     private final ITextureManager textureManager;
     private final GameClientViewEventListener gameClientViewEventListener;

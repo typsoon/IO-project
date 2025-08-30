@@ -3,7 +3,6 @@ package network.messages.utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.logging.Logger;
 
 import network.messages.MessagesConfig;
 

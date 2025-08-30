@@ -158,13 +158,6 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
         }
     }
 
-    private class UDPSendableReceiver extends SendableReceiver {
-        public UDPSendableReceiver(DuplexSocket<?> socketWrapper) {
-            super(socketWrapper);
-        }
-
-    }
-
     @Override
     public Collection<ISendable> getSendables() throws IOException {
         var answer = new ArrayList<ISendable>();

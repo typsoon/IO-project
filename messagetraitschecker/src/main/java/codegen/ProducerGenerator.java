@@ -3,7 +3,6 @@ package codegen;
 import static codegen.CodegenConfig.decodeFromRecordMethodName;
 import static codegen.CodegenConfig.decodeFromRecordParName;
 import static codegen.CodegenConfig.getTypeNameData;
-import static codegen.CodegenConfig.typeToTypeData;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
