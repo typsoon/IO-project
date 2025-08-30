@@ -1,13 +1,13 @@
-package network.server.nio.impl;
+package network.utils.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import network.server.nio.BytesAccumulator;
+import network.utils.BytesAccumulator;
 
-public class SSLSocketBytesAccumulator implements BytesAccumulator {
+public class OnlyMessagesBytesAccumulator implements BytesAccumulator {
     private Optional<ByteBuffer> currBuffer = Optional.empty();
     private final Logger logger = Logger.getGlobal();
 

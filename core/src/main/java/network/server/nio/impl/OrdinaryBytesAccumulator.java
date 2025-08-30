@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import network.messages.MessagesConfig;
-import network.server.nio.BytesAccumulator;
+import network.utils.BytesAccumulator;
 
 public class OrdinaryBytesAccumulator implements BytesAccumulator {
     private static enum State {

@@ -32,9 +32,11 @@ import network.messages.loginstate.PortInfoResponse;
 import network.messages.utils.ByteBufferDataProducer;
 import network.server.AuthenticationService;
 import network.server.AuthenticationService.Token;
-import network.server.nio.BytesAccumulator.WhatWasRead;
 import network.server.nio.NIOConnectionManager;
 import network.server.nio.NIOConnectionManager.SessionContract;
+import network.utils.AccumulatorAdapters;
+import network.utils.BytesAccumulator.WhatWasRead;
+import network.utils.impl.OnlyMessagesBytesAccumulator;
 import network.server.nio.NIOSSLSocketServer;
 import network.server.nio.NIOSocketServer;
 
@@ -92,7 +94,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
     private final NIOSocketServer tcpMessageSender;
     private final NIOSSLSocketServer sslMessageSender;
 
-    private final Map<SocketChannel, SSLSocketBytesAccumulator> unauthorizedChannels = new HashMap<>();
+    private final Map<SocketChannel, OnlyMessagesBytesAccumulator> unauthorizedChannels = new HashMap<>();
 
     private final IDatabaseManager databaseManager;
     private final AuthenticationService authenticationService;
@@ -251,7 +253,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
                 // New user connected to SSLServer - mark them as unauthorized
                 if (Objects.equals(serverSocketChannel, sslMessageSender.getServerSocketChannel())) {
-                    unauthorizedChannels.put(clientSocketChannel, new SSLSocketBytesAccumulator());
+                    unauthorizedChannels.put(clientSocketChannel, new OnlyMessagesBytesAccumulator());
                     sslMessageSender.acceptClient(clientSocketChannel);
 
                     clientSocketChannel.register(selector, initialInterestSet);

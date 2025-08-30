@@ -1,10 +1,9 @@
-package network.server.nio.impl;
+package network.utils;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
-import network.server.nio.BytesAccumulator.Readable;
+import network.utils.BytesAccumulator.Readable;
 
 public class AccumulatorAdapters {
     public static Readable getRedableByteChannelAdapter(final ReadableByteChannel readableByteChannel) {

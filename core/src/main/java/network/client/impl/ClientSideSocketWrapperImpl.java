@@ -1,6 +1,8 @@
 package network.client.impl;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +28,7 @@ import network.messages.utils.OutputStreamDataReceiver;
 import network.socketwrappers.SocketTypes.DuplexSocket;
 import network.socketwrappers.concretesocketwrappers.ClientSessionSSLSocket;
 import network.socketwrappers.concretesocketwrappers.ClientSessionSocket;
+import network.socketwrappers.concretesocketwrappers.ClientSessionUDPSocket;
 import network.utils.ConnectionData;
 import network.utils.TokenHolder;
 
@@ -46,6 +49,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
 
     private Socket sslSocket;
     private Socket tcpSocket;
+    private DatagramSocket udpSocket;
     private ConnectionData sslConnectionData;
 
     // private final Collection<Sendable> pendingSendables = new
@@ -118,6 +122,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                 }
                 case PortInfoResponse.Payload portInfo -> {
                     try {
+                        // NOTE: tcp socket setup
                         tcpSocket = new Socket(sslConnectionData.host(), portInfo.tcpPort());
 
                         var producer = new InputStreamDataProducer(tcpSocket.getInputStream());
@@ -127,8 +132,18 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                                 tokenHolder);
                         messageDispatcher.connectTCPSender(tcpSocketWrapper);
                         tcpSocketContainer.setSocketWrapper(tcpSocketWrapper);
-                        executorService
-                                .submit(new SendableReceiver(tcpSocketWrapper));
+
+                        executorService.submit(new SendableReceiver(tcpSocketWrapper));
+
+                        // NOTE: udp socket setup
+                        udpSocket = new DatagramSocket();
+                        udpSocket.connect(new InetSocketAddress(sslConnectionData.host(), portInfo.udpPort()));
+
+                        var udpSocketWrapper = new ClientSessionUDPSocket(udpSocket);
+                        messageDispatcher.connectUDPSender(udpSocketWrapper);
+                        udpSocketContainer.setSocketWrapper(udpSocketWrapper);
+
+                        executorService.submit(new SendableReceiver(udpSocketWrapper));
 
                         Logger.getGlobal().info("Received port info");
                     } catch (Exception e) {
@@ -141,6 +156,13 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                 }
             }
         }
+    }
+
+    private class UDPSendableReceiver extends SendableReceiver {
+        public UDPSendableReceiver(DuplexSocket<?> socketWrapper) {
+            super(socketWrapper);
+        }
+
     }
 
     @Override

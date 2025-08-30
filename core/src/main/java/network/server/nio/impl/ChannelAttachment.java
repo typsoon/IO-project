@@ -31,13 +31,15 @@ import network.messages.utils.ByteBufferDataProducer;
 import network.messages.utils.ByteChannelDataReceiver;
 import network.messages.utils.DataConsumer;
 import network.server.AuthenticationService;
-import network.server.nio.BytesAccumulator;
-import network.server.nio.BytesAccumulator.Readable;
-import network.server.nio.BytesAccumulator.WhatWasRead;
 import network.server.nio.NIOConnectionManager.ClientAndTheirMessage;
 import network.server.nio.NIOConnectionManager.SessionContract;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import network.socketwrappers.SocketTypes.SocketSender;
+import network.utils.AccumulatorAdapters;
+import network.utils.BytesAccumulator;
+import network.utils.BytesAccumulator.Readable;
+import network.utils.BytesAccumulator.WhatWasRead;
+import network.utils.impl.OnlyMessagesBytesAccumulator;
 
 public interface ChannelAttachment<T extends SessionContract> {
     void dispatchMessages() throws IOException;
@@ -219,7 +221,7 @@ class TCPChannelAttachment<T extends SessionContract> extends ConnectionBasedCha
 
 class SSLChannelAttachment<T extends SessionContract> extends ConnectionBasedChannelAttachment<T, EncryptedMessage> {
     // TODO: think about this
-    private final BytesAccumulator bytesAccumulator = new SSLSocketBytesAccumulator();
+    private final BytesAccumulator bytesAccumulator = new OnlyMessagesBytesAccumulator();
     private final Readable clientSocketChannel;
     private final T clientSession;
 
