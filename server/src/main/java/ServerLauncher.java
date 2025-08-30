@@ -12,6 +12,7 @@ public class ServerLauncher {
         var applog = Logger.getGlobal();
         Handler systemOut = new ConsoleHandler();
         var level = Level.FINER;
+        // var level = Level.FINEST;
         systemOut.setLevel(level);
         applog.addHandler(systemOut);
         applog.setLevel(level);

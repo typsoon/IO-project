@@ -9,10 +9,12 @@ public final class SocketTypes {
     public static interface DuplexSocket<T extends Message> extends SocketSender<T>, SocketReceiver {
     }
 
+    @FunctionalInterface
     public interface SocketReceiver {
         Message receiveMessage() throws IOException;
     }
 
+    @FunctionalInterface
     public interface SocketSender<SentMessage extends Message> {
         /**
          * @param message
