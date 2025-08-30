@@ -57,7 +57,7 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
         }
 
         var actBufferUnwrapped = currBuffer.get();
-        while (actBufferUnwrapped.position() != actBufferUnwrapped.capacity()) {
+        while (actBufferUnwrapped.hasRemaining()) {
             var readRes = byteIn.read(actBufferUnwrapped);
 
             if (readRes == 0) {
@@ -75,19 +75,16 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
 
         // TODO: remove this try catch block - it is not good for performance
         try {
-            switch (state) {
+            return switch (state) {
                 case TOKEN_NOT_READ -> {
                     state = State.TOKEN_READ;
-                    return Optional.of(new ReadData(WhatWasRead.TOKEN, actBufferUnwrapped));
+                    yield Optional.of(new ReadData(WhatWasRead.TOKEN, actBufferUnwrapped));
                 }
                 case TOKEN_READ -> {
                     state = State.TOKEN_NOT_READ;
-                    return Optional.of(new ReadData(WhatWasRead.MESSAGE, actBufferUnwrapped));
+                    yield Optional.of(new ReadData(WhatWasRead.MESSAGE, actBufferUnwrapped));
                 }
-                default -> {
-                    throw new IllegalStateException();
-                }
-            }
+            };
         } finally {
             currBuffer = Optional.empty();
         }

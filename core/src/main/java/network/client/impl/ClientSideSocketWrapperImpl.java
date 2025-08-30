@@ -139,7 +139,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                         udpSocket = new DatagramSocket();
                         udpSocket.connect(new InetSocketAddress(sslConnectionData.host(), portInfo.udpPort()));
 
-                        var udpSocketWrapper = new ClientSessionUDPSocket(udpSocket);
+                        var udpSocketWrapper = new ClientSessionUDPSocket(udpSocket, tokenHolder);
                         messageDispatcher.connectUDPSender(udpSocketWrapper);
                         udpSocketContainer.setSocketWrapper(udpSocketWrapper);
 

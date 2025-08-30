@@ -93,6 +93,7 @@ public class AutoMessagesGenerator {
             if (mappedVal.size() == DYNAMIC_SIZE) {
                 initialDynamicSizeVal += CodegenConfig.STRING_SIZE_VALUE_SIZE;
 
+                // TODO: Change this so it takes charset length encoded msg
                 calculateDynamicSizeBlockBuilder.addStatement("$N += $N.length()",
                         answerVarName, field.name());
             }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.nio.ByteBuffer;
+import java.util.logging.Logger;
 
 import network.messages.Message;
 import network.messages.Message.UDPMessage;
@@ -16,6 +17,7 @@ import network.messages.utils.DataConsumer;
 import network.socketwrappers.SocketTypes.DuplexSocket;
 import network.utils.AccumulatorAdapters;
 import network.utils.BytesAccumulator;
+import network.utils.TokenView;
 import network.utils.impl.OnlyMessagesBytesAccumulator;
 
 public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
@@ -30,13 +32,16 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
 
     private final MessageDecoder messageDecoder;
 
-    public ClientSessionUDPSocket(DatagramSocket datagramSocket, MessageDecoder messageDecoder) {
+    private final TokenView tokenHolder;
+
+    public ClientSessionUDPSocket(DatagramSocket datagramSocket, TokenView tokenView, MessageDecoder messageDecoder) {
         this.datagramSocket = datagramSocket;
         this.messageDecoder = messageDecoder;
+        this.tokenHolder = tokenView;
     }
 
-    public ClientSessionUDPSocket(DatagramSocket datagramSocket) {
-        this(datagramSocket, new ConcreteMessageDecoder());
+    public ClientSessionUDPSocket(DatagramSocket datagramSocket, TokenView tokenView) {
+        this(datagramSocket, tokenView, new ConcreteMessageDecoder());
     }
 
     private final DataConsumer consumer = new ByteBufferDataConsumer(sendingByteBuf);
@@ -46,7 +51,20 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
         // TODO: maybe send multiple messages in one Datagram
         sendingByteBuf.clear();
 
+        consumer.putInt(tokenHolder.getToken());
+
+        Logger.getGlobal().finer("Put token bytes in %d".formatted(tokenHolder.getToken()));
+
         message.encodeAndWrite(consumer);
+
+        // NOTE: debug
+        // int oldPos = sendingByteBuf.position();
+        // int oldLimit = sendingByteBuf.limit();
+        // sendingByteBuf.flip();
+        // DebugUtils.printBuffer(sendingByteBuf);
+        // sendingByteBuf.position(oldPos);
+        // sendingByteBuf.limit(oldLimit);
+
         sentPacket.setLength(sendingByteBuf.position());
 
         datagramSocket.send(sentPacket);

@@ -31,9 +31,16 @@ public class ByteBufferDataProducer implements DataProducer {
 
     @Override
     public String getString() throws IOException {
+        Logger.getGlobal().finest(
+                "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(), byteBuffer.capacity(),
+                        byteBuffer.limit()));
+
         byte len = byteBuffer.get();
+
         byte[] strBytes = new byte[len];
+
         byteBuffer.get(strBytes);
+
         return new String(strBytes, charset);
     }
 

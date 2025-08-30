@@ -71,10 +71,10 @@ abstract class ChannelAttachmentTraits<T extends SessionContract> implements Cha
     }
 
     final Collection<Message> readAllDataFromUDPorTCPAccumulator(final BytesAccumulator bytesAccumulator,
-            final BytesAccumulator.Readable clientSocketChannel,
+            final BytesAccumulator.Readable readable,
             final AuthenticationService authenticationService) throws IOException {
         final Collection<Message> answer = new LinkedList<>();
-        final var readRes = bytesAccumulator.accumulateBytes(clientSocketChannel);
+        final var readRes = bytesAccumulator.accumulateBytes(readable);
         var tempReadRes = readRes.orElse(null);
 
         while (tempReadRes != null) {
@@ -92,11 +92,15 @@ abstract class ChannelAttachmentTraits<T extends SessionContract> implements Cha
                         disconnectUser(userId);
                     }
 
-                    tempReadRes = bytesAccumulator.accumulateBytes(clientSocketChannel).orElse(null);
+                    tempReadRes = bytesAccumulator.accumulateBytes(readable).orElse(null);
                 }
 
                 case MESSAGE -> {
+                    // DebugUtils.printBuffer(msgByteBuf);
+
                     final var msg = messageDecoder.decodeMessage(new ByteBufferDataProducer(msgByteBuf));
+                    // final var msg = messageDecoder.decodeMessage(new
+                    // ByteBufferDataProducer(tempMsgByteBuf));
                     answer.add(msg);
                     tempReadRes = null;
                 }
@@ -333,13 +337,14 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
     public List<ClientAndTheirMessage<T>> readIncomingMessages() throws IOException {
         receivingByteBuffer.clear();
         final var address = datagramChannel.receive(receivingByteBuffer);
+
         receivingByteBuffer.flip();
+        logger.info("Received %d bytes".formatted(receivingByteBuffer.limit()));
 
         final List<ClientAndTheirMessage<T>> answer = new LinkedList<>();
         final var byteBufAdapter = AccumulatorAdapters.getByteBufferAdapter(receivingByteBuffer);
 
-        final var userData = allUsers.get(address);
-        if (userData == null) {
+        if (!allUsers.containsKey(address)) {
             final BytesAccumulator bytesAccumulator = unauthorizedUsers.computeIfAbsent(address,
                     adress -> new OrdinaryBytesAccumulator());
 
@@ -363,25 +368,35 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
 
             ChannelAttachmentLoggingUtils.logNewSessionWillBeCreated(logger, userTokenVal, userId);
             authorizeUser(address, userId, bytesAccumulator);
-        } else {
-            answer.addAll(readAllDataFromUDPorTCPAccumulator(userData.bytesAccumulator, byteBufAdapter,
-                    authenticationService)
-                    .stream()
-                    .map(msg -> new ClientAndTheirMessage<T>(userData.clientSession, msg))
-                    .toList());
         }
+
+        final var userData = allUsers.get(address);
+
+        logger.finer("position %d limit %d".formatted(receivingByteBuffer.position(),
+                receivingByteBuffer.limit()));
+
+        answer.addAll(readAllDataFromUDPorTCPAccumulator(userData.bytesAccumulator, byteBufAdapter,
+                authenticationService)
+                .stream()
+                .map(msg -> new ClientAndTheirMessage<T>(userData.clientSession, msg))
+                .toList());
 
         return answer;
     }
 
-    private final void authorizeUser(final SocketAddress address, final UserId userId,
+    private final UserData<T> authorizeUser(final SocketAddress address, final UserId userId,
             final BytesAccumulator bytesAccumulator) {
         final var sessionContract = sessionCreator.getSession(userId);
-        sessionContract.getMessageDispatcher().connectUDPSender(getSender(address));
 
         unauthorizedUsers.remove(address);
 
         final Queue<Message> queue = new ConcurrentLinkedQueue<>();
-        allUsers.put(address, new UserData<T>(queue, bytesAccumulator, sessionContract));
+
+        final UserData<T> userData = new UserData<T>(queue, bytesAccumulator, sessionContract);
+        allUsers.put(address, userData);
+
+        sessionContract.getMessageDispatcher().connectUDPSender(getSender(address));
+
+        return userData;
     }
 }

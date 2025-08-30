@@ -3,6 +3,7 @@ package network.messages.utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.logging.Logger;
 
 import network.messages.MessagesConfig;
 
@@ -27,10 +28,9 @@ public class ByteBufferDataConsumer implements DataConsumer {
     @Override
     public void putString(String str) throws IOException {
         byte[] strBytes = str.getBytes(charset);
-        byte len = (byte) (Byte.BYTES + strBytes.length);
 
         wrappedByteBuffer
-                .put(len)
+                .put((byte) strBytes.length)
                 .put(strBytes);
     }
 
