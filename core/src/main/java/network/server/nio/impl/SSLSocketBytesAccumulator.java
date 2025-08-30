@@ -2,7 +2,6 @@ package network.server.nio.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -12,7 +11,7 @@ public class SSLSocketBytesAccumulator implements BytesAccumulator {
     private Optional<ByteBuffer> currBuffer = Optional.empty();
     private final Logger logger = Logger.getGlobal();
 
-    private void createBuffer(ReadableByteChannel in) throws IOException {
+    private void createBuffer(Readable in) throws IOException {
         ByteBuffer msgSizeBuf = ByteBuffer.allocate(Byte.BYTES);
         var readRes = in.read(msgSizeBuf);
 
@@ -27,7 +26,7 @@ public class SSLSocketBytesAccumulator implements BytesAccumulator {
         currBuffer = Optional.of(ByteBuffer.allocate(msgSize));
     }
 
-    public Optional<ReadData> accumulateBytes(ReadableByteChannel byteIn)
+    public Optional<ReadData> accumulateBytes(Readable byteIn)
             throws IOException {
         if (currBuffer.isEmpty()) {
             createBuffer(byteIn);

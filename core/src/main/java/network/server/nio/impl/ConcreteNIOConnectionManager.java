@@ -43,7 +43,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
     private class SSLChannelAttachmentWrapper implements ChannelAttachment<T> {
         private final SSLChannelAttachment<T> channelAttachment;
 
-        public SSLChannelAttachmentWrapper(SSLChannelAttachment<T> channelAttachment) {
+        public SSLChannelAttachmentWrapper(final SSLChannelAttachment<T> channelAttachment) {
             this.channelAttachment = channelAttachment;
         }
 
@@ -54,16 +54,16 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
         @Override
         public final List<ClientAndTheirMessage<T>> readIncomingMessages() throws IOException {
-            List<ClientAndTheirMessage<T>> answer = new LinkedList<>();
+            final List<ClientAndTheirMessage<T>> answer = new LinkedList<>();
 
-            var allClientsAndMessages = channelAttachment.readIncomingMessages();
+            final var allClientsAndMessages = channelAttachment.readIncomingMessages();
 
-            for (var clientAndMessage : allClientsAndMessages) {
+            for (final var clientAndMessage : allClientsAndMessages) {
                 assert clientAndMessage.message() instanceof EncryptedMessage;
 
                 switch (clientAndMessage.message()) {
                     case final PortInfoRequest portInfoReq -> {
-                        var sslSender = channelAttachment.getSender();
+                        final var sslSender = channelAttachment.getSender();
 
                         final var portInfoResponse = (Message.EncryptedMessage) objectToMessageDecoder
                                 .decodeFromRecord(new PortInfoResponse.Payload(udpMessageSender.getPort(),
@@ -97,6 +97,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
     private final IDatabaseManager databaseManager;
     private final AuthenticationService authenticationService;
 
+    private static final int initialInterestSet = SelectionKey.OP_READ;
+
     public ConcreteNIOConnectionManager(final IDatabaseManager databaseManager,
             final AuthenticationService authenticationService, final NIOSocketServer udpServer,
             final NIOSocketServer tcpServer,
@@ -116,6 +118,14 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
         // registerSocketServer(udpServer);
         registerSocketServer(tcpServer);
         registerSocketServer(sslServer);
+
+        final var udpDatagramChannel = (DatagramChannel) udpMessageSender.getServerSocketChannel();
+        final var clientKey = udpDatagramChannel.register(selector, 0);
+        final var udpAttachment = new UDPChannelAttachment<T>(clientKey, udpDatagramChannel, authenticationService,
+                sessionCreator);
+        clientKey.attach(udpAttachment);
+
+        clientKey.interestOpsOr(initialInterestSet);
     }
 
     // TODO: there is room for improvement: we could be parsing messages in
@@ -144,7 +154,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 }
 
                 if (key.isWritable() && key.attachment() != null) {
-                    var attachment = (ChannelAttachment<?>) key.attachment();
+                    final var attachment = (ChannelAttachment<?>) key.attachment();
                     attachment.dispatchMessages();
                 }
 
@@ -160,7 +170,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
                     // NOTE: This is faster than casting each element
                     @SuppressWarnings("unchecked")
-                    var attachment = (ChannelAttachment<T>) key.attachment();
+                    final var attachment = (ChannelAttachment<T>) key.attachment();
 
                     answer.addAll(attachment.readIncomingMessages());
                 }
@@ -179,7 +189,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
     private final void handleUnauthorizedUser(final ReadableByteChannel clientSocketChannel, final SelectionKey key)
             throws IOException {
         final var bytesAccumulator = unauthorizedChannels.get(clientSocketChannel);
-        final var msgByteBuffer = bytesAccumulator.accumulateBytes(clientSocketChannel);
+        final var msgByteBuffer = bytesAccumulator.accumulateBytes(
+                AccumulatorAdapters.getRedableByteChannelAdapter(clientSocketChannel));
 
         if (msgByteBuffer.isEmpty()) {
             return;
@@ -232,11 +243,9 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
         }
     }
 
-    private static final int initialInterestSet = SelectionKey.OP_READ;
-
     private final void handleIncomingConnection(final SelectionKey key) throws IOException {
         switch (key.channel()) {
-            case ServerSocketChannel serverSocketChannel -> {
+            case final ServerSocketChannel serverSocketChannel -> {
                 final var clientSocketChannel = serverSocketChannel.accept();
                 clientSocketChannel.configureBlocking(false);
 
@@ -249,8 +258,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
                 } else if (Objects.equals(serverSocketChannel, tcpMessageSender.getServerSocketChannel())) {
 
-                    var clientKey = clientSocketChannel.register(selector, 0);
-                    var attachment = new TCPChannelAttachment<T>(clientKey, authenticationService, sessionCreator,
+                    final var clientKey = clientSocketChannel.register(selector, 0);
+                    final var attachment = new TCPChannelAttachment<T>(clientKey, authenticationService, sessionCreator,
                             messageDecoder);
                     clientKey.attach(attachment);
                     clientKey.interestOpsOr(initialInterestSet);
@@ -262,7 +271,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 logger.info(String.format("Client connected %s", clientSocketChannel.getRemoteAddress()));
             }
 
-            case DatagramChannel datagramChannel -> {
+            case final DatagramChannel datagramChannel -> {
                 throw new IllegalStateException("DatagramChannel never accepts anything");
             }
 

@@ -2,12 +2,11 @@ package network.server.nio.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import network.server.nio.BytesAccumulator;
 import network.messages.MessagesConfig;
+import network.server.nio.BytesAccumulator;
 
 public class OrdinaryBytesAccumulator implements BytesAccumulator {
     private static enum State {
@@ -19,7 +18,7 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
     private State state = State.TOKEN_NOT_READ;
 
     // true if a buffer was created
-    private boolean createBuffer(ReadableByteChannel in) throws IOException {
+    private boolean createBuffer(Readable in) throws IOException {
         if (State.TOKEN_NOT_READ.equals(state)) {
             currBuffer = Optional.of(ByteBuffer.allocate(MessagesConfig.tokenSize));
             logger.finest("Allocated buffer for token: buffer capacity: %s".formatted(currBuffer.get().capacity()));
@@ -49,7 +48,7 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
         return true;
     }
 
-    public Optional<ReadData> accumulateBytes(ReadableByteChannel byteIn)
+    public Optional<ReadData> accumulateBytes(Readable byteIn)
             throws IOException {
         if (currBuffer.isEmpty()) {
             if (!createBuffer(byteIn)) {
