@@ -51,7 +51,6 @@ public class Player implements IAIEntity {
     }
 
     private void slotUse(IWorldView view) {
-        System.out.println(moveset.slotUse.direction());
         geometryRepresentation.setRotation(moveset.slotUse.direction().angle());
         if(moveset.slotUse.usageType() == UsageType.PRIMARY){
             attackClock++;
