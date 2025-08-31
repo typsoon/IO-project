@@ -16,6 +16,22 @@ final class TestingUtils {
     private final static int seed = 29;
     private final static int mod = 37;
 
+    static byte[] concatArrays(byte[]... arrays) {
+        int totalLength = 0;
+        for (byte[] arr : arrays) {
+            totalLength += arr.length;
+        }
+
+        byte[] result = new byte[totalLength];
+        int offset = 0;
+        for (byte[] arr : arrays) {
+            System.arraycopy(arr, 0, result, offset, arr.length);
+            offset += arr.length;
+        }
+
+        return result;
+    }
+
     private static byte[] pseudoRandomByteSeq(int len) {
         byte[] answer = new byte[len];
 
