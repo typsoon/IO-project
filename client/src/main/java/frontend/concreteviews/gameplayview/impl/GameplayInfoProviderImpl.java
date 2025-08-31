@@ -18,8 +18,11 @@ public class GameplayInfoProviderImpl implements IGameplayInfoProvider {
     }
 
     @Override
-    public final Point2F castWorldCordinatesToGameCordinates(final float worldX, final float worldY) {
-        var projectionRes = viewport.project(new Vector2(worldX, worldY));
+    public final Point2F castScreenCordinatesToGameCordinates(final float worldX, final float worldY) {
+        var projectionRes = viewport.unproject(new Vector2(worldX, worldY));
+        // var logger = Logger.getGlobal();
+        // logger.info("%f %f world %s game".formatted(worldX, worldY, projectionRes));
+
         return new Point2F(projectionRes.x, projectionRes.y);
     }
 

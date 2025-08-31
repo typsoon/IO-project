@@ -1,6 +1,9 @@
 package frontend.concreteviews.gameplayview.processors;
 
 import com.badlogic.gdx.Input.Buttons;
+
+import java.util.logging.Logger;
+
 import com.badlogic.gdx.InputAdapter;
 
 import frontend.concreteviews.gameplayview.IGameplayInfoProvider;
@@ -18,9 +21,13 @@ public class MouseClickProcessor extends InputAdapter {
         return gameplayInfoProvider.getCenterOfInterest();
     }
 
-    private static final Vector2F getDirectionVector(Point2F placeOfInterestPosition, Point2F clickedPoint) {
-        float dx = clickedPoint.x() - placeOfInterestPosition.x();
-        float dy = clickedPoint.y() - placeOfInterestPosition.y();
+    private final Vector2F getDirectionVector(Point2F placeOfInterestPosition, Point2F clickedPointInScreenCords) {
+        var clickedPointInGameCords = gameplayInfoProvider.castScreenCordinatesToGameCordinates(
+                clickedPointInScreenCords.x(),
+                clickedPointInScreenCords.y());
+
+        float dx = clickedPointInGameCords.x() - placeOfInterestPosition.x();
+        float dy = clickedPointInGameCords.y() - placeOfInterestPosition.y();
 
         var vector = new Vector2F(dx, dy).normalize();
         return vector;
@@ -62,6 +69,8 @@ public class MouseClickProcessor extends InputAdapter {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         var usageType = buttonToUsageTypeMapping[button];
         var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(screenX, screenY));
+
+        Logger.getGlobal().info("%s".formatted(direction));
 
         var action = new PlayerSlotUse(usageType, direction, 0);
         actionSender.sendIAction(action);
