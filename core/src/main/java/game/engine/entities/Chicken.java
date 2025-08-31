@@ -2,7 +2,7 @@ package game.engine.entities;
 
 import game.engine.IWorldView;
 import game.engine.entities.behaviours.IBehaviour;
-import game.engine.entities.weapons.Damage;
+import game.engine.entities.items.weapons.Damage;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;

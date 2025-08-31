@@ -1,4 +1,4 @@
-package game.engine.entities.weapons;
+package game.engine.entities.items.weapons;
 
 import game.engine.IWorldView;
 import game.engine.entities.IDamageable;
@@ -7,14 +7,14 @@ import game.utility.Rectangle2F;
 
 import java.util.Collection;
 
-public class Sword implements IWeapon{
+public class RectangleSlash implements IAttack {
 
     private final float attackRangeHeight = 2f;
     private final float attackRangeWidth = 2f;
     private final Damage damage = new Damage(DamageType.SLASH,100);
 
     @Override
-    public void attack(IWorldView view, IEntity user) {
+    public void attack(IWorldView view, IEntity user, DamageModifier modifier) {
         float x1 = user.geometryRepresentation().getPosition().x();
         float y1 = user.geometryRepresentation().getPosition().y()-attackRangeHeight/2;
         Rectangle2F attackArea = new Rectangle2F(x1,y1,
@@ -28,7 +28,7 @@ public class Sword implements IWeapon{
 
         for(IEntity entity : entities){
             if(entity instanceof IDamageable damageable){
-                damageable.takeDamage(damage,user);
+                damageable.takeDamage(modifier.modify(damage),user);
             }
         }
     }

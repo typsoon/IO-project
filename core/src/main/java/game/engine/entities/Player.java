@@ -5,8 +5,8 @@ import game.actions.PlayerSlotUse;
 import game.actions.UsageType;
 import game.engine.IWorldView;
 import game.engine.PlayerConfig;
-import game.engine.entities.weapons.IWeapon;
-import game.engine.entities.weapons.Sword;
+import game.engine.entities.items.weapons.IAttack;
+import game.engine.entities.items.weapons.RectangleSlash;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
@@ -21,7 +21,7 @@ public class Player implements IAIEntity {
     private final IManagingGeometryRepresentation geometryRepresentation;
     private final MoveSet moveset = new MoveSet();
 
-    private final IWeapon weapon = new Sword();
+    private final IAttack weapon = new RectangleSlash();
     private final int attackTime = 60; // in ticks
     private int attackClock = 0;
 
@@ -55,7 +55,7 @@ public class Player implements IAIEntity {
         if(moveset.slotUse.usageType() == UsageType.PRIMARY){
             attackClock++;
             if(attackClock >= attackTime){
-                weapon.attack(view,this);
+                weapon.attack(view,this, Damage -> Damage);
                 attackClock = 0;
                 moveset.slotUse = new PlayerSlotUse(UsageType.NONE, moveset.slotUse.direction(), 0);
             }

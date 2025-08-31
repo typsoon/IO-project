@@ -1,4 +1,4 @@
-package game.engine.entities.weapons;
+package game.engine.entities.items.weapons;
 
 public record Damage (
     DamageType type,
