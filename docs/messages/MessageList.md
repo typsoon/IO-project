@@ -1,0 +1,12 @@
+# Message List
+
+| ID | Message Name     | Description   |
+|----|------------------|---------------|
+| 0  | LogInQuery                   |  Self explanatory name             |
+| 1  | LogInResponse                   | Self explanatory name     |
+| 2  | PortInfoRequest                  |   Asks the server for tcp and udp ports  |
+| 3  | PortInfoResponse                  |  Server response to PortInfoRequest |
+| 4  | CreateRoomRequest                 | Self explanatory name              |
+| 5  | PlayerMove                 | Player is moving             |
+| 6  | GameConfirmation | Confirms Game |
+| 7  | PlayerSlotUse    | Player Uses an item from inventory slot when in game |

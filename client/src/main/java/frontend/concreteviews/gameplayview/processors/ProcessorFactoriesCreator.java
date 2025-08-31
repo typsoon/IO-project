@@ -21,7 +21,10 @@ public class ProcessorFactoriesCreator {
             DisplayableGameState displayableGameState) {
         Function<IGameplayInfoProvider, InputProcessor> playerMovementProcessorFactory = infoProvider -> new PlayerMovementProcessor(
                 actionSender);
+        Function<IGameplayInfoProvider, InputProcessor> mouseClickProcessorCreator = infoProvider -> new MouseClickProcessor(
+                actionSender,
+                infoProvider);
 
-        return List.of(playerMovementProcessorFactory);
+        return List.of(playerMovementProcessorFactory, mouseClickProcessorCreator);
     }
 }

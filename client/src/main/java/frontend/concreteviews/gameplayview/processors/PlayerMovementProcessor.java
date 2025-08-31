@@ -21,7 +21,7 @@ public class PlayerMovementProcessor extends InputAdapter {
     private final EnumSet<SimpleDirection> pressedKeys = EnumSet.noneOf(SimpleDirection.class);
     private final IActionSender actionSender;
 
-    private final SimpleDirection[] keyToDirections = new SimpleDirection[200];
+    private final SimpleDirection[] keyToDirections = new SimpleDirection[Keys.MAX_KEYCODE + 1];
 
     public PlayerMovementProcessor(IActionSender actionSender, int[] leftKeycodes, int[] rightKeycodes,
             int[] upKeycodes, int[] downKeycodes) {

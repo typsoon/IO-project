@@ -8,7 +8,7 @@ of a class annotated with ``MessageTraits`` annotation.
 If a class is annotated with ``MessageTraits``  annotation
 (directly or indirectly) and is not abstract then:
 
-- It should have a ``public static final int id`` field with a default value.
+- It should have a ``public static final byte id`` field with a default value.
 - It should be final
 
 ``id`` values should be unique among different classes annotated
