@@ -2,18 +2,15 @@ package frontend.concreteviews.gameplayview;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Logger;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.ViewWithTimedEventLoop;
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactory;
-import frontend.concreteviews.gameplayview.processors.PlayerMovementProcessor;
+import frontend.concreteviews.gameplayview.processors.ProcessorFactoriesCreator;
 import frontend.gamestate.DisplayableGameState;
 import game.engine.PlayerConfig;
 import network.client.DuplexSocketWrapper;
@@ -27,34 +24,36 @@ import viewmodel.IViewManager;
 
 public class GameplayViewFactory {
     public IView getGameplayView(
-            Game game, IViewManager viewManager, DuplexSocketWrapper clientSideSocketWrapper,
-            ITextureManager textureManager, PlayerConfig playerConfig, TexturesProvider texturesProvider) {
+            final Game game, final IViewManager viewManager, final DuplexSocketWrapper clientSideSocketWrapper,
+            final ITextureManager textureManager, final PlayerConfig playerConfig,
+            final TexturesProvider texturesProvider) {
 
-        DisplayableGameState gameState = new DisplayableGameState();
+        final DisplayableGameState gameState = new DisplayableGameState();
 
-        var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager, clientSideSocketWrapper,
+        final var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager,
+                clientSideSocketWrapper,
                 gameState, playerConfig);
 
         // see other screens (Login, GameClient) for clues about how these work
-        var listeners = new ArrayList<EventListener>();
+        final var listeners = new ArrayList<EventListener>();
 
-        ObjectToMessageDecoder objectDecoder = new ConcreteObjectDecoder();
-        IActionSender actionSender = action -> {
-            var msg = objectDecoder.decodeFromRecord(action);
+        final ObjectToMessageDecoder objectDecoder = new ConcreteObjectDecoder();
+        final IActionSender actionSender = action -> {
+            final var msg = objectDecoder.decodeFromRecord(action);
             try {
                 Logger.getGlobal().finer("Message dispatched. Payload: %s".formatted(action));
                 clientSideSocketWrapper.dispatchMessage(msg);
-            } catch (ConnectionEndedException e) {
+            } catch (final ConnectionEndedException e) {
                 throw new IllegalStateException("Connection ended", e);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new IllegalStateException("Error while sending message", e);
             }
         };
 
         // see libgdx docs
-        Collection<InputProcessor> processors = List.of(new PlayerMovementProcessor(actionSender));
-
-        var view = new GameplayView(game, listeners, processors, textureManager, gameState, texturesProvider);
+        final var processorsFactories = new ProcessorFactoriesCreator(actionSender).getProcessorsFactories(gameState);
+        final var view = new GameplayView(game, listeners, processorsFactories, textureManager, gameState,
+                texturesProvider);
 
         return new ViewWithTimedEventLoop(gameplayManager, view, game);
     }

@@ -1,6 +1,7 @@
 package frontend.concreteviews.gameplayview;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameclientview.GameClientView;
+import frontend.concreteviews.gameplayview.impl.GameplayInfoProviderImpl;
 import frontend.concreteviews.loginview.LoginView;
 import frontend.gamestate.IReadOnlyDisplayableGameState;
 import game.utility.Point2F;
@@ -40,7 +42,8 @@ public class GameplayView extends ScreenAdapter {
     @SuppressWarnings("unused")
     private final Game game;
     private final Collection<EventListener> gameplayViewEventListeners;
-    private final Collection<InputProcessor> gameplayViewInputProcessors;
+    private final Collection<Function<IGameplayInfoProvider, InputProcessor>> gameplayViewInputProcessorsFactories;
+
     private final ITextureManager textureManager;
     private final IReadOnlyDisplayableGameState gameState;
     public final static int WINDOW_WIDTH = 900;
@@ -53,6 +56,7 @@ public class GameplayView extends ScreenAdapter {
     private Stage stage;
     private OrthographicCamera gameCamera;
     private FitViewport viewport;
+    private IGameplayInfoProvider gameplayInfoProvider;
 
     // private final TextureRegion test;
     // private final SpriteBatch spriteBatch = new SpriteBatch();
@@ -70,12 +74,12 @@ public class GameplayView extends ScreenAdapter {
     }
 
     GameplayView(Game game, Collection<EventListener> gameplayViewEventListeners,
-            Collection<InputProcessor> gameplayViewInputProcessors,
+            Collection<Function<IGameplayInfoProvider, InputProcessor>> gameplayViewInputProcessorsFactories,
             ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
             TexturesProvider texturesProvider) {
         this.game = game;
         this.gameplayViewEventListeners = gameplayViewEventListeners;
-        this.gameplayViewInputProcessors = gameplayViewInputProcessors;
+        this.gameplayViewInputProcessorsFactories = gameplayViewInputProcessorsFactories;
         this.textureManager = textureManager;
         this.gameState = gameState;
         this.texturesProvider = texturesProvider;
@@ -84,14 +88,13 @@ public class GameplayView extends ScreenAdapter {
         // EntityVisibleState.IDLE_FRONT, 0);
     }
 
-
-    //this in only for debug
+    // this in only for debug
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private void grid(){
+
+    private void grid() {
         shapeRenderer.setProjectionMatrix(gameCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
-
 
         float camX = gameCamera.position.x;
         float camY = gameCamera.position.y;
@@ -101,22 +104,21 @@ public class GameplayView extends ScreenAdapter {
         int gridSize = 2;
         float worldWidth = rangeOfView.x();
         float worldHeight = rangeOfView.y();
-        int startX = (int)(camX - worldWidth/2) / gridSize * gridSize;
-        int endX   = (int)(camX + worldWidth/2);
+        int startX = (int) (camX - worldWidth / 2) / gridSize * gridSize;
+        int endX = (int) (camX + worldWidth / 2);
 
-        int startY = (int)(camY - worldHeight/2) / gridSize * gridSize;
-        int endY   = (int)(camY + worldHeight/2);
+        int startY = (int) (camY - worldHeight / 2) / gridSize * gridSize;
+        int endY = (int) (camY + worldHeight / 2);
 
         for (int x = startX; x < endX; x += gridSize) {
-            shapeRenderer.line(x, camY - worldHeight/2, x, camY + worldHeight/2);
+            shapeRenderer.line(x, camY - worldHeight / 2, x, camY + worldHeight / 2);
         }
         for (int y = startY; y < endY; y += gridSize) {
-            shapeRenderer.line(camX - worldWidth/2, y, camX + worldWidth/2, y);
+            shapeRenderer.line(camX - worldWidth / 2, y, camX + worldWidth / 2, y);
         }
 
         shapeRenderer.end();
     }
-
 
     @Override
     public void render(final float delta) {
@@ -132,10 +134,8 @@ public class GameplayView extends ScreenAdapter {
         viewport.setWorldSize(rangeOfView.x(), rangeOfView.y());
         viewport.apply();
 
-
-        //this is for debug puposes, to see the grid
+        // this is for debug puposes, to see the grid
         grid();
-
 
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
@@ -148,27 +148,26 @@ public class GameplayView extends ScreenAdapter {
 
     @Override
     public void show() {
+        gameCamera = new OrthographicCamera();
+        gameCamera.setToOrtho(false);
+        viewport = new FitViewport(0, 0, gameCamera);
+        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition);
+
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         stage = new Stage();
         for (EventListener eventListener : gameplayViewEventListeners) {
             stage.addListener(eventListener);
         }
+        final Table table = textureManager.getTable();
+        stage.addActor(table);
 
         var multiplexer = new InputMultiplexer(stage);
-        for (var processor : gameplayViewInputProcessors) {
-            multiplexer.addProcessor(processor);
+        for (var processorFactory : gameplayViewInputProcessorsFactories) {
+            multiplexer.addProcessor(processorFactory.apply(gameplayInfoProvider));
         }
         Gdx.input.setInputProcessor(multiplexer);
 
-        final Table table = textureManager.getTable();
-
-        stage.addActor(table);
-
-        gameCamera = new OrthographicCamera();
-        gameCamera.setToOrtho(false);
-
-        viewport = new FitViewport(0, 0, gameCamera);
         // viewport = new FitViewport(WIDTH, HEIGHT);
 
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
