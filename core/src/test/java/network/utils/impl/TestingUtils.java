@@ -138,6 +138,7 @@ final class TestingUtils {
     public static int howManyReads(BytesAccumulator bytesAccumulator,
             TestingUtils.ReadableAndEverythingReadIndicator dataAndIndicator) throws IOException {
         int answer = 0;
+
         while (!dataAndIndicator.wasEverythingRead().get()) {
             bytesAccumulator.accumulateBytes(dataAndIndicator.readable());
 

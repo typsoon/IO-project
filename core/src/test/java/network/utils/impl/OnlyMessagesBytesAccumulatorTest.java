@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import network.utils.BytesAccumulator;
 
-public class OrdinaryBytesAccumulatorTest {
+public class OnlyMessagesBytesAccumulatorTest {
     private BytesAccumulator bytesAccumulator;
     private TestingUtils.ReadableAndEverythingReadIndicator dataAndIndicator;
 
     @BeforeEach
     void prepareAccumulator() {
-        bytesAccumulator = new OrdinaryBytesAccumulator();
+        bytesAccumulator = new OnlyMessagesBytesAccumulator();
     }
 
     void prepareData(byte[] data, int[] partition) {
@@ -24,16 +24,16 @@ public class OrdinaryBytesAccumulatorTest {
 
     @Test
     void readsUntilEmptyDoNotThrow() {
-        prepareData(ExampleData.BasicExampleWToken.byteArr, ExampleData.BasicExampleWToken.partition);
+        prepareData(ExampleData.BasicExamplePureMessages.byteArr, ExampleData.BasicExamplePureMessages.partition);
         assertDoesNotThrow(() -> TestingUtils.howManyReads(bytesAccumulator, dataAndIndicator));
     }
 
     @Test
     void readIsCorrect() {
-        prepareData(ExampleData.BasicExampleWToken.byteArr, ExampleData.BasicExampleWToken.partition);
+        prepareData(ExampleData.BasicExamplePureMessages.byteArr, ExampleData.BasicExamplePureMessages.partition);
         var readResult = assertDoesNotThrow(
                 () -> TestingUtils.readAllData(bytesAccumulator, dataAndIndicator)).toArray();
 
-        assertArrayEquals(ExampleData.BasicExampleWToken.whatShouldBeRead, readResult);
+        assertArrayEquals(ExampleData.BasicExamplePureMessages.whatShouldBeRead, readResult);
     }
 }

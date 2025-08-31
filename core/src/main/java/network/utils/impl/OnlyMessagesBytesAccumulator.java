@@ -11,7 +11,7 @@ public class OnlyMessagesBytesAccumulator implements BytesAccumulator {
     private Optional<ByteBuffer> currBuffer = Optional.empty();
     private final Logger logger = Logger.getGlobal();
 
-    private void createBuffer(Readable in) throws IOException {
+    private boolean createBuffer(Readable in) throws IOException {
         ByteBuffer msgSizeBuf = ByteBuffer.allocate(Byte.BYTES);
         var readRes = in.read(msgSizeBuf);
 
@@ -19,21 +19,28 @@ public class OnlyMessagesBytesAccumulator implements BytesAccumulator {
             // TODO: Connection has ended
             throw new IllegalStateException("Connection has ended");
         }
+        if (readRes == 0) {
+            return false;
+        }
+
         msgSizeBuf.flip();
         var msgSize = msgSizeBuf.get();
         logger.finest("Message size: %s".formatted(msgSize));
 
         currBuffer = Optional.of(ByteBuffer.allocate(msgSize));
+        return true;
     }
 
     public Optional<ReadData> accumulateBytes(Readable byteIn)
             throws IOException {
         if (currBuffer.isEmpty()) {
-            createBuffer(byteIn);
+            if (!createBuffer(byteIn)) {
+                return Optional.empty();
+            }
         }
 
         var actBufferUnwrapped = currBuffer.get();
-        while (actBufferUnwrapped.position() != actBufferUnwrapped.capacity()) {
+        while (actBufferUnwrapped.hasRemaining()) {
             var readRes = byteIn.read(actBufferUnwrapped);
 
             if (readRes == 0) {
