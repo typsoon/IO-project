@@ -59,7 +59,7 @@ public class Chicken implements IAIEntity, IDamageable{
     }
 
     @Override
-    public void takeDamage(Damage damage) {
+    public void takeDamage(Damage damage, IEntity source) {
         health-=damage.value();
         if(health<=0){
             geometryRepresentation.dispose();

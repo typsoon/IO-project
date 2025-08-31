@@ -51,10 +51,12 @@ public class Player implements IAIEntity {
     }
 
     private void slotUse(IWorldView view) {
+        System.out.println(moveset.slotUse.direction());
+        geometryRepresentation.setRotation(moveset.slotUse.direction().angle());
         if(moveset.slotUse.usageType() == UsageType.LEFT_CLICK){
             attackClock++;
             if(attackClock >= attackTime){
-                weapon.attack(view,geometryRepresentation);
+                weapon.attack(view,this);
                 attackClock = 0;
                 moveset.slotUse = new PlayerSlotUse(UsageType.NONE, moveset.slotUse.direction(), 0);
             }

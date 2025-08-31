@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import game.actions.*;
 import game.engine.entities.EntityGroupID;
@@ -67,10 +68,18 @@ public class DebugScreen implements Screen {
         if (dir1 != null) {
             player1Connector.sendAction(new PlayerMove(dir1));
         }
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.input.getY();
+        Vector3 worldCoords = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        float worldX = worldCoords.x - camera.position.x;
+        float worldY = worldCoords.y - camera.position.y;
+
+
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             player2Connector.sendAction(new PlayerSlotUse(UsageType.LEFT_CLICK,
-                    new Vector2F(0,0), 0));
+                    new Vector2F(worldCoords.x,worldCoords.y).normalize(), 0));
         }
+
         Direction dir2 = getDirection(
                 Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT);
         if (dir2 != null) {

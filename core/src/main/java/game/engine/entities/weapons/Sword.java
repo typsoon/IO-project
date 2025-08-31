@@ -3,7 +3,9 @@ package game.engine.entities.weapons;
 import game.engine.IWorldView;
 import game.engine.entities.IDamageable;
 import game.engine.entities.IEntity;
-import game.engine.modules.IGeometryRepresentation;
+import game.utility.Rectangle2F;
+
+import java.util.Collection;
 
 public class Sword implements IWeapon{
 
@@ -12,12 +14,21 @@ public class Sword implements IWeapon{
     private final Damage damage = new Damage(DamageType.SLASH,100);
 
     @Override
-    public void attack(IWorldView view, IGeometryRepresentation representation) {
-        //add rotation
-        for(IEntity entity : view.getEntitiesInArea(representation.getPosition().x()-attackRangeWidth/2,
-                representation.getPosition().y(),attackRangeWidth,attackRangeHeight)){
+    public void attack(IWorldView view, IEntity user) {
+        float x1 = user.geometryRepresentation().getPosition().x();
+        float y1 = user.geometryRepresentation().getPosition().y()-attackRangeHeight/2;
+        Rectangle2F attackArea = new Rectangle2F(x1,y1,
+                x1 + attackRangeWidth,
+                y1 + attackRangeHeight
+        );
+        attackArea = attackArea.rotateBB(user.geometryRepresentation().getRotation(), user.geometryRepresentation().getPosition());
+
+        //need predicate that really checks if entity is in area
+        Collection<IEntity> entities = view.getEntitiesInArea(attackArea, entity -> true);
+
+        for(IEntity entity : entities){
             if(entity instanceof IDamageable damageable){
-                damageable.takeDamage(damage);
+                damageable.takeDamage(damage,user);
             }
         }
     }
