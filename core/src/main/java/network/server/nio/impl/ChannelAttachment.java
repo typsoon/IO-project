@@ -40,6 +40,7 @@ import network.utils.BytesAccumulator;
 import network.utils.BytesAccumulator.Readable;
 import network.utils.BytesAccumulator.WhatWasRead;
 import network.utils.impl.OnlyMessagesBytesAccumulator;
+import network.utils.impl.OrdinaryBytesAccumulator;
 
 public interface ChannelAttachment<T extends SessionContract> {
     void dispatchMessages() throws IOException;
