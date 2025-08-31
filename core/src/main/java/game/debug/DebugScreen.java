@@ -76,7 +76,7 @@ public class DebugScreen implements Screen {
 
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            player2Connector.sendAction(new PlayerSlotUse(UsageType.LEFT_CLICK,
+            player2Connector.sendAction(new PlayerSlotUse(UsageType.PRIMARY,
                     new Vector2F(worldCoords.x,worldCoords.y).normalize(), 0));
         }
 

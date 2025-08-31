@@ -37,9 +37,9 @@ public class MouseClickProcessor extends InputAdapter {
             buttonToUsageTypeMapping[i] = UsageType.NONE;
         }
 
-        buttonToUsageTypeMapping[Buttons.LEFT] = UsageType.LEFT_CLICK;
-        buttonToUsageTypeMapping[Buttons.RIGHT] = UsageType.RIGHT_CLICK;
-        buttonToUsageTypeMapping[Buttons.MIDDLE] = UsageType.MIDDLE_CLICK;
+        buttonToUsageTypeMapping[Buttons.LEFT] = UsageType.PRIMARY;
+        buttonToUsageTypeMapping[Buttons.RIGHT] = UsageType.SECONDARY;
+        buttonToUsageTypeMapping[Buttons.MIDDLE] = UsageType.SPECIAL;
     }
 
     // @Override
