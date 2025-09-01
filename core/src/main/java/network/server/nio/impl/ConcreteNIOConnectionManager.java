@@ -156,7 +156,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 }
 
                 if (key.isWritable() && key.attachment() != null) {
-                    Logger.getGlobal().info("Am I even entering this place?");
+                    // Logger.getGlobal().info("Am I even entering this place?");
                     final var attachment = (ChannelAttachment<?>) key.attachment();
                     attachment.dispatchMessages();
                 }

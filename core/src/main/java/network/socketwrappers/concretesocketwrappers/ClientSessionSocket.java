@@ -56,10 +56,11 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
     public Message receiveMessage() throws IOException {
         @SuppressWarnings("unused")
         var msgLen = in.getByte();
-        Logger.getGlobal().info("Started receiving");
+
+        // Logger.getGlobal().info("Started receiving");
         var received = messageDecoder.decodeMessage(in);
 
-        Logger.getGlobal().info("FINISHED receiving");
+        // Logger.getGlobal().info("FINISHED receiving");
         return received;
     }
 

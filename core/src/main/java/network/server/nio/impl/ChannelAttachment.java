@@ -127,7 +127,8 @@ abstract class ConnectionBasedChannelAttachment<T extends SessionContract, U ext
     public final void dispatchMessages() throws IOException {
         synchronized (key) {
             for (final Message msg : msgQueue) {
-                Logger.getGlobal().info("I AM HERE AND SENDING %s".formatted(msg.getSendable()));
+                // Logger.getGlobal().info("I AM HERE AND SENDING
+                // %s".formatted(msg.getSendable()));
 
                 msg.encodeAndWrite(consumer);
 
