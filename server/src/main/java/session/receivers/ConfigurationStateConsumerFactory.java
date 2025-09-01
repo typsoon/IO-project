@@ -27,10 +27,7 @@ public class ConfigurationStateConsumerFactory {
     public ConfigurationStateConsumer getConfigurationStateConsumer(final IUsersRoomHandle userRoomHandle,
             final IUsersMatchmakingHandle matchmakingHandle) {
         final ISendableConsumer sendableDispatcher = sendable -> {
-
-            Logger.getGlobal().info("Sendable is going to be sent sent %s".formatted(sendable));
             try {
-
                 final var msg = objectToMessageDecoder.decodeFromRecord(sendable);
                 messageDispatcher.dispatchMessage(msg);
 
