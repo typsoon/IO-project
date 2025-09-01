@@ -1,5 +1,9 @@
 package frontend.concreteviews.gameclientview;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -12,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import gameclient.rooms.RoomInfo;
+import gameclient.user.UserInfo;
 import viewmodel.ITextureManager;
 
 public class GameClientView extends ScreenAdapter {
@@ -128,5 +134,26 @@ public class GameClientView extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+}
+
+final record GameClientViewData(Map<RoomInfo, Collection<UserInfo>> rooms) {
+    void addRoom(RoomInfo roomInfo) {
+        rooms.computeIfAbsent(roomInfo, info -> new ConcurrentLinkedDeque<>());
+    }
+
+    void addAnUserToRoom(RoomInfo roomInfo, UserInfo userInfo) {
+        var userList = rooms.get(roomInfo);
+
+        assert userList != null;
+        userList.add(userInfo);
+    }
+
+    void clearRoomContents(RoomInfo roomInfo) {
+        rooms.remove(roomInfo);
+    }
+
+    void clearAllRoomInfo() {
+        rooms.clear();
     }
 }
