@@ -1,12 +1,11 @@
 package room;
 
-import user.IUserView;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomInfo;
+import gameclient.user.IUserView;
 
 public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomConfig) {
 

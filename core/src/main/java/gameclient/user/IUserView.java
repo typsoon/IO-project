@@ -1,4 +1,4 @@
-package user;
+package gameclient.user;
 
 import database.IDatabaseManager.UserId;
 

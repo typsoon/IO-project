@@ -3,12 +3,12 @@ package matchmaking;
 import database.IDatabaseManager.UserId;
 import game.session.ISendableConsumer;
 import game.utility.ISendable;
+import gameclient.user.IUserView;
 import matchmaking.lobby.Lobby;
 import matchmaking.lobby.LobbyFactory;
 import matchmaking.lobby.LobbyMember;
 import matchmaking.lobby.PendingLobby;
 import network.messages.userstate.GameConfirmation;
-import user.IUserView;
 import user.UserState;
 
 import java.time.Instant;
@@ -33,8 +33,8 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
     private final Map<UUID, ActivePending> activePendings = new ConcurrentHashMap<>();
 
     ConfirmationManager(Consumer<Lobby> onLobbyFinalized,
-                        BiConsumer<Collection<LobbyMember>, MatchmakingParameters> requeueHandler,
-                        long timeoutMillis) {
+            BiConsumer<Collection<LobbyMember>, MatchmakingParameters> requeueHandler,
+            long timeoutMillis) {
         this.onLobbyFinalized = onLobbyFinalized;
         this.requeueHandler = requeueHandler;
         this.timeoutMillis = timeoutMillis;
@@ -52,7 +52,8 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
         }
         UUID pid = UUID.randomUUID();
         ActivePending activePending = new ActivePending(pid, pendingLobby, Instant.now());
-        if (activePendings.putIfAbsent(pid, activePending) != null) return; // very unlikely
+        if (activePendings.putIfAbsent(pid, activePending) != null)
+            return; // very unlikely
 
         for (var member : pendingLobby.members()) {
             var id = member.userView().id();
@@ -66,13 +67,15 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
 
     private void onTimeout(UUID pid) {
         var activePending = activePendings.remove(pid);
-        if (activePending == null) return;
+        if (activePending == null)
+            return;
         activePending.markTimeout();
         resolve(activePending);
     }
 
     private void resolve(ActivePending activePending) {
-        if (!activePending.markResolving()) return;
+        if (!activePending.markResolving())
+            return;
         activePending.cancelTimeout();
 
         var acceptedMembers = activePending.getAcceptedMembers();
@@ -81,8 +84,7 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
 
         if (declinedMembers.isEmpty()) {
             onLobbyFinalized.accept(activePending.finalizeLobby());
-        }
-        else {
+        } else {
             requeueHandler.accept(acceptedMembers, params);
         }
         activePendings.remove(activePending.lobbyId);
@@ -106,9 +108,11 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
             if (sendable instanceof GameConfirmation(GameConfirmation.Confirmation confirmation)) {
                 boolean confirmed = confirmation == GameConfirmation.Confirmation.CONFIRMED;
                 var ap = activePendings.get(lobbyId);
-                if (ap == null) return;
+                if (ap == null)
+                    return;
                 boolean isFinal = ap.recordResponse(userId, confirmed);
-                if (isFinal) resolve(ap);
+                if (isFinal)
+                    resolve(ap);
             }
         }
     }
@@ -135,7 +139,8 @@ class ActivePending {
 
     synchronized boolean recordResponse(UserId userId, boolean confirmed) {
         ConfirmationState state = confirmations.get(userId);
-        if (state != ConfirmationState.PENDING) return false;
+        if (state != ConfirmationState.PENDING)
+            return false;
         confirmations.put(userId, confirmed ? ConfirmationState.CONFIRMED : ConfirmationState.DECLINED);
         return isFinal();
     }
@@ -179,7 +184,8 @@ class ActivePending {
     }
 
     Lobby finalizeLobby() {
-        if (!isFinal()) throw new IllegalStateException("Cannot finalize lobby before all responses are in");
+        if (!isFinal())
+            throw new IllegalStateException("Cannot finalize lobby before all responses are in");
         for (var member : pendingLobby.members()) {
             member.userState().setState(UserState.State.IN_LOBBY);
         }
@@ -192,5 +198,3 @@ class ActivePending {
         DECLINED
     }
 }
-
-

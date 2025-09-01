@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import gameclient.rooms.RoomConfig;
+import gameclient.user.IUserView;
 
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     private final IRoomManager roomManager;

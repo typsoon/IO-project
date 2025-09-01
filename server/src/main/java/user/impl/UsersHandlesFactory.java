@@ -1,5 +1,6 @@
 package user.impl;
 
+import gameclient.user.IUserView;
 import matchmaking.IMatchmakingEngine;
 import matchmaking.lobby.LobbyMember;
 import room.IRoomManager;

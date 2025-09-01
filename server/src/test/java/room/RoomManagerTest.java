@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import database.IDatabaseManager.UserId;
 import gameclient.rooms.RoomConfig;
+import gameclient.user.UserInfo;
 import matchmaking.IMatchmakingEngine;
 import user.IMatchmakingUserHandle;
-import user.IUserView;
 import user.UserState;
 
 public class RoomManagerTest {
@@ -22,11 +22,8 @@ public class RoomManagerTest {
     private RoomMember user1;
     private RoomMember user2;
 
-    private record UserData(UserId id, String username) implements IUserView {
-    }
-
     private RoomMember mockRoomMember(int id, String userName) {
-        return new RoomMember(new UserData(new UserId(id), userName),
+        return new RoomMember(new UserInfo(new UserId(id), userName),
                 mock(IMatchmakingUserHandle.class),
                 mock(),
                 new UserState());
