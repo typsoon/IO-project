@@ -1,9 +1,10 @@
 package session;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.logging.Logger;
 
+import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
 import game.engine.PlayerConfig;
 import game.gamestates.IGameState;
 import game.session.IPlayerConnector;
@@ -12,7 +13,9 @@ import network.MessageDispatcher;
 import network.messages.Message;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import network.server.nio.NIOConnectionManager.SessionContract;
+import session.receivers.IConfigurationStateConsumerFactory;
 import user.IMatchmakingUserHandle;
+import user.IUsersHandlesFactory;
 
 public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
@@ -20,15 +23,26 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final PlayerConfig playerConfig;
     private final ObjectToMessageDecoder objectToMessageDecoder;
     private final ISendableConsumer defaultSendableReceiver;
+    private final IDatabaseManager databaseManager;
 
-    public ClientData(MessageDispatcher messageDispatcher, ISendableConsumer sendableReceiver,
-            PlayerConfig playerConfig, ObjectToMessageDecoder objectToMessageDecoder) {
+    private final UserId userId;
+
+    public ClientData(MessageDispatcher messageDispatcher, IConfigurationStateConsumerFactory sendableReceiverFactory,
+            ObjectToMessageDecoder objectToMessageDecoder, IUsersHandlesFactory usersHandlesFactory,
+            UserId userId,
+            IDatabaseManager databaseManager) {
         this.messageDispatcher = messageDispatcher;
-        this.sendableReceiver = Objects.requireNonNull(sendableReceiver);
-        this.defaultSendableReceiver = sendableReceiver;
-
-        this.playerConfig = playerConfig;
         this.objectToMessageDecoder = objectToMessageDecoder;
+        this.databaseManager = databaseManager;
+
+        this.playerConfig = null;
+
+        var usersHandles = usersHandlesFactory.getUsersHandles(null, this);
+
+        this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
+                usersHandles.matchmakingHandle());
+        this.sendableReceiver = defaultSendableReceiver;
+        this.userId = userId;
     }
 
     @Override

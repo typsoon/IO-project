@@ -27,12 +27,14 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
 
         switch (sendable) {
             case RoomConfig createRoomRequest -> {
-                var result = userRoomHandle.createRoomRequest(createRoomRequest);
-                var responsePayload = new CreateRoomRequestResponse.Payload(result, createRoomRequest.name());
+                synchronized (userRoomHandle) {
+                    var result = userRoomHandle.createRoomRequest(createRoomRequest);
+                    var responsePayload = new CreateRoomRequestResponse.Payload(result, createRoomRequest.name());
 
-                Logger.getGlobal().info("%s response payload".formatted(responsePayload.toString()));
+                    Logger.getGlobal().info("%s response payload".formatted(responsePayload.toString()));
 
-                sendableDispatcher.processSendable(responsePayload);
+                    sendableDispatcher.processSendable(responsePayload);
+                }
             }
 
             default -> {

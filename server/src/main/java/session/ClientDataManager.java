@@ -3,35 +3,33 @@ package session;
 import java.util.HashMap;
 import java.util.Map;
 
+import database.IDatabaseManager;
 import database.IDatabaseManager.UserId;
-import game.engine.PlayerConfig;
 import network.impl.ConcreteMessageDispatcher;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import session.receivers.ConfigurationStateConsumerFactory;
-import user.IUsersMatchmakingHandle;
-import user.IUsersRoomHandle;
+import user.impl.UsersHandlesFactory;
 
 public class ClientDataManager implements SessionCreator<ClientData> {
-    Map<UserId, ClientData> activeClientsData = new HashMap<>();
+    private final Map<UserId, ClientData> activeClientsData = new HashMap<>();
+    private final UsersHandlesFactory usersHandlesFactory;
+    private final IDatabaseManager databaseManager;
+
+    public ClientDataManager(final UsersHandlesFactory usersHandlesFactory, IDatabaseManager databaseManager) {
+        this.usersHandlesFactory = usersHandlesFactory;
+        this.databaseManager = databaseManager;
+    }
 
     @Override
-    public ClientData getSession(UserId address) {
-        var dispatcher = new ConcreteMessageDispatcher();
-        // TODO: get this from a server
-        PlayerConfig playerConfig = null;
+    public ClientData getSession(final UserId address) {
+        final var dispatcher = new ConcreteMessageDispatcher();
 
-        // TODO: put factory calls here
-        IUsersRoomHandle userRoomHandle = null;
-        IUsersMatchmakingHandle matchmakingHandle = null;
+        final var configurationStateConsumerFactory = new ConfigurationStateConsumerFactory(dispatcher);
+        final var objectToMessageDecoder = new ConcreteObjectDecoder();
 
-        var configurationStateConsumer = new ConfigurationStateConsumerFactory(dispatcher)
-                .getConfigurationStateConsumer(userRoomHandle, matchmakingHandle);
-        var objectToMessageDecoder = new ConcreteObjectDecoder();
-
-        activeClientsData.computeIfAbsent(address,
-                _address -> new ClientData(dispatcher, configurationStateConsumer,
-                        playerConfig, objectToMessageDecoder));
-        return activeClientsData.get(address);
+        return activeClientsData.computeIfAbsent(address,
+                _address -> new ClientData(dispatcher, configurationStateConsumerFactory,
+                        objectToMessageDecoder, usersHandlesFactory, address, databaseManager));
     }
 }

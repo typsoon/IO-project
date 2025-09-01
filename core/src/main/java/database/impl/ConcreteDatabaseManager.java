@@ -5,14 +5,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import database.IDatabaseManager;
+import game.engine.PlayerConfig;
 import network.utils.Credentials;
 
 public class ConcreteDatabaseManager implements IDatabaseManager {
     private final Set<Integer> possibleIdVals;
 
-    private static record FullUserData(UserId userId, Credentials credentials) {
+    private static record FullUserData(UserId userId, Credentials credentials, PlayerConfig playerConfig) {
     }
 
     private final Collection<FullUserData> users;
@@ -42,10 +44,15 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
 
     @Override
     public void addUser(String login, String password) {
+        if (!possibleIdVals.iterator().hasNext()) {
+            Logger.getGlobal().info("There are no available ids");
+            return;
+        }
+
         var id = possibleIdVals.iterator().next();
         possibleIdVals.remove(id);
 
-        users.add(new FullUserData(new UserId(id), new Credentials(login, password)));
+        users.add(new FullUserData(new UserId(id), new Credentials(login, password), new PlayerConfig()));
     }
 
     @Override
@@ -56,4 +63,11 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
                 .orElse(null);
     }
 
+    @Override
+    public PlayerConfig getPlayerConfig(UserId uId) {
+        return users.stream().filter(uData -> uData.userId.equals(uId))
+                .map(uData -> uData.playerConfig())
+                .findFirst()
+                .orElse(null);
+    }
 }

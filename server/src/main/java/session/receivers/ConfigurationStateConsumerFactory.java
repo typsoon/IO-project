@@ -10,7 +10,7 @@ import network.messages.defaultmessage.ObjectToMessageDecoder;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
 
-public class ConfigurationStateConsumerFactory {
+public class ConfigurationStateConsumerFactory implements IConfigurationStateConsumerFactory {
     private final ObjectToMessageDecoder objectToMessageDecoder;
     private final MessageDispatcher messageDispatcher;
 
@@ -24,6 +24,7 @@ public class ConfigurationStateConsumerFactory {
         this.messageDispatcher = messageDispatcher;
     }
 
+    @Override
     public ConfigurationStateConsumer getConfigurationStateConsumer(final IUsersRoomHandle userRoomHandle,
             final IUsersMatchmakingHandle matchmakingHandle) {
         final ISendableConsumer sendableDispatcher = sendable -> {
