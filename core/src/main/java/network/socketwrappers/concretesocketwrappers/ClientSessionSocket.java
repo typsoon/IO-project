@@ -42,6 +42,8 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
             logger.finer("Put token bytes in %d".formatted(tokenHolder.getToken()));
 
             message.encodeAndWrite(out);
+
+            logger.finer("Written %s".formatted(message.getSendable()));
         } catch (IOException e) {
             logger.log(Level.OFF, String.format("An error occured: %s", e));
         } catch (Exception e) {
