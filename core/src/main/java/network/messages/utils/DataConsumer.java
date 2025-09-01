@@ -14,6 +14,10 @@ public interface DataConsumer {
 
     void putFloat(float val) throws IOException;
 
+    default void putBoolean(boolean val) throws IOException {
+        putByte((byte) (val ? 0 : 1));
+    }
+
     default void putPoint2F(Point2F point) throws IOException {
         putFloat(point.x());
         putFloat(point.y());

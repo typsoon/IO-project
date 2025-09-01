@@ -68,6 +68,12 @@ public class CodegenConfig {
                 Integer.BYTES,
                 Optional.empty()));
 
+        typeToTypeData.put(TypeName.BOOLEAN, new TypeNameData(
+                name -> CodeBlock.of("$N.putBoolean($L)", consumerParName, name),
+                name -> CodeBlock.of("$N.getBoolean()", producerParName),
+                Byte.BYTES,
+                Optional.empty()));
+
         typeToTypeData.put(TypeName.get(String.class), new TypeNameData(
                 name -> CodeBlock.of("$N.putString($L)", consumerParName, name),
                 name -> CodeBlock.of("$N.getString()", producerParName),
