@@ -10,6 +10,8 @@ public interface IDatabaseManager {
 
     PlayerConfig getPlayerConfig(UserId id);
 
+    String getPlayerUsername(UserId id);
+
     void addUser(String login, String password);
 
     // TODO: change this to get passwordHash

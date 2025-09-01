@@ -25,8 +25,12 @@ public class NIOServer implements Server {
                 var messagesToHandle = connectionManager.select();
 
                 workerThreadPool.submit(() -> {
-                    for (ClientAndTheirMessage<ClientData> clientAndTheirMessage : messagesToHandle) {
-                        clientAndTheirMessage.client().handleMessage(clientAndTheirMessage.message());
+                    try {
+                        for (ClientAndTheirMessage<ClientData> clientAndTheirMessage : messagesToHandle) {
+                            clientAndTheirMessage.client().handleMessage(clientAndTheirMessage.message());
+                        }
+                    } catch (Exception e) {
+                        Logger.getGlobal().info("An error occured during the handling of messages %s".formatted(e));
                     }
                 });
             } catch (IOException e) {

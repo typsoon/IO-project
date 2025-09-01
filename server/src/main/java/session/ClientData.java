@@ -17,6 +17,8 @@ import session.receivers.IConfigurationStateConsumerFactory;
 import user.IMatchmakingUserHandle;
 import user.IUsersHandlesFactory;
 
+import gameclient.user.UserInfo;
+
 public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
     private ISendableConsumer sendableReceiver;
@@ -35,9 +37,11 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
         this.objectToMessageDecoder = objectToMessageDecoder;
         this.databaseManager = databaseManager;
 
-        this.playerConfig = null;
+        this.playerConfig = databaseManager.getPlayerConfig(userId);
 
-        var usersHandles = usersHandlesFactory.getUsersHandles(null, this);
+        var userName = databaseManager.getPlayerUsername(userId);
+
+        var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this);
 
         this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
                 usersHandles.matchmakingHandle());

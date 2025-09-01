@@ -70,4 +70,12 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
                 .findFirst()
                 .orElse(null);
     }
+
+    @Override
+    public String getPlayerUsername(UserId uId) {
+        return users.stream().filter(uData -> uData.userId.equals(uId))
+                .map(uData -> uData.credentials.login())
+                .findFirst()
+                .orElse(null);
+    }
 }
