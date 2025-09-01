@@ -10,6 +10,7 @@ import gameclient.rooms.RoomInfo;
 import gameclient.rooms.UserMembershipInfo;
 import gameclient.user.UserInfo;
 import network.client.ClientSideSocketWrapper;
+import network.messages.configurationstate.CreateRoomRequestResponse;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utility.ICyclePerformer;
 import viewmodel.IViewManager;
@@ -49,6 +50,10 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
 
                     case GameConfirmationRequestMessage.GameConfirmationRequest gameConfirmationRequest -> {
 
+                    }
+
+                    case CreateRoomRequestResponse.Payload createRoomResponse -> {
+                        displayHandler.processSendable(createRoomResponse);
                     }
 
                     default ->

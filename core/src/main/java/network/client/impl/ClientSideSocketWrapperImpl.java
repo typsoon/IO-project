@@ -80,10 +80,10 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                 try {
                     Logger.getGlobal().info("%s RECEIVING".formatted(socketWrapper));
                     var received = socketWrapper.receiveMessage();
+                    Logger.getGlobal().info("Received %s".formatted(received.getClass().getSimpleName()));
 
                     synchronized (pendingSendables) {
                         handleMessage(received);
-                        Logger.getGlobal().info("Received %s".formatted(received.getClass().getSimpleName()));
                     }
                 } catch (IOException ioException) {
                     Logger.getGlobal().severe("IOException encountered here!");
