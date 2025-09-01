@@ -4,14 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
 
 public interface IRoomManager {
-    enum RoomRequest {
-        SUCCESSFUL,
-        FAILED,
-        NOT_AUTHORIZED,
-    }
-
     RoomRequest createRoom(RoomMember user, RoomConfig roomConfig);
 
     RoomRequest deleteRoom(RoomMember user);

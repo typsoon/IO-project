@@ -1,4 +1,3 @@
-
 package frontend.concreteviews.gameclientview;
 
 import com.badlogic.gdx.Game;
@@ -24,12 +23,15 @@ public class GameClientViewFactory {
 
     public IView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
         // TODO: make this one
-        ICyclePerformer cyclePerformer = () -> {
-        };
         var objectDecoder = new ConcreteObjectDecoder();
         var eventListener = new GameClientViewEventListener(viewManager, clientSideSocketWrapper, objectDecoder);
 
-        var view = new GameClientView(game, textureManager, eventListener);
+        var gameClientViewData = new GameClientViewData();
+
+        var view = new GameClientView(game, textureManager, eventListener, gameClientViewData);
+
+        ICyclePerformer cyclePerformer = new GameClientViewMessageHandler(gameClientViewData, clientSideSocketWrapper,
+                viewManager, view);
 
         return new ViewWithEventLoop(cyclePerformer, view, game);
     }

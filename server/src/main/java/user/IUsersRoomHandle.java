@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import gameclient.rooms.RoomConfig;
-import room.IRoomManager.RoomRequest;
+import gameclient.rooms.RoomRequest;
 import room.Room;
 import room.RoomMember;
 

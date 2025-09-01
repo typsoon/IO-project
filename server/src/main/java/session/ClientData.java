@@ -43,13 +43,11 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     @Override
     public void gameStarted(ISendableConsumer lobby) {
         sendableReceiver = lobby;
-        // sendableReceiver = new
-        // GameplayStateConsumerFactory().getGameplayStateConsumer();
     }
 
     @Override
-    public void confirmGameStart(ISendableConsumer sendableConsumer) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void moveToConfirmationState(ISendableConsumer confirmationReceiver) {
+        this.sendableReceiver = confirmationReceiver;
     }
 
     @Override

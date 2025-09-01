@@ -57,7 +57,7 @@ public class ConfirmationManager implements Consumer<PendingLobby> {
 
         for (var member : pendingLobby.members()) {
             var id = member.userView().id();
-            member.matchmakingUserHandle().confirmGameStart(new ConfirmationConsumer(id, pid));
+            member.matchmakingUserHandle().moveToConfirmationState(new ConfirmationConsumer(id, pid));
         }
 
         ScheduledFuture<?> scheduledFuture = scheduler.schedule(() -> onTimeout(pid),

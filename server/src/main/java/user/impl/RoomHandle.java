@@ -1,7 +1,6 @@
 package user.impl;
 
 import room.IRoomManager;
-import room.IRoomManager.RoomRequest;
 import room.Room;
 import room.RoomMember;
 import user.*;
@@ -13,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
 import gameclient.user.IUserView;
 
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {

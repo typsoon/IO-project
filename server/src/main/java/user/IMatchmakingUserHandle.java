@@ -8,7 +8,7 @@ import game.session.PlayerData;
 public interface IMatchmakingUserHandle {
     void gameStarted(ISendableConsumer sendableConsumer);
 
-    void confirmGameStart(ISendableConsumer sendableConsumer);
+    void moveToConfirmationState(ISendableConsumer confirmationReceiver);
 
     void moveToDefaultState();
 

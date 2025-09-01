@@ -1,8 +1,8 @@
 package room;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static room.IRoomManager.RoomRequest.FAILED;
+import static gameclient.rooms.RoomRequest.*;
 
 import java.util.Optional;
 
@@ -44,6 +44,13 @@ public class RoomManagerTest {
     }
 
     @Test
+    void itShouldNotThrowEvenOnDumbData() {
+        var roomConfig = new RoomConfig("sdads", "", 1, false);
+
+        assertDoesNotThrow(() -> roomManager.createRoom(user1, roomConfig));
+    }
+
+    @Test
     @Disabled
     void creatingRoomWithTheSameNameAsAnExistingOneShouldFail() {
         var roomConfig = new RoomConfig("R1", "", 2, false);
@@ -51,4 +58,5 @@ public class RoomManagerTest {
 
         assertEquals(FAILED, roomManager.createRoom(user2, roomConfig));
     }
+
 }

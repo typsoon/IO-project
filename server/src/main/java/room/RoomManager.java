@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
 
 public class RoomManager implements IRoomManager {
     private final IMatchmakingEngine matchmakingEngine;

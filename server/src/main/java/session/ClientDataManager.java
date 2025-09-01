@@ -25,7 +25,7 @@ public class ClientDataManager implements SessionCreator<ClientData> {
         IUsersRoomHandle userRoomHandle = null;
         IUsersMatchmakingHandle matchmakingHandle = null;
 
-        var configurationStateConsumer = new ConfigurationStateConsumerFactory()
+        var configurationStateConsumer = new ConfigurationStateConsumerFactory(dispatcher)
                 .getConfigurationStateConsumer(userRoomHandle, matchmakingHandle);
         var objectToMessageDecoder = new ConcreteObjectDecoder();
 
