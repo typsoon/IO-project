@@ -5,10 +5,12 @@ import java.util.logging.Logger;
 import game.session.ISendableConsumer;
 import game.utility.ISendable;
 import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
+import gameclient.rooms.UserMembershipInfo;
 import network.messages.configurationstate.CreateRoomRequestResponse;
+import room.Room;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
-import gameclient.rooms.*;
 
 public class ConfigurationStateConsumer implements ISendableConsumer {
     private final IUsersRoomHandle userRoomHandle;
@@ -20,6 +22,10 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
         this.userRoomHandle = userRoomHandle;
         this.matchmakingHandle = matchmakingHandle;
         this.sendableDispatcher = sendableDispatcher;
+    }
+
+    private void sendDataAboutARoom(Room room) {
+        sendableDispatcher.processSendable(room.getRoomInfo());
     }
 
     @Override
@@ -43,7 +49,14 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
                             break;
                         }
 
-                        sendableDispatcher.processSendable(roomInfoMessage.get().getRoomInfo());
+                        var room = roomInfoMessage.get();
+                        sendDataAboutARoom(room);
+                        var user = userRoomHandle.getRoomMembers().iterator().next().userView();
+                        var roomMembershipMsgPayload = new UserMembershipInfo(room.getRoomInfo().roomName(),
+                                user.id().id(),
+                                user.username());
+
+                        sendableDispatcher.processSendable(roomMembershipMsgPayload);
                     }
 
                     sendableDispatcher.processSendable(createRoomResponsePayload);
