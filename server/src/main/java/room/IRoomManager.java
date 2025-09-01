@@ -3,6 +3,8 @@ package room;
 import java.util.List;
 import java.util.Optional;
 
+import gameclient.rooms.RoomConfig;
+
 public interface IRoomManager {
     enum RoomRequest {
         SUCCESSFUL,

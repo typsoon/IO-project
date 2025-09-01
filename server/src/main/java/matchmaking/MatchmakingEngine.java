@@ -22,7 +22,7 @@ public class MatchmakingEngine implements IMatchmakingEngine {
     private final IMatchmakingPoolFactory matchmakingPoolFactory;
 
     MatchmakingEngine(Consumer<PendingLobby> pendingLobbyConsumer,
-                      IMatchmakingPoolFactory matchmakingPoolFactory) {
+            IMatchmakingPoolFactory matchmakingPoolFactory) {
         this.pendingLobbyConsumer = pendingLobbyConsumer;
         this.matchmakingPoolFactory = matchmakingPoolFactory;
     }
@@ -47,7 +47,8 @@ public class MatchmakingEngine implements IMatchmakingEngine {
     @Override
     public boolean interruptSearch(UserId userId) { // TODO: this looks shady
         var paramsSet = activeSearches.remove(userId);
-        if (paramsSet == null) return false;
+        if (paramsSet == null)
+            return false;
         boolean removed = false;
         for (var params : paramsSet) {
             var pool = getPool(params);
