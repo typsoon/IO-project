@@ -4,14 +4,20 @@ import static com.palantir.javapoet.TypeName.BYTE;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
+import com.palantir.javapoet.ArrayTypeName;
 import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.CodeBlock;
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
 
 public class CodegenConfig {
     public static final boolean UNKNOWN_TYPE_MEANS_ENUM = true;
     public static final String generatedClassNameFormat = "%sGenerated";
+
+    public static final String tempSizeFieldName = "msgSize";
 
     public static final String consumerParName = "consumer";
     public static final String idFieldName = "id";
@@ -32,11 +38,9 @@ public class CodegenConfig {
     public static final String generatedClassesLoaderName = "GeneratedClassesData";
 
     public static record TypeNameData(
-            String consumerMethod, String producerMethod,
-            int size) {
-        public int size() {
-            return size;
-        };
+            Function<String, CodeBlock> consumerMethod, Function<String, CodeBlock> producerMethod,
+            int size,
+            Optional<Function<String, CodeBlock>> updateDynamicSizeCodeblock) {
     }
 
     public static final String answerVarName = "answer";
@@ -51,39 +55,66 @@ public class CodegenConfig {
     public static final Map<TypeName, TypeNameData> typeToTypeData = new HashMap<>();
 
     static {
-        typeToTypeData.put(TypeName.BYTE, new TypeNameData("putByte($L)", "getByte()", Byte.BYTES));
-        typeToTypeData.put(TypeName.INT, new TypeNameData("putInt($N)", "getInt()", Integer.BYTES));
-        typeToTypeData.put(TypeName.get(String.class),
-                new TypeNameData("putString($N)", "getString()", DYNAMIC_SIZE));
+        typeToTypeData.put(TypeName.BYTE,
+                new TypeNameData(
+                        name -> CodeBlock.of("$N.putByte($L)", consumerParName, name),
+                        name -> CodeBlock.of("$N.getByte()", producerParName),
+                        Byte.BYTES,
+                        Optional.empty()));
+
+        typeToTypeData.put(TypeName.INT, new TypeNameData(
+                name -> CodeBlock.of("$N.putInt($L)", consumerParName, name),
+                name -> CodeBlock.of("$N.getInt()", producerParName),
+                Integer.BYTES,
+                Optional.empty()));
+
+        typeToTypeData.put(TypeName.get(String.class), new TypeNameData(
+                name -> CodeBlock.of("$N.putString($L)", consumerParName, name),
+                name -> CodeBlock.of("$N.getString()", producerParName),
+                DYNAMIC_SIZE,
+                Optional.of(name -> CodeBlock.of("$N += $N.length()", answerVarName, name))));
 
         // FIXME: this is ugly - it depends on file structure
-        typeToTypeData.put(ClassName.bestGuess("game.utility.Point2F"),
-                new TypeNameData("putPoint2F($N)", "getPoint2F()", 2 * Float.BYTES));
-        typeToTypeData.put(ClassName.bestGuess("game.utility.Vector2F"),
-                new TypeNameData("putVector2F($N)", "getVector2F()", 2 * Float.BYTES));
+        typeToTypeData.put(ClassName.bestGuess("game.utility.Point2F"), new TypeNameData(
+                name -> CodeBlock.of("$N.putPoint2F($L)", consumerParName, name),
+                name -> CodeBlock.of("$N.getPoint2F()", producerParName),
+                2 * Float.BYTES,
+                Optional.empty()));
+
+        typeToTypeData.put(ClassName.bestGuess("game.utility.Vector2F"), new TypeNameData(
+                name -> CodeBlock.of("$N.putVector2F($L)", consumerParName, name),
+                name -> CodeBlock.of("$N.getVector2F()", producerParName),
+                2 * Float.BYTES,
+                Optional.empty()));
 
     }
 
     static final TypeNameData getTypeNameData(FieldSpec field) {
-        var mappedVal = typeToTypeData.get(field.type());
-
-        // TODO: fixme, how to check if that is an enum, It's possible that a separate
-        // annotation will be needed to
-        // mark enums that can be passed in messages
-        // && field.type().getClass().isEnum())
-        if (UNKNOWN_TYPE_MEANS_ENUM) {
-            if (mappedVal == null) {
-                mappedVal = new CodegenConfig.TypeNameData("putEnum($N)",
-                        "getEnum(%s.values())".formatted(field.type()),
-                        Integer.BYTES);
-            }
+        if (field.type() instanceof ArrayTypeName) {
+            throw new UnsupportedOperationException("Not implemented");
         } else {
-            if (mappedVal == null) {
-                throw new IllegalStateException(
-                        "Unsupported type: %s, not found among keys %s".formatted(field.type(),
-                                typeToTypeData.keySet()));
+            var mappedVal = typeToTypeData.get(field.type());
+
+            // TODO: fixme, how to check if that is an enum, It's possible that a separate
+            // annotation will be needed to
+            // mark enums that can be passed in messages
+            // && field.type().getClass().isEnum())
+            if (UNKNOWN_TYPE_MEANS_ENUM) {
+                if (mappedVal == null) {
+                    mappedVal = new CodegenConfig.TypeNameData(
+                            name -> CodeBlock.of("$N.putEnum($L)", consumerParName, name),
+                            name -> CodeBlock.of("$N.getEnum($T.values())", producerParName, field.type()),
+                            Integer.BYTES,
+                            Optional.empty());
+                }
+            } else {
+                if (mappedVal == null) {
+                    throw new IllegalStateException(
+                            "Unsupported type: %s, not found among keys %s".formatted(field.type(),
+                                    typeToTypeData.keySet()));
+                }
             }
+            return mappedVal;
         }
-        return mappedVal;
     }
 }
