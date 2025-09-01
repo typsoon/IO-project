@@ -8,6 +8,7 @@ import gameclient.rooms.RoomConfig;
 import network.messages.configurationstate.CreateRoomRequestResponse;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
+import gameclient.rooms.*;
 
 public class ConfigurationStateConsumer implements ISendableConsumer {
     private final IUsersRoomHandle userRoomHandle;
@@ -29,16 +30,27 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
             case RoomConfig createRoomRequest -> {
                 synchronized (userRoomHandle) {
                     var result = userRoomHandle.createRoomRequest(createRoomRequest);
-                    var responsePayload = new CreateRoomRequestResponse.Payload(result, createRoomRequest.name());
+                    var createRoomResponsePayload = new CreateRoomRequestResponse.Payload(result,
+                            createRoomRequest.name());
 
-                    Logger.getGlobal().info("%s response payload".formatted(responsePayload.toString()));
+                    Logger.getGlobal().info("%s response payload".formatted(createRoomResponsePayload.toString()));
 
-                    sendableDispatcher.processSendable(responsePayload);
+                    if (result == RoomRequest.SUCCESSFUL) {
+                        var roomInfoMessage = userRoomHandle.getRoom(createRoomRequest.name());
+
+                        if (roomInfoMessage.isEmpty()) {
+                            Logger.getGlobal().info("We should not have encountered this state");
+                            break;
+                        }
+
+                        sendableDispatcher.processSendable(roomInfoMessage.get().getRoomInfo());
+                    }
+
+                    sendableDispatcher.processSendable(createRoomResponsePayload);
                 }
             }
 
             default -> {
-                Logger.getGlobal().info("HUUHU");
             }
         }
     }

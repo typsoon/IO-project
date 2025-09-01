@@ -46,11 +46,14 @@ public class WaitingRoomScreen extends ScreenAdapter {
         RoomInfo roomInfo = gameClientViewData.getRoomInfo(roomName);
 
         // Nagłówek
-        rootTable.add(new Label("Waiting Room: " + roomInfo.roomName(), labelStyle)).colspan(2).pad(10);
+        var label = textureManager.getHeading("Waiting Room: " + roomInfo.roomName());
+        rootTable.add(label).colspan(2).pad(10);
         rootTable.row();
 
         // Lista użytkowników
-        rootTable.add(new Label("Players:", labelStyle)).left().pad(5);
+
+        var label2 = textureManager.getHeading("Players:");
+        rootTable.add(label2).left().pad(5);
         rootTable.row();
 
         for (UserInfo user : gameClientViewData.getUsersInRoom(roomName)) {

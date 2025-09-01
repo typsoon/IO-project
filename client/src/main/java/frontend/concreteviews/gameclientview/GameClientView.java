@@ -15,12 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
 import game.session.ISendableConsumer;
 import game.utility.ISendable;
+import gameclient.rooms.RoomRequest;
 import network.messages.configurationstate.CreateRoomRequestResponse;
 import viewmodel.ITextureManager;
-
-import frontend.concreteviews.gameclientview.subscreens.*;
 
 public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
     @SuppressWarnings("unused")
@@ -161,9 +161,11 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     public void processSendable(ISendable sendable) {
         switch (sendable) {
             case CreateRoomRequestResponse.Payload requestResponse -> {
-                var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData, requestResponse.roomName(),
-                        textureManager);
-                changeSubscreen(waitingRoomScreen);
+                if (requestResponse.request() == RoomRequest.SUCCESSFUL) {
+                    var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData, requestResponse.roomName(),
+                            textureManager);
+                    changeSubscreen(waitingRoomScreen);
+                }
             }
 
             default -> {
