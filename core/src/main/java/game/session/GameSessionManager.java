@@ -34,9 +34,6 @@ public class GameSessionManager implements IActionReceiver, Closeable {
     public void sendAction(ISubscribablePlayerConnector player, IAction action) {
         eventQueue.add(new Event(playerGameStateSenders.get(player), action));
         eventQueue.add(new Event(playerGameStateSenders.get(player), action));
-
-        Logger.getGlobal().info("Input received by GameSessionManager %s %s".formatted(action, player));
-        Logger.getGlobal().info("%s playerGameStateSenders".formatted(playerGameStateSenders));
     }
 
     public void startGameLoop() {

@@ -4,19 +4,19 @@ import game.engine.entities.EntityGroupID;
 
 // TODO: Consider whether using the Enum's ordinal instead of the Enum itself would be better.
 public class DrawableInfo {
-    EntityGroupID entityGroupID;
-    EntityVisibleState state;
-    float stateTime;
+    private EntityGroupID entityGroupID;
+    private EntityVisibleState state;
+    private float stateTime;
     // TODO: Modifiers modifiers,
-    float x;
-    float y;
-    float width;
-    float height;
-    float originX;
-    float originY;
-    float scaleX;
-    float scaleY;
-    float rotation;
+    private float x;
+    private float y;
+    private float width;
+    private float height;
+    private float originX;
+    private float originY;
+    private float scaleX;
+    private float scaleY;
+    private float rotation;
 
     public DrawableInfo(EntityGroupID entityGroupID, EntityVisibleState state) {
         this.entityGroupID = entityGroupID;
@@ -78,6 +78,7 @@ public class DrawableInfo {
     }
 
     public void setHeight(float height) {
+        this.originY = height / 2;
         this.height = height;
     }
 
@@ -86,6 +87,7 @@ public class DrawableInfo {
     }
 
     public void setWidth(float width) {
+        this.originX = width / 2;
         this.width = width;
     }
 

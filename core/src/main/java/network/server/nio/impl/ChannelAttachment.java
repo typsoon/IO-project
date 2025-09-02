@@ -334,8 +334,8 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
                 // TODO: maybe send more messages in a single Datagram
                 for (final Message msg : nextVal.messageQueue) {
 
-                    // logger.finer("Message %s sent to user %s".formatted(msg.getSendable(),
-                    // nextVal.socketAdress));
+                    logger.finer("Message %s sent to user %s".formatted(msg.getSendable(),
+                            nextVal.socketAdress));
 
                     sendingByteBuffer.clear();
 

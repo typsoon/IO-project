@@ -26,13 +26,16 @@ public class EntitiesDrawer {
             var textureRegion = texturesProvider.getTextureRegion(drawableInfo.getEntityGroupID(),
                     drawableInfo.getState(), drawableInfo.getStateTime());
 
+            final float x = drawableInfo.getX() - drawableInfo.getWidth() / 2;
+            final float y = drawableInfo.getY() - drawableInfo.getHeight() / 2;
             spriteBatch.draw(textureRegion,
-                    drawableInfo.getX(), drawableInfo.getY(),
-                    drawableInfo.getOriginX(), drawableInfo.getOriginY(),
+                    x, y,
+                    drawableInfo.getOriginX(),
+                    drawableInfo.getOriginY(),
                     drawableInfo.getWidth(), drawableInfo.getHeight(),
                     drawableInfo.getScaleX(),
                     drawableInfo.getScaleY(),
-                    drawableInfo.getRotation());
+                    (float) Math.toDegrees(drawableInfo.getRotation()));
         }
 
         spriteBatch.end();
