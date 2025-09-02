@@ -20,9 +20,12 @@ import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import utility.IActionSender;
+import utils.ObserverWithATwist.ObserverImpl;
 import viewmodel.ITextureManager;
 import viewmodel.IView;
 import viewmodel.IViewManager;
+
+import utility.ICycleTimedPerformer;
 
 public class GameplayViewFactory {
     public IView getGameplayView(
@@ -32,9 +35,15 @@ public class GameplayViewFactory {
 
         final DisplayableGameState gameState = new DisplayableGameState();
 
+        final var gameCycles = new ObserverImpl();
         final var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager,
                 clientSideSocketWrapper,
                 gameState, playerConfig, initialGameStates);
+
+        final ICycleTimedPerformer cyclePerformer = deltaTime -> {
+            gameCycles.notifySubscribers(deltaTime);
+            gameplayManager.performCycle(deltaTime);
+        };
 
         // see other screens (Login, GameClient) for clues about how these work
         final var listeners = new ArrayList<EventListener>();
@@ -55,8 +64,8 @@ public class GameplayViewFactory {
         // see libgdx docs
         final var processorsFactories = new ProcessorFactoriesCreator(actionSender).getProcessorsFactories(gameState);
         final var view = new GameplayView(game, listeners, processorsFactories, textureManager, gameState,
-                texturesProvider);
+                texturesProvider, gameCycles);
 
-        return new ViewWithTimedEventLoop(gameplayManager, view, game);
+        return new ViewWithTimedEventLoop(cyclePerformer, view, game);
     }
 }

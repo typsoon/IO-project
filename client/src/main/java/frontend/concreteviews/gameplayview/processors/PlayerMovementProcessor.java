@@ -3,6 +3,7 @@ package frontend.concreteviews.gameplayview.processors;
 import java.util.EnumSet;
 
 import com.badlogic.gdx.Input.Keys;
+import utils.ObserverWithATwist.Subscribable;
 import com.badlogic.gdx.InputAdapter;
 
 import game.actions.Direction;
@@ -23,7 +24,8 @@ public class PlayerMovementProcessor extends InputAdapter {
 
     private final SimpleDirection[] keyToDirections = new SimpleDirection[Keys.MAX_KEYCODE + 1];
 
-    public PlayerMovementProcessor(IActionSender actionSender, int[] leftKeycodes, int[] rightKeycodes,
+    public PlayerMovementProcessor(IActionSender actionSender, Subscribable gameCycles, int[] leftKeycodes,
+            int[] rightKeycodes,
             int[] upKeycodes, int[] downKeycodes) {
         this.actionSender = actionSender;
         for (int i : leftKeycodes) {
@@ -38,10 +40,14 @@ public class PlayerMovementProcessor extends InputAdapter {
         for (int i : downKeycodes) {
             keyToDirections[i] = SimpleDirection.DOWN;
         }
+
+        gameCycles.registerSubscriber(
+                deltaTime -> actionSender.sendIAction(new PlayerMove(getDirection())));
     }
 
-    public PlayerMovementProcessor(IActionSender actionSender) {
-        this(actionSender, new int[] { Keys.A }, new int[] { Keys.D }, new int[] { Keys.W }, new int[] { Keys.S });
+    public PlayerMovementProcessor(IActionSender actionSender, Subscribable gameCycles) {
+        this(actionSender, gameCycles, new int[] { Keys.A }, new int[] { Keys.D }, new int[] { Keys.W },
+                new int[] { Keys.S });
     }
 
     @Override

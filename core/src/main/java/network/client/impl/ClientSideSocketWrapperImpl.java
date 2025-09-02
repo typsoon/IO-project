@@ -89,8 +89,10 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                     }
                 } catch (IOException ioException) {
                     Logger.getGlobal().severe("IOException encountered here!");
+                    break;
                 } catch (Exception e) {
                     Logger.getGlobal().severe("Exception here!! %s".formatted(e));
+                    break;
                 }
             }
         }
@@ -121,6 +123,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                             throw new IllegalStateException("Error requesting portInfo");
                         } catch (Exception e) {
                             Logger.getGlobal().severe("Illegal state");
+                            throw e;
                         }
                     }
 

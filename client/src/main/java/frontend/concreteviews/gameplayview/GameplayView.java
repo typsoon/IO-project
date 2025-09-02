@@ -21,10 +21,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameclientview.GameClientView;
 import frontend.concreteviews.gameplayview.impl.GameplayInfoProviderImpl;
+import frontend.concreteviews.gameplayview.processors.ProcessorFactoriesCreator.DataNeededForCreation;
 import frontend.concreteviews.loginview.LoginView;
 import frontend.gamestate.IReadOnlyDisplayableGameState;
 import game.utility.Point2F;
 import game.utility.Vector2F;
+import utils.ObserverWithATwist.Subscribable;
 import viewmodel.ITextureManager;
 
 //NOTE: this class doesn't implement View, nor does it contain GameplayManager. We use ViewWithEventLoop class to wrap
@@ -42,7 +44,7 @@ public class GameplayView extends ScreenAdapter {
     @SuppressWarnings("unused")
     private final Game game;
     private final Collection<EventListener> gameplayViewEventListeners;
-    private final Collection<Function<IGameplayInfoProvider, InputProcessor>> gameplayViewInputProcessorsFactories;
+    private final Collection<Function<DataNeededForCreation, InputProcessor>> gameplayViewInputProcessorsFactories;
 
     private final ITextureManager textureManager;
     private final IReadOnlyDisplayableGameState gameState;
@@ -50,6 +52,7 @@ public class GameplayView extends ScreenAdapter {
     public final static int WINDOW_HEIGHT = 900;
     public final ShapeRenderer shapeDrawer = new ShapeRenderer();
     private final TexturesProvider texturesProvider;
+    private final Subscribable gameCycles;
 
     private EntitiesDrawer entitiesDrawer;
 
@@ -74,15 +77,16 @@ public class GameplayView extends ScreenAdapter {
     }
 
     GameplayView(Game game, Collection<EventListener> gameplayViewEventListeners,
-            Collection<Function<IGameplayInfoProvider, InputProcessor>> gameplayViewInputProcessorsFactories,
+            Collection<Function<DataNeededForCreation, InputProcessor>> gameplayViewInputProcessorsFactories,
             ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
-            TexturesProvider texturesProvider) {
+            TexturesProvider texturesProvider, Subscribable gameCycles) {
         this.game = game;
         this.gameplayViewEventListeners = gameplayViewEventListeners;
         this.gameplayViewInputProcessorsFactories = gameplayViewInputProcessorsFactories;
         this.textureManager = textureManager;
         this.gameState = gameState;
         this.texturesProvider = texturesProvider;
+        this.gameCycles = gameCycles;
 
         // test = texturesProvider.getTextureRegion(EntityGroupID.HUMAN_BASIC,
         // EntityVisibleState.IDLE_FRONT, 0);
@@ -164,7 +168,8 @@ public class GameplayView extends ScreenAdapter {
 
         var multiplexer = new InputMultiplexer(stage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
-            multiplexer.addProcessor(processorFactory.apply(gameplayInfoProvider));
+            multiplexer
+                    .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
         }
         Gdx.input.setInputProcessor(multiplexer);
 

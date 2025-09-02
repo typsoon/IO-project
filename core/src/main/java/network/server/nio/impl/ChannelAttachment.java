@@ -145,7 +145,7 @@ abstract class ConnectionBasedChannelAttachment<T extends SessionContract, U ext
     public final SocketSender<U> getSender() {
         return message -> {
             synchronized (key) {
-                Logger.getGlobal().info("Message %s enqueued".formatted(message.getSendable()));
+                Logger.getGlobal().finest("Message %s enqueued".formatted(message.getSendable()));
 
                 msgQueue.add(message);
                 key.interestOpsOr(SelectionKey.OP_WRITE);

@@ -9,21 +9,27 @@ import com.badlogic.gdx.InputProcessor;
 import frontend.concreteviews.gameplayview.IGameplayInfoProvider;
 import frontend.gamestate.DisplayableGameState;
 import utility.IActionSender;
+import utils.ObserverWithATwist.Subscribable;
 
 public class ProcessorFactoriesCreator {
     public ProcessorFactoriesCreator(final IActionSender actionSender) {
         this.actionSender = actionSender;
     }
 
+    public static record DataNeededForCreation(
+            IGameplayInfoProvider infoProvider, Subscribable gameCycles) {
+    }
+
     private final IActionSender actionSender;
 
-    public Collection<Function<IGameplayInfoProvider, InputProcessor>> getProcessorsFactories(
+    public Collection<Function<DataNeededForCreation, InputProcessor>> getProcessorsFactories(
             DisplayableGameState displayableGameState) {
-        Function<IGameplayInfoProvider, InputProcessor> playerMovementProcessorFactory = infoProvider -> new PlayerMovementProcessor(
-                actionSender);
-        Function<IGameplayInfoProvider, InputProcessor> mouseClickProcessorCreator = infoProvider -> new MouseClickProcessor(
+        Function<DataNeededForCreation, InputProcessor> playerMovementProcessorFactory = data -> new PlayerMovementProcessor(
+                actionSender, data.gameCycles);
+
+        Function<DataNeededForCreation, InputProcessor> mouseClickProcessorCreator = data -> new MouseClickProcessor(
                 actionSender,
-                infoProvider);
+                data.infoProvider);
 
         return List.of(playerMovementProcessorFactory, mouseClickProcessorCreator);
     }

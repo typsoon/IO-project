@@ -150,9 +150,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     @Override
     public void changeSubscreen(final Screen newScreen) {
         Gdx.app.postRunnable(() -> {
-            // Logger.getGlobal().info(activeSubscreens.toString());
             activeSubscreens.add(newScreen);
-            var view = gameClientSubscreensFactory.wrapScreen(this, newScreen, game);
+            final var view = gameClientSubscreensFactory.wrapScreen(this, newScreen, game);
             view.display();
         });
     }
@@ -160,10 +159,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     @Override
     public void moveToPreviousSubscreen() {
         Gdx.app.postRunnable(() -> {
-            Logger.getGlobal().info(activeSubscreens.toString());
             activeSubscreens.pop();
-
-            var view = gameClientSubscreensFactory.wrapScreen(this, activeSubscreens.peek(), game);
+            final var view = gameClientSubscreensFactory.wrapScreen(this, activeSubscreens.peek(), game);
             view.display();
         });
     }
@@ -187,7 +184,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
             case GameConfirmationRequestMessage.Payload gameConfirmationRequest -> {
                 Logger.getGlobal().info("Moving to confirmation screen");
 
-                var screen = new ConfirmationPromptScreen(this, gameClientViewEventListener, textureManager);
+                final var screen = new ConfirmationPromptScreen(this, gameClientViewEventListener, textureManager);
                 changeSubscreen(screen);
             }
 
