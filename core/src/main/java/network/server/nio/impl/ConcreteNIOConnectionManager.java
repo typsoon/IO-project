@@ -7,6 +7,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -196,6 +197,10 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 // TODO: handle disconnecting
                 // e.printStackTrace();
                 // key.cancel();
+                try {
+                    Thread.sleep(Duration.ofSeconds(1));
+                } catch (Exception inter) {
+                }
                 throw e;
             } finally {
                 iter.remove();

@@ -25,7 +25,7 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
     private final ByteBuffer receivingByteBuf = ByteBuffer.wrap(new byte[MessagesConfig.maxUdpPacketLength]).flip();
 
     private final DatagramPacket receivedPacket = new DatagramPacket(receivingByteBuf.array(),
-            receivingByteBuf.limit());
+            receivingByteBuf.capacity());
     private final BytesAccumulator bytesAccumulator = new OnlyMessagesBytesAccumulator();
 
     private final ByteBuffer sendingByteBuf = ByteBuffer.wrap(new byte[MessagesConfig.maxUdpPacketLength]);
@@ -91,10 +91,11 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
 
             receivingByteBuf.clear();
 
-            Logger.getGlobal().info("RECEIVING OVER UDP");
+            // Logger.getGlobal().info("RECEIVING OVER UDP");
             datagramSocket.receive(receivedPacket);
-            Logger.getGlobal().info("RECEIVED OVER UDP");
-            receivingByteBuf.flip();
+            Logger.getGlobal().info(
+                    "RECEIVED %d BYTES OVER UDP".formatted(receivedPacket.getLength()));
+            receivingByteBuf.limit(receivedPacket.getLength());
         } while (true);
     }
 }

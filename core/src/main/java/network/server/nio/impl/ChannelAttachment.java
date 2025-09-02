@@ -336,6 +336,7 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
                     sendingByteBuffer.clear();
 
                     msg.encodeAndWrite(sendingBufferDataConsumer);
+                    sendingByteBuffer.flip();
                     datagramChannel.send(sendingByteBuffer, nextVal.socketAdress);
 
                     logger.info("Message %s sent to user %s".formatted(msg.getSendable(),

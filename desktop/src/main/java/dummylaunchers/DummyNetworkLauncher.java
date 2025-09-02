@@ -2,7 +2,6 @@ package dummylaunchers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -70,10 +69,16 @@ class DummyNetworkGameLauncher extends Game {
                     }
 
                     case CreateRoomRequestResponse.Payload createRoomRequestResponse -> {
-                        assert createRoomRequestResponse.request().equals(RoomRequest.SUCCESSFUL);
+                        switch (createRoomRequestResponse.request()) {
+                            case RoomRequest.SUCCESSFUL -> {
+                                socketWrapper.dispatchMessage(
+                                        objectDecoder.decodeFromRecord(new StartGameRequest.Payload()));
+                            }
+                            default -> {
+                                throw new IllegalStateException("Failed to create a room");
+                            }
+                        }
 
-                        socketWrapper
-                                .dispatchMessage(objectDecoder.decodeFromRecord(new StartGameRequest.Payload()));
                     }
 
                     case GameConfirmationRequestMessage.Payload confirmationRequest -> {
@@ -109,7 +114,8 @@ class DummyNetworkLauncher {
 
         var applog = Logger.getGlobal();
         Handler systemOut = new ConsoleHandler();
-        var level = Level.INFO;
+        var level = Level.FINEST;
+        // var level = Level.INFO;
         systemOut.setLevel(level);
         applog.addHandler(systemOut);
         applog.setLevel(level);
