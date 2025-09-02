@@ -9,15 +9,16 @@ import game.engine.PlayerConfig;
 import game.gamestates.IGameState;
 import game.session.IPlayerConnector;
 import game.session.ISendableConsumer;
+import gameclient.user.UserInfo;
 import network.MessageDispatcher;
 import network.messages.Message;
+import network.messages.configurationstate.GameStartMessages.GameStartedNotification;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
+import network.messages.userstate.GameConfirmationRequestMessage;
 import network.server.nio.NIOConnectionManager.SessionContract;
 import session.receivers.IConfigurationStateConsumerFactory;
 import user.IMatchmakingUserHandle;
 import user.IUsersHandlesFactory;
-
-import gameclient.user.UserInfo;
 
 public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
@@ -60,11 +61,29 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
 
     @Override
     public void gameStarted(ISendableConsumer lobby) {
+        try {
+            messageDispatcher
+                    .dispatchMessage(
+                            objectToMessageDecoder.decodeFromRecord(new GameStartedNotification.Payload()));
+        } catch (IOException ioException) {
+            Logger.getGlobal().severe("IOException should not have occured there!!!");
+            return;
+        }
+
         sendableReceiver = lobby;
     }
 
     @Override
     public void moveToConfirmationState(ISendableConsumer confirmationReceiver) {
+        try {
+            messageDispatcher
+                    .dispatchMessage(
+                            objectToMessageDecoder.decodeFromRecord(new GameConfirmationRequestMessage.Payload()));
+        } catch (IOException ioException) {
+            Logger.getGlobal().severe("IOException should not have occured there!!!");
+            return;
+        }
+
         this.sendableReceiver = confirmationReceiver;
     }
 
@@ -89,7 +108,8 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
             } catch (IOException e) {
                 Logger.getGlobal().severe("An IOException caught");
             } catch (Exception e) {
-                Logger.getGlobal().severe("An unpredictable error occured");
+                Logger.getGlobal().severe("An unpredictable error occured %s".formatted(e));
+                e.printStackTrace();
             }
         };
     }

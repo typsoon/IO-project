@@ -14,3 +14,8 @@
 | 9  | RoomMembershipMessage    |  |
 | 10  | CreateRoomRequestResponse    |  |
 | 11  | GameConfirmationRequestMessage    |  |
+| 12  | StartGameRequest    |  |
+| 13  | GameStartedNotification    |  |
+| 14  | PlayerStateMessage     |  |
+| 15  | EntityStateMessage    |  |
+<!-- | 16  | ReadyForDataMessage    |  | -->

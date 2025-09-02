@@ -68,6 +68,12 @@ public class CodegenConfig {
                 Integer.BYTES,
                 Optional.empty()));
 
+        typeToTypeData.put(TypeName.FLOAT, new TypeNameData(
+                name -> CodeBlock.of("$N.putFloat($L)", consumerParName, name),
+                name -> CodeBlock.of("$N.getFloat()", producerParName),
+                Float.BYTES,
+                Optional.empty()));
+
         typeToTypeData.put(TypeName.BOOLEAN, new TypeNameData(
                 name -> CodeBlock.of("$N.putBoolean($L)", consumerParName, name),
                 name -> CodeBlock.of("$N.getBoolean()", producerParName),

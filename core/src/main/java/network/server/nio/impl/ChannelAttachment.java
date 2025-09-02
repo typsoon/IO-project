@@ -349,7 +349,7 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
         final var address = datagramChannel.receive(receivingByteBuffer);
 
         receivingByteBuffer.flip();
-        logger.info("Received %d bytes".formatted(receivingByteBuffer.limit()));
+        // logger.finest("Received %d bytes".formatted(receivingByteBuffer.limit()));
 
         final List<ClientAndTheirMessage<T>> answer = new LinkedList<>();
         final var byteBufAdapter = AccumulatorAdapters.getByteBufferAdapter(receivingByteBuffer);
@@ -382,8 +382,9 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
 
         final var userData = allUsers.get(address);
 
-        logger.finer("position %d limit %d".formatted(receivingByteBuffer.position(),
-                receivingByteBuffer.limit()));
+        // logger.finest("position %d limit
+        // %d".formatted(receivingByteBuffer.position(),
+        // receivingByteBuffer.limit()));
 
         answer.addAll(readAllDataFromUDPorTCPAccumulator(userData.bytesAccumulator, byteBufAdapter,
                 authenticationService)

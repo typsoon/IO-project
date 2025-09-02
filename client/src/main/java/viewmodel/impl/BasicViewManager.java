@@ -1,12 +1,16 @@
 package viewmodel.impl;
 
+import java.util.Collection;
+
+import game.gamestates.IGameState;
 import network.client.ClientSideSocketWrapper;
 import viewmodel.ITextureManager;
+import viewmodel.IViewFactory;
 import viewmodel.IViewManager;
 
 public class BasicViewManager implements IViewManager {
-    private final BasicViewFactory viewFactory;
-    private final BasicTextureManager textureManager;
+    private final IViewFactory viewFactory;
+    private final ITextureManager textureManager;
 
     // should only be called by its injector
     BasicViewManager(
@@ -29,8 +33,8 @@ public class BasicViewManager implements IViewManager {
     }
 
     @Override
-    public void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper) {
-        viewFactory.getGameClientView(clientSideSocketWrapper).display();
+    public void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper, int id) {
+        viewFactory.getGameClientView(clientSideSocketWrapper, id).display();
     }
 
     @Override
@@ -46,6 +50,12 @@ public class BasicViewManager implements IViewManager {
     @Override
     public void moveToLoginView(ClientSideSocketWrapper clientSideSocketWrapper) {
         viewFactory.getLoginView(clientSideSocketWrapper).display();
+    }
+
+    @Override
+    public void moveToGameplay(ClientSideSocketWrapper clientSideSocketWrapper, int id,
+            Collection<IGameState> initialGameStates) {
+        viewFactory.getGameplayView(clientSideSocketWrapper, id, initialGameStates).display();
     }
 
 }

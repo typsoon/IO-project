@@ -11,13 +11,13 @@ public final class LogInResponse extends EncryptedMessage {
     public static int NO_AUTH_TOKEN = -1;
     public static final byte id = 1;
 
-    public record Payload(Optional<Integer> authToken) implements ISendable {
+    private final Payload payload;
+
+    public record Payload(Optional<Integer> authToken, int userId) implements ISendable {
     }
 
-    private final Payload authTokenOptional;
-
-    public LogInResponse(Optional<Integer> authTokenOptional) {
-        this.authTokenOptional = new Payload(authTokenOptional);
+    public LogInResponse(Optional<Integer> authTokenOptional, int userId) {
+        this.payload = new Payload(authTokenOptional, userId);
     }
 
     @Override
@@ -25,11 +25,12 @@ public final class LogInResponse extends EncryptedMessage {
         byte msgSize = Byte.BYTES + Integer.BYTES;
         out.putByte(msgSize);
         out.putByte(id);
-        out.putInt(authTokenOptional.authToken.orElse(NO_AUTH_TOKEN));
+        out.putInt(payload.authToken.orElse(NO_AUTH_TOKEN));
+        out.putInt(payload.userId);
     }
 
     @Override
     public ISendable getSendable() {
-        return authTokenOptional;
+        return payload;
     }
 }

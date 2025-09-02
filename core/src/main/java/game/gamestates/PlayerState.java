@@ -15,5 +15,6 @@ public record PlayerState(
         EntityGroupID entityGroupId,
         EntityAction action,
         Vector2F sightRange
-        //this will hold more information than entity state
-) implements IGameState { }
+// this will hold more information than entity state
+) implements IGameState {
+}

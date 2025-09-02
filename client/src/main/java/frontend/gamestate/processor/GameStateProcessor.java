@@ -1,5 +1,9 @@
 package frontend.gamestate.processor;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import frontend.gamestate.IDisplayableGameState;
 import game.engine.PlayerConfig;
 import game.engine.modules.IGeometryModule;
@@ -10,13 +14,9 @@ import viewmodel.game.RenderableObjectFactory;
 import viewmodel.game.RenderablePlayer;
 import viewmodel.game.TimedRenderableObject;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 public class GameStateProcessor implements IGameStateProcessor {
 
-    private static final float TIME_STEP = 1f/64f;
+    private static final float TIME_STEP = 1f / 64f;
     private float accumulatedTime = 0f;
     private final float timeThreshold = 0.5f;
 
@@ -27,13 +27,17 @@ public class GameStateProcessor implements IGameStateProcessor {
     IDisplayableGameState displayableGameState;
     Map<Integer, TimedRenderableObject> entities = new HashMap<>();
 
-    public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory, IDisplayableGameState displayableGameState, PlayerConfig playerConfig) {
+    public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory,
+            IDisplayableGameState displayableGameState, PlayerConfig playerConfig,
+            Collection<IGameState> initialGameStates) {
         this.geometryModule = geometryModule;
         this.renderableObjectFactory = objectFactory;
         this.displayableGameState = displayableGameState;
         this.player = objectFactory.createRenderablePlayer(playerConfig);
         this.displayableGameState.addPlayer(player);
         this.displayableGameState.addDrawable(player.getDrawableInfo());
+
+        processGameStates(initialGameStates, 0);
     }
 
     @Override
@@ -47,7 +51,8 @@ public class GameStateProcessor implements IGameStateProcessor {
             switch (gameState) {
                 case EntityState entityState -> updateEntityState(entityState);
                 case PlayerState playerState -> updatePlayerState(playerState);
-                default -> { }
+                default -> {
+                }
             }
         }
         cleanupEntities(deltaTime);
@@ -75,6 +80,7 @@ public class GameStateProcessor implements IGameStateProcessor {
         }
         renderableObject.timeSinceUpdate = 0f;
     }
+
     private void cleanupEntities(float deltaTime) {
         entities.entrySet().removeIf(entry -> {
             TimedRenderableObject renderableObject = entry.getValue();

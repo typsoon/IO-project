@@ -2,6 +2,7 @@ package frontend.concreteviews.gameplayview;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import com.badlogic.gdx.Game;
@@ -13,6 +14,7 @@ import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactor
 import frontend.concreteviews.gameplayview.processors.ProcessorFactoriesCreator;
 import frontend.gamestate.DisplayableGameState;
 import game.engine.PlayerConfig;
+import game.gamestates.IGameState;
 import network.client.DuplexSocketWrapper;
 import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
@@ -26,13 +28,13 @@ public class GameplayViewFactory {
     public IView getGameplayView(
             final Game game, final IViewManager viewManager, final DuplexSocketWrapper clientSideSocketWrapper,
             final ITextureManager textureManager, final PlayerConfig playerConfig,
-            final TexturesProvider texturesProvider) {
+            final TexturesProvider texturesProvider, Collection<IGameState> initialGameStates) {
 
         final DisplayableGameState gameState = new DisplayableGameState();
 
         final var gameplayManager = new GameplayManagerFactory().getGameplayManager(viewManager,
                 clientSideSocketWrapper,
-                gameState, playerConfig);
+                gameState, playerConfig, initialGameStates);
 
         // see other screens (Login, GameClient) for clues about how these work
         final var listeners = new ArrayList<EventListener>();

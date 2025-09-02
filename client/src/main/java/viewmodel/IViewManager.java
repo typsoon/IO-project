@@ -1,5 +1,9 @@
 package viewmodel;
 
+import java.util.Collection;
+import java.util.List;
+
+import game.gamestates.IGameState;
 import network.client.ClientSideSocketWrapper;
 
 //don't use outside package concerning frontend. use AbstractViewManager instead
@@ -12,7 +16,14 @@ public interface IViewManager extends IAbstractGeneralViewManager {
 
     void moveToLoginView(ClientSideSocketWrapper clientSideSocketWrapper);
 
-    void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper);
+    void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper, int id);
+
+    void moveToGameplay(ClientSideSocketWrapper clientSideSocketWrapper, int id,
+            Collection<IGameState> initialGameStates);
+
+    default void moveToGameplay(ClientSideSocketWrapper clientSideSocketWrapper, int id) {
+        moveToGameplay(clientSideSocketWrapper, id, List.of());
+    };
 
     ITextureManager getTextureManager();
 }

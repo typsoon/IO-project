@@ -1,5 +1,8 @@
 package viewmodel;
 
+import java.util.Collection;
+
+import game.gamestates.IGameState;
 import network.client.ClientSideSocketWrapper;
 
 public interface IViewFactory {
@@ -11,6 +14,9 @@ public interface IViewFactory {
 
     IView getPlayView();
 
-    IView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper);
+    IView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper, int id);
+
+    IView getGameplayView(ClientSideSocketWrapper clientSideSocketWrapper, int id,
+            Collection<IGameState> initialGameStates);
     // AbstractView getLoginView();
 }

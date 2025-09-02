@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,18 +16,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import frontend.concreteviews.gameclientview.subscreens.ConfirmationPromptScreen;
 import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
 import game.session.ISendableConsumer;
 import game.utility.ISendable;
 import gameclient.rooms.RoomRequest;
 import network.messages.configurationstate.CreateRoomRequestResponse;
+import network.messages.userstate.GameConfirmationRequestMessage;
 import viewmodel.ITextureManager;
 
 public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
     @SuppressWarnings("unused")
     private final Game game;
     private final ITextureManager textureManager;
-    private final GameClientViewEventListener gameClientViewEventListener;
+    private final EventListener gameClientViewEventListener;
     private final GameClientViewData gameClientViewData;
 
     private Stack<Screen> activeSubscreens = new Stack<>();
@@ -34,10 +37,10 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     private Stage stage;
 
     public GameClientView(final Game game, ITextureManager textureManager,
-            GameClientViewEventListener gameClientViewEventListener2, GameClientViewData gameClientViewData) {
+            GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData) {
         this.game = game;
         this.textureManager = textureManager;
-        this.gameClientViewEventListener = gameClientViewEventListener2;
+        this.gameClientViewEventListener = gameClientViewEventListener;
         this.gameClientViewData = gameClientViewData;
     }
 
@@ -141,15 +144,27 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     }
 
     @Override
-    public void changeSubscreen(Screen newScreen) {
+    public void changeSubscreen(final Screen newScreen) {
+        // Logger.getGlobal().info(activeSubscreens.toString());
         activeSubscreens.add(newScreen);
         game.setScreen(newScreen);
+        // Gdx.app.postRunnable(() -> {
+        // Logger.getGlobal().info(activeSubscreens.toString());
+        // activeSubscreens.add(newScreen);
+        // game.setScreen(newScreen);
+        // });
     }
 
     @Override
     public void moveToPreviousSubscreen() {
-        var screen = activeSubscreens.pop();
-        game.setScreen(screen);
+        // Logger.getGlobal().info(activeSubscreens.toString());
+        activeSubscreens.pop();
+        game.setScreen(activeSubscreens.peek());
+        // Gdx.app.postRunnable(() -> {
+        // Logger.getGlobal().info(activeSubscreens.toString());
+        // activeSubscreens.pop();
+        // game.setScreen(activeSubscreens.peek());
+        // });
     }
 
     @Override
@@ -163,9 +178,14 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
             case CreateRoomRequestResponse.Payload requestResponse -> {
                 if (requestResponse.request() == RoomRequest.SUCCESSFUL) {
                     var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData, requestResponse.roomName(),
-                            textureManager);
+                            textureManager, gameClientViewEventListener);
                     changeSubscreen(waitingRoomScreen);
                 }
+            }
+
+            case GameConfirmationRequestMessage.Payload gameConfirmationRequest -> {
+                var screen = new ConfirmationPromptScreen(this, gameClientViewEventListener, textureManager);
+                changeSubscreen(screen);
             }
 
             default -> {

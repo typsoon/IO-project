@@ -229,14 +229,14 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
             if (token != null) {
                 session.getMessageDispatcher()
                         .connectSSLSender(sslSender);
-                sslSender.sendMessage(new LogInResponse(Optional.of(token.val())));
+                sslSender.sendMessage(new LogInResponse(Optional.of(token.val()), id.id()));
 
                 unauthorizedChannels.remove(clientSocketChannel);
 
                 logger.info("Successfully authenticated user: %s login: %s".formatted(id.id(),
                         logInQuery.username()));
             } else {
-                sslSender.sendMessage(new LogInResponse(Optional.empty()));
+                sslSender.sendMessage(new LogInResponse(Optional.empty(), 0));
                 logger.info("Auth for user id: %s login: %s was unsuccessfull".formatted(id,
                         logInQuery.username()));
             }

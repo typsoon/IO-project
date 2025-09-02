@@ -21,17 +21,17 @@ public class GameClientViewFactory {
         this.textureManager = textureManager;
     }
 
-    public IView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper) {
+    public IView getGameClientView(ClientSideSocketWrapper clientSideSocketWrapper, int userID) {
         // TODO: make this one
         var objectDecoder = new ConcreteObjectDecoder();
         var eventListener = new GameClientViewEventListener(viewManager, clientSideSocketWrapper, objectDecoder);
 
-        var gameClientViewData = new GameClientViewData();
+        var gameClientViewData = new GameClientViewData(userID);
 
         var view = new GameClientView(game, textureManager, eventListener, gameClientViewData);
 
         ICyclePerformer cyclePerformer = new GameClientViewMessageHandler(gameClientViewData, clientSideSocketWrapper,
-                viewManager, view);
+                viewManager, view, userID);
 
         return new ViewWithEventLoop(cyclePerformer, view, game);
     }

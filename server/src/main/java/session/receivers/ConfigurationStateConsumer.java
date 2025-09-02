@@ -8,6 +8,7 @@ import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomRequest;
 import gameclient.rooms.UserMembershipInfo;
 import network.messages.configurationstate.CreateRoomRequestResponse;
+import network.messages.configurationstate.GameStartMessages.StartGameRequest;
 import room.Room;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
@@ -54,13 +55,21 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
                         var user = userRoomHandle.getRoomMembers().iterator().next().userView();
                         var roomMembershipMsgPayload = new UserMembershipInfo(room.getRoomInfo().roomName(),
                                 user.id().id(),
-                                user.username());
+                                user.username(),
+                                true);
 
                         sendableDispatcher.processSendable(roomMembershipMsgPayload);
                     }
 
                     sendableDispatcher.processSendable(createRoomResponsePayload);
                 }
+            }
+
+            case StartGameRequest.Payload startGameReqPayload -> {
+                // TODO: unify this between rooms and matchmaking
+                var res = userRoomHandle.createGameRequest();
+                // if (res == RoomRequest.SUCCESSFUL) {
+                // }
             }
 
             default -> {

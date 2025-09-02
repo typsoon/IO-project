@@ -28,15 +28,15 @@ public class LoginViewMessageHandler implements ICyclePerformer {
                 switch (sendable) {
                     case LogInResponse.Payload logInResponse -> {
 
-                        var response_payload = logInResponse.authToken();
+                        var responsePayload = logInResponse.authToken();
 
-                        if (response_payload.isEmpty()) {
+                        if (responsePayload.isEmpty()) {
                             logger.info("Invalid credentials");
                             return;
                         }
 
                         logger.info("Succesfully logged in");
-                        viewManager.moveToGameClient(clientSideSocketWrapper);
+                        viewManager.moveToGameClient(clientSideSocketWrapper, logInResponse.userId());
                     }
 
                     default -> throw new IllegalStateException(

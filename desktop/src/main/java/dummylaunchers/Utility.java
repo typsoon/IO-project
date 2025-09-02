@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.logging.Logger;
 
 import game.actions.IAction;
+import game.gamestates.IGameState;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
 import game.utility.ISendable;
@@ -77,15 +78,22 @@ public class Utility {
         }
 
         @Override
-        public void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper) {
+        public ITextureManager getTextureManager() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getTextureManager'");
+        }
+
+        @Override
+        public void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper, int id) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'moveToGameClient'");
         }
 
         @Override
-        public ITextureManager getTextureManager() {
+        public void moveToGameplay(ClientSideSocketWrapper clientSideSocketWrapper, int id,
+                Collection<IGameState> initialGameStates) {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getTextureManager'");
+            throw new UnsupportedOperationException("Unimplemented method 'moveToGameplay'");
         }
     }
 

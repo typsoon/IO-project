@@ -6,11 +6,15 @@ import java.util.logging.Logger;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
+import frontend.concreteviews.gameclientview.GameClientViewEvents.ConfirmGameEvent;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
+import frontend.concreteviews.gameclientview.GameClientViewEvents.RequestGameStartEvent;
 import gameclient.rooms.RoomConfig;
 import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper.ConnectionEndedException;
+import network.messages.configurationstate.GameStartMessages.*;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
+import network.messages.userstate.GameConfirmation;
 import viewmodel.IViewManager;
 
 public class GameClientViewEventListener implements EventListener {
@@ -38,6 +42,25 @@ public class GameClientViewEventListener implements EventListener {
 
                     logger.info("Sent create room request");
                     clientSideSocketWrapper.dispatchMessage(msg);
+                    return true;
+                }
+
+                case RequestGameStartEvent requestGameStartEvent -> {
+                    var msgPayload = new StartGameRequest.Payload();
+                    var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
+
+                    logger.info("Send game start request");
+                    clientSideSocketWrapper.dispatchMessage(msg);
+                    return true;
+                }
+
+                case ConfirmGameEvent confirmGameEvent -> {
+                    var msgPayload = new GameConfirmation(confirmGameEvent.getConfirmationVal());
+                    var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
+
+                    logger.info("Confirmed game %s".formatted(confirmGameEvent.getConfirmationVal()));
+                    clientSideSocketWrapper.dispatchMessage(msg);
+                    return true;
                 }
 
                 default -> {

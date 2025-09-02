@@ -1,9 +1,11 @@
 package frontend.concreteviews.gameclientview;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import database.IDatabaseManager.UserId;
+import game.gamestates.IGameState;
 import game.session.ISendableConsumer;
 import game.utility.ISendable;
 import gameclient.rooms.RoomInfo;
@@ -11,8 +13,10 @@ import gameclient.rooms.UserMembershipInfo;
 import gameclient.user.UserInfo;
 import network.client.ClientSideSocketWrapper;
 import network.messages.configurationstate.CreateRoomRequestResponse;
+import network.messages.configurationstate.GameStartMessages.GameStartedNotification;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utility.ICyclePerformer;
+import utils.BoundedQueue;
 import viewmodel.IViewManager;
 
 public class GameClientViewMessageHandler implements ICyclePerformer {
@@ -20,20 +24,28 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
     private final ClientSideSocketWrapper clientSideSocketWrapper;
     private final IViewManager viewManager;
     private final ISendableConsumer displayHandler;
+    private final int userId;
+
+    private Collection<IGameState> initialGameStates = new BoundedQueue<>(1 << 16);
 
     public GameClientViewMessageHandler(GameClientViewData gameClientViewData,
             ClientSideSocketWrapper clientSideSocketWrapper, IViewManager viewManager,
-            ISendableConsumer displayHandler) {
+            ISendableConsumer displayHandler, int userId) {
         this.gameClientViewData = gameClientViewData;
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.viewManager = viewManager;
         this.displayHandler = displayHandler;
+        this.userId = userId;
     }
 
     @Override
     public void performCycle() {
         try {
             var sendables = clientSideSocketWrapper.getSendables();
+
+            if (!sendables.isEmpty()) {
+                Logger.getGlobal().info("Received sendables %s".formatted(sendables));
+            }
 
             for (ISendable sendable : sendables) {
                 switch (sendable) {
@@ -45,15 +57,24 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
                         var roomName = userMembershipInfo.roomName();
                         var userInfo = new UserInfo(new UserId(userMembershipInfo.userID()),
                                 userMembershipInfo.username());
-                        gameClientViewData.addAnUserToARoom(roomName, userInfo);
+                        gameClientViewData.addAnUserToARoom(roomName, userInfo, userMembershipInfo.isAdmin());
                     }
 
-                    case GameConfirmationRequestMessage.GameConfirmationRequest gameConfirmationRequest -> {
-
+                    case GameConfirmationRequestMessage.Payload gameConfirmationRequest -> {
+                        displayHandler.processSendable(gameConfirmationRequest);
                     }
 
                     case CreateRoomRequestResponse.Payload createRoomResponse -> {
                         displayHandler.processSendable(createRoomResponse);
+                    }
+
+                    case GameStartedNotification.Payload gameStartedNotificationPayload -> {
+                        viewManager.moveToGameplay(clientSideSocketWrapper, userId, initialGameStates);
+                    }
+
+                    case IGameState gameState -> {
+                        Logger.getGlobal().info("Adding gamestate");
+                        initialGameStates.add(gameState);
                     }
 
                     default ->

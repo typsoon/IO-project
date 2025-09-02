@@ -35,7 +35,8 @@ public class MatchmakingEngineFactory implements IMatchmakingEngineFactory {
         return matchmakingEngine;
     }
 
-    private static ConfirmationManager getConfirmationManager(AtomicReference<MatchmakingEngine> engineRef, Consumer<Lobby> onLobbyFinalized) {
+    private static ConfirmationManager getConfirmationManager(AtomicReference<MatchmakingEngine> engineRef,
+            Consumer<Lobby> onLobbyFinalized) {
         BiConsumer<Collection<LobbyMember>, MatchmakingParameters> requeueHandler = (members, params) -> {
             var engine = engineRef.get();
             if (engine != null) {
@@ -48,7 +49,6 @@ public class MatchmakingEngineFactory implements IMatchmakingEngineFactory {
         return new ConfirmationManager(
                 onLobbyFinalized,
                 requeueHandler,
-                DEFAULT_CONFIRMATION_TIMEOUT_MS
-        );
+                DEFAULT_CONFIRMATION_TIMEOUT_MS);
     }
 }

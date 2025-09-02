@@ -40,7 +40,8 @@ public class ConcreteMessageDecoder implements MessageDecoder {
             case LogInResponse.id -> {
                 int answer = dataProducer.getInt();
                 return new LogInResponse(
-                        (answer == LogInResponse.NO_AUTH_TOKEN) ? Optional.empty() : Optional.of(answer));
+                        (answer == LogInResponse.NO_AUTH_TOKEN) ? Optional.empty() : Optional.of(answer),
+                        dataProducer.getInt());
             }
 
             default -> {

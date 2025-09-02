@@ -2,35 +2,40 @@ package frontend.concreteviews.gameclientview.subscreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import frontend.concreteviews.gameclientview.GameClientViewData;
+import frontend.concreteviews.gameclientview.GameClientViewEvents.RequestGameStartEvent;
 import frontend.concreteviews.gameclientview.ScreenSwitchingUtils;
 import gameclient.rooms.RoomInfo;
-import gameclient.user.UserInfo;
-import viewmodel.ITextureManager;
+import viewmodel.ITextureManager;;
 
 public class WaitingRoomScreen extends ScreenAdapter {
     private final ScreenSwitchingUtils screenSwitchingUtils;
     private final GameClientViewData gameClientViewData;
     private final String roomName;
     private final ITextureManager textureManager;
+    private final EventListener eventListener;
 
     private final Stage stage;
     private final Table rootTable;
     private final LabelStyle labelStyle = new LabelStyle();
 
     public WaitingRoomScreen(ScreenSwitchingUtils screenSwitchingUtils, GameClientViewData gameClientViewData,
-            String roomName, ITextureManager textureManager) {
+            String roomName, ITextureManager textureManager, EventListener eventListener) {
         this.screenSwitchingUtils = screenSwitchingUtils;
         this.gameClientViewData = gameClientViewData;
         this.roomName = roomName;
         this.textureManager = textureManager;
+        this.eventListener = eventListener;
 
         this.stage = new Stage(new ScreenViewport());
         this.rootTable = new Table();
@@ -56,9 +61,33 @@ public class WaitingRoomScreen extends ScreenAdapter {
         rootTable.add(label2).left().pad(5);
         rootTable.row();
 
-        for (UserInfo user : gameClientViewData.getUsersInRoom(roomName)) {
-            var tempLabel = textureManager.getHeading(user.username());
+        boolean amIAdmin = false;
+        for (var user : gameClientViewData.getUsersInRoom(roomName)) {
+            var tempLabel = textureManager.getHeading(user.userInfo().username());
+
+            if (user.isAdmin()) {
+                tempLabel.setColor(Color.YELLOW); // or bold font, or underline, etc.
+                if (user.isItMe()) {
+                    amIAdmin = true;
+                }
+            }
+
             rootTable.add(tempLabel).left().pad(3);
+            rootTable.row();
+        }
+
+        var startGameButton = textureManager.getTextButton("Start Game");
+        startGameButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                    final int button) {
+                startGameButton.fire(new RequestGameStartEvent());
+                return true;
+            }
+        });
+
+        if (amIAdmin) {
+            rootTable.add(startGameButton).colspan(2).padTop(20);
             rootTable.row();
         }
 
@@ -78,6 +107,7 @@ public class WaitingRoomScreen extends ScreenAdapter {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        stage.addListener(eventListener);
     }
 
     @Override
