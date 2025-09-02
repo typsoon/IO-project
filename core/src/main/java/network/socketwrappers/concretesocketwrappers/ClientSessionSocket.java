@@ -1,17 +1,16 @@
 package network.socketwrappers.concretesocketwrappers;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import network.messages.Message;
 import network.messages.decoding.ConcreteMessageDecoder;
 import network.messages.decoding.MessageDecoder;
+import network.messages.utils.DataConsumer;
 import network.messages.utils.DataProducer;
 import network.socketwrappers.SocketTypes.DuplexSocket;
 import network.utils.TokenView;
-import network.messages.utils.DataConsumer;
-
-import java.util.logging.Level;
 
 public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
     private final DataProducer in;
@@ -42,6 +41,8 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
             logger.finer("Put token bytes in %d".formatted(tokenHolder.getToken()));
 
             message.encodeAndWrite(out);
+
+            logger.finer("Written %s".formatted(message.getSendable()));
         } catch (IOException e) {
             logger.log(Level.OFF, String.format("An error occured: %s", e));
         } catch (Exception e) {
@@ -53,7 +54,14 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
 
     @Override
     public Message receiveMessage() throws IOException {
-        return messageDecoder.decodeMessage(in);
+        @SuppressWarnings("unused")
+        var msgLen = in.getByte();
+
+        // Logger.getGlobal().info("Started receiving");
+        var received = messageDecoder.decodeMessage(in);
+
+        // Logger.getGlobal().info("FINISHED receiving");
+        return received;
     }
 
 }

@@ -5,5 +5,10 @@ import game.engine.entities.EntityGroupID;
 
 public record PlayerConfig(
         GeometryConfigID geometryConfigID,
-        EntityGroupID entityGroupID
-){}
+        EntityGroupID entityGroupID) {
+    public PlayerConfig() {
+        this(GeometryConfigID.HUMAN,
+                EntityGroupID.HUMAN_BASIC);
+    }
+
+}

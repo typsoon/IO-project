@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import room.IRoomManager.RoomRequest;
+import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
 import room.Room;
-import room.RoomConfig;
 import room.RoomMember;
 
 // Interface that allows communication from the user to the room

@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
+import gameclient.rooms.RoomConfig;
 import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper.ConnectionEndedException;
-import network.messages.configurationstate.CreateRoomRequest;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import viewmodel.IViewManager;
 
@@ -31,7 +31,9 @@ public class GameClientViewEventListener implements EventListener {
         try {
             switch (event) {
                 case CreateRoomEvent createRoomEvent -> {
-                    var msgPayload = new CreateRoomRequest.Payload(createRoomEvent.getName());
+
+                    // TODO: change this so it has all the info
+                    var msgPayload = new RoomConfig(createRoomEvent.getName(), "", 1, true);
                     var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
 
                     logger.info("Sent create room request");

@@ -40,6 +40,7 @@ import network.utils.BytesAccumulator;
 import network.utils.BytesAccumulator.Readable;
 import network.utils.BytesAccumulator.WhatWasRead;
 import network.utils.impl.OnlyMessagesBytesAccumulator;
+import network.utils.impl.OrdinaryBytesAccumulator;
 
 public interface ChannelAttachment<T extends SessionContract> {
     void dispatchMessages() throws IOException;
@@ -126,6 +127,9 @@ abstract class ConnectionBasedChannelAttachment<T extends SessionContract, U ext
     public final void dispatchMessages() throws IOException {
         synchronized (key) {
             for (final Message msg : msgQueue) {
+                // Logger.getGlobal().info("I AM HERE AND SENDING
+                // %s".formatted(msg.getSendable()));
+
                 msg.encodeAndWrite(consumer);
 
                 Logger.getGlobal()
@@ -141,10 +145,14 @@ abstract class ConnectionBasedChannelAttachment<T extends SessionContract, U ext
     public final SocketSender<U> getSender() {
         return message -> {
             synchronized (key) {
+                Logger.getGlobal().info("Message %s enqueued".formatted(message.getSendable()));
+
                 msgQueue.add(message);
-                key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
-                // return Optional.empty();
+                key.interestOpsOr(SelectionKey.OP_WRITE);
+
             }
+
+            key.selector().wakeup();
         };
     }
 }
@@ -303,6 +311,8 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
 
                 selectionKey.interestOpsOr(SelectionKey.OP_WRITE);
             }
+
+            selectionKey.selector().wakeup();
         };
     }
 

@@ -10,3 +10,7 @@
 | 5  | PlayerMove                 | Player is moving             |
 | 6  | GameConfirmation | Confirms Game |
 | 7  | PlayerSlotUse    | Player Uses an item from inventory slot when in game |
+| 8  | RoomInfoMessage    | Message containing info about a specified room |
+| 9  | RoomMembershipMessage    |  |
+| 10  | CreateRoomRequestResponse    |  |
+| 11  | GameConfirmationRequestMessage    |  |

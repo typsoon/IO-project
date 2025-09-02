@@ -28,7 +28,9 @@ public class ProducerGenerator {
         formatArgs.add(String.format(CodegenConfig.generatedClassNameFormat, messageTypeMirror.getSimpleName()));
 
         var producerPar = ParameterSpec
-                .builder(ClassName.bestGuess(producerQualifiedName), CodegenConfig.producerParName).build();
+                .builder(ClassName.bestGuess(producerQualifiedName), CodegenConfig.producerParName)
+                .addModifiers(FINAL)
+                .build();
 
         var methodBuilder = MethodSpec.methodBuilder(CodegenConfig.decodeMethodName)
                 .addModifiers(PUBLIC, FINAL, STATIC)
@@ -39,7 +41,7 @@ public class ProducerGenerator {
             var mappedVal = getTypeNameData(field);
 
             args.add("$L");
-            formatArgs.add(CodeBlock.of("$N.$L", CodegenConfig.producerParName, mappedVal.producerMethod()));
+            formatArgs.add(mappedVal.producerMethod().apply(field.name()));
         });
 
         String format = "return new $L(" + args + ")";
@@ -56,7 +58,7 @@ public class ProducerGenerator {
 
     public MethodSpec getProduceFromRecordMethod(Iterable<FieldSpec> fieldSpecs, TypeMirror record,
             TypeElement messageTypeElement) {
-        var parameter = ParameterSpec.builder(Object.class, decodeFromRecordParName).build();
+        var parameter = ParameterSpec.builder(Object.class, decodeFromRecordParName).addModifiers(FINAL).build();
 
         var recName = "castedRec";
         var methodBuilder = MethodSpec.methodBuilder(decodeFromRecordMethodName)

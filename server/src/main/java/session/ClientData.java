@@ -1,9 +1,10 @@
 package session;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.logging.Logger;
 
+import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
 import game.engine.PlayerConfig;
 import game.gamestates.IGameState;
 import game.session.IPlayerConnector;
@@ -12,7 +13,11 @@ import network.MessageDispatcher;
 import network.messages.Message;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import network.server.nio.NIOConnectionManager.SessionContract;
+import session.receivers.IConfigurationStateConsumerFactory;
 import user.IMatchmakingUserHandle;
+import user.IUsersHandlesFactory;
+
+import gameclient.user.UserInfo;
 
 public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
@@ -20,15 +25,28 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final PlayerConfig playerConfig;
     private final ObjectToMessageDecoder objectToMessageDecoder;
     private final ISendableConsumer defaultSendableReceiver;
+    private final IDatabaseManager databaseManager;
 
-    public ClientData(MessageDispatcher messageDispatcher, ISendableConsumer sendableReceiver,
-            PlayerConfig playerConfig, ObjectToMessageDecoder objectToMessageDecoder) {
+    private final UserId userId;
+
+    public ClientData(MessageDispatcher messageDispatcher, IConfigurationStateConsumerFactory sendableReceiverFactory,
+            ObjectToMessageDecoder objectToMessageDecoder, IUsersHandlesFactory usersHandlesFactory,
+            UserId userId,
+            IDatabaseManager databaseManager) {
         this.messageDispatcher = messageDispatcher;
-        this.sendableReceiver = Objects.requireNonNull(sendableReceiver);
-        this.defaultSendableReceiver = sendableReceiver;
-
-        this.playerConfig = playerConfig;
         this.objectToMessageDecoder = objectToMessageDecoder;
+        this.databaseManager = databaseManager;
+
+        this.playerConfig = databaseManager.getPlayerConfig(userId);
+
+        var userName = databaseManager.getPlayerUsername(userId);
+
+        var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this);
+
+        this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
+                usersHandles.matchmakingHandle());
+        this.sendableReceiver = defaultSendableReceiver;
+        this.userId = userId;
     }
 
     @Override
@@ -43,13 +61,11 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     @Override
     public void gameStarted(ISendableConsumer lobby) {
         sendableReceiver = lobby;
-        // sendableReceiver = new
-        // GameplayStateConsumerFactory().getGameplayStateConsumer();
     }
 
     @Override
-    public void confirmGameStart(ISendableConsumer sendableConsumer) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void moveToConfirmationState(ISendableConsumer confirmationReceiver) {
+        this.sendableReceiver = confirmationReceiver;
     }
 
     @Override

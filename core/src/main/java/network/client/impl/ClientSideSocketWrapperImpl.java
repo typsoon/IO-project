@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,14 +78,17 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
         public final void run() {
             while (true) {
                 try {
+                    Logger.getGlobal().info("%s RECEIVING".formatted(socketWrapper));
                     var received = socketWrapper.receiveMessage();
+                    Logger.getGlobal().info("Received %s".formatted(received.getClass().getSimpleName()));
 
                     synchronized (pendingSendables) {
                         handleMessage(received);
-                        Logger.getGlobal().info(received.getClass().getSimpleName());
                     }
                 } catch (IOException ioException) {
                     Logger.getGlobal().severe("IOException encountered here!");
+                } catch (Exception e) {
+                    Logger.getGlobal().severe("Exception here!! %s".formatted(e));
                 }
             }
         }

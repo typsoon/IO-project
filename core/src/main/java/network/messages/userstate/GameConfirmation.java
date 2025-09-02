@@ -8,4 +8,3 @@ public record GameConfirmation(Confirmation confirmation) implements ISendable {
         CANCELLED,
     }
 }
-

@@ -1,9 +1,11 @@
 package room;
 
-import user.IUserView;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomInfo;
+import gameclient.user.IUserView;
 
 public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomConfig) {
 
@@ -18,8 +20,7 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
                 roomConfig.isPublic(),
                 members.size(),
                 roomConfig.maxPlayers(),
-                hasPassword()
-        );
+                hasPassword());
     }
 
     public boolean hasPassword() {
@@ -46,7 +47,8 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
     public void removeMember(RoomMember member) {
         if (members.remove(member)) {
             member.roomsUserHandle().leaveRoomCommand();
-            if (members.isEmpty()) return;
+            if (members.isEmpty())
+                return;
             if (isAdmin(member)) {
                 admin.changeAdmin(members.iterator().next().userView());
             }

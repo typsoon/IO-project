@@ -1,7 +1,10 @@
 package frontend.concreteviews.gameclientview;
 
+import java.util.Stack;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,21 +15,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
+import game.session.ISendableConsumer;
+import game.utility.ISendable;
+import gameclient.rooms.RoomRequest;
+import network.messages.configurationstate.CreateRoomRequestResponse;
 import viewmodel.ITextureManager;
 
-public class GameClientView extends ScreenAdapter {
+public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
     @SuppressWarnings("unused")
     private final Game game;
     private final ITextureManager textureManager;
     private final GameClientViewEventListener gameClientViewEventListener;
+    private final GameClientViewData gameClientViewData;
+
+    private Stack<Screen> activeSubscreens = new Stack<>();
 
     private Stage stage;
 
     public GameClientView(final Game game, ITextureManager textureManager,
-            GameClientViewEventListener gameClientViewEventListener2) {
+            GameClientViewEventListener gameClientViewEventListener2, GameClientViewData gameClientViewData) {
         this.game = game;
         this.textureManager = textureManager;
         this.gameClientViewEventListener = gameClientViewEventListener2;
+        this.gameClientViewData = gameClientViewData;
     }
 
     @Override
@@ -43,7 +55,10 @@ public class GameClientView extends ScreenAdapter {
 
     @Override
     public void show() {
-        // TODO hardcoded: remove hardcoded strings, use config instead
+        // FIXME: I have a feeling that this will blow up
+        activeSubscreens.clear();
+        activeSubscreens.add(game.getScreen());
+
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -126,7 +141,36 @@ public class GameClientView extends ScreenAdapter {
     }
 
     @Override
+    public void changeSubscreen(Screen newScreen) {
+        activeSubscreens.add(newScreen);
+        game.setScreen(newScreen);
+    }
+
+    @Override
+    public void moveToPreviousSubscreen() {
+        var screen = activeSubscreens.pop();
+        game.setScreen(screen);
+    }
+
+    @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    @Override
+    public void processSendable(ISendable sendable) {
+        switch (sendable) {
+            case CreateRoomRequestResponse.Payload requestResponse -> {
+                if (requestResponse.request() == RoomRequest.SUCCESSFUL) {
+                    var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData, requestResponse.roomName(),
+                            textureManager);
+                    changeSubscreen(waitingRoomScreen);
+                }
+            }
+
+            default -> {
+                throw new IllegalStateException("Unexpected sendable");
+            }
+        }
     }
 }

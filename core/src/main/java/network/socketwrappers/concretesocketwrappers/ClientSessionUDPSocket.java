@@ -22,7 +22,8 @@ import network.utils.impl.OnlyMessagesBytesAccumulator;
 
 public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
     private final DatagramSocket datagramSocket;
-    private final ByteBuffer receivingByteBuf = ByteBuffer.wrap(new byte[MessagesConfig.maxUdpPacketLength]);
+    private final ByteBuffer receivingByteBuf = ByteBuffer.wrap(new byte[MessagesConfig.maxUdpPacketLength]).flip();
+
     private final DatagramPacket receivedPacket = new DatagramPacket(receivingByteBuf.array(),
             receivingByteBuf.limit());
     private final BytesAccumulator bytesAccumulator = new OnlyMessagesBytesAccumulator();
@@ -80,6 +81,9 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
                 var readRes = bytesAccumulator.accumulateBytes(receivingByteBufAdapter);
 
                 if (readRes.isPresent()) {
+                    Logger.getGlobal().info("%s %d bytes remaining".formatted(readRes.get().whatWasRead(),
+                            readRes.get().byteBuf().remaining()));
+
                     var dataProducer = new ByteBufferDataProducer(readRes.get().byteBuf());
                     return messageDecoder.decodeMessage(dataProducer);
                 }
@@ -87,6 +91,7 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
 
             receivingByteBuf.clear();
             datagramSocket.receive(receivedPacket);
+            receivingByteBuf.flip();
         } while (true);
     }
 }

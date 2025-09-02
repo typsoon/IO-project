@@ -1,4 +1,4 @@
-package network.server.nio.impl;
+package network.utils.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,6 +48,7 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
         return true;
     }
 
+    @Override
     public Optional<ReadData> accumulateBytes(Readable byteIn)
             throws IOException {
         if (currBuffer.isEmpty()) {

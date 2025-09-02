@@ -1,9 +1,6 @@
 package frontend.concreteviews.gameplayview.processors;
 
 import com.badlogic.gdx.Input.Buttons;
-
-import java.util.logging.Logger;
-
 import com.badlogic.gdx.InputAdapter;
 
 import frontend.concreteviews.gameplayview.IGameplayInfoProvider;
@@ -70,7 +67,7 @@ public class MouseClickProcessor extends InputAdapter {
         var usageType = buttonToUsageTypeMapping[button];
         var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(screenX, screenY));
 
-        Logger.getGlobal().info("%s".formatted(direction));
+        // Logger.getGlobal().info("%s".formatted(direction));
 
         var action = new PlayerSlotUse(usageType, direction, 0);
         actionSender.sendIAction(action);

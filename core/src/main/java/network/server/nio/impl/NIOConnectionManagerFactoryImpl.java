@@ -2,20 +2,21 @@ package network.server.nio.impl;
 
 import java.io.IOException;
 
-import database.impl.ConcreteDatabaseManager;
+import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.server.ConcreteAuthenticationService;
 import network.server.nio.NIOConnectionManager;
 import network.server.nio.NIOConnectionManager.SessionContract;
 import network.server.nio.NIOConnectionManager.SessionCreator;
 import network.server.nio.NIOConnectionManagerFactory;
 import network.server.nio.NIOSSLSocketServer;
-import network.messages.defaultmessage.ConcreteObjectDecoder;
+import database.IDatabaseManager;
 
 public class NIOConnectionManagerFactoryImpl implements NIOConnectionManagerFactory {
 
     @Override
     public <T extends SessionContract> NIOConnectionManager<T> getConnectionManager(SessionCreator<T> sessionCreator,
-                                                                                    int sslServerPort, int udpServerPort, int tcpServerPort) throws IOException {
+            int sslServerPort, int udpServerPort, int tcpServerPort,
+            IDatabaseManager databaseManager) throws IOException {
 
         var udpServer = new UDPSocketServer(udpServerPort);
         var tcpServer = new TCPSocketServer(tcpServerPort);
@@ -28,9 +29,9 @@ public class NIOConnectionManagerFactoryImpl implements NIOConnectionManagerFact
             throw new IllegalStateException(e);
         }
 
-        ConcreteDatabaseManager concreteDatabaseManager = new ConcreteDatabaseManager();
-        return new ConcreteNIOConnectionManager<>(concreteDatabaseManager,
-                new ConcreteAuthenticationService(concreteDatabaseManager),
+        return new ConcreteNIOConnectionManager<>(databaseManager,
+                new ConcreteAuthenticationService(
+                        databaseManager),
                 udpServer, tcpServer, sslServer, sessionCreator,
                 new ConcreteObjectDecoder());
     }

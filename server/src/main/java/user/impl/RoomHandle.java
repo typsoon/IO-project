@@ -1,9 +1,7 @@
 package user.impl;
 
 import room.IRoomManager;
-import room.IRoomManager.RoomRequest;
 import room.Room;
-import room.RoomConfig;
 import room.RoomMember;
 import user.*;
 import user.UserState.State;
@@ -13,13 +11,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
+import gameclient.user.IUserView;
+
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     private final IRoomManager roomManager;
     private final RoomMember member;
     private Room room = null;
 
     RoomHandle(IRoomManager roomManager, IUserView userView,
-               IMatchmakingUserHandle matchmakingUserHandle, UserState userState) {
+            IMatchmakingUserHandle matchmakingUserHandle, UserState userState) {
         this.roomManager = roomManager;
         this.member = new RoomMember(userView, matchmakingUserHandle, this, userState);
     }
@@ -83,7 +85,8 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
 
     @Override
     public List<Room> getPublicRooms() {
-        return roomManager.listRooms().stream().filter(room -> room.roomConfig().isPublic()).collect(Collectors.toList());
+        return roomManager.listRooms().stream().filter(room -> room.roomConfig().isPublic())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -93,7 +96,8 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
 
     @Override
     public Collection<RoomMember> getRoomMembers() {
-        if (room == null) return List.of();
+        if (room == null)
+            return List.of();
         return room.members();
     }
 }

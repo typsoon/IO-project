@@ -3,13 +3,10 @@ package room;
 import java.util.List;
 import java.util.Optional;
 
-public interface IRoomManager {
-    enum RoomRequest {
-        SUCCESSFUL,
-        FAILED,
-        NOT_AUTHORIZED,
-    }
+import gameclient.rooms.RoomConfig;
+import gameclient.rooms.RoomRequest;
 
+public interface IRoomManager {
     RoomRequest createRoom(RoomMember user, RoomConfig roomConfig);
 
     RoomRequest deleteRoom(RoomMember user);

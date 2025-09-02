@@ -14,6 +14,10 @@ public interface DataProducer {
 
     float getFloat() throws IOException;
 
+    default boolean getBoolean() throws IOException {
+        return getByte() != 0;
+    }
+
     default Point2F getPoint2F() throws IOException {
         return new Point2F(getFloat(), getFloat());
     }
