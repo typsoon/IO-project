@@ -3,9 +3,10 @@ package frontend.concreteviews.loginview;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import network.client.ClientSideSocketWrapper;
 import game.utility.ISendable;
+import network.client.ClientSideSocketWrapper;
 import network.messages.loginstate.LogInResponse;
+import network.messages.loginstate.PortInfoResponse;
 import utility.ICyclePerformer;
 import viewmodel.IViewManager;
 
@@ -19,6 +20,8 @@ public class LoginViewMessageHandler implements ICyclePerformer {
         this.viewManager = viewManager;
     }
 
+    private int userId;
+
     @Override
     public void performCycle() {
         try {
@@ -27,7 +30,6 @@ public class LoginViewMessageHandler implements ICyclePerformer {
             for (ISendable sendable : sendables) {
                 switch (sendable) {
                     case LogInResponse.Payload logInResponse -> {
-
                         var responsePayload = logInResponse.authToken();
 
                         if (responsePayload.isEmpty()) {
@@ -36,7 +38,11 @@ public class LoginViewMessageHandler implements ICyclePerformer {
                         }
 
                         logger.info("Succesfully logged in");
-                        viewManager.moveToGameClient(clientSideSocketWrapper, logInResponse.userId());
+                        userId = logInResponse.userId();
+                        viewManager.moveToGameClient(clientSideSocketWrapper, userId);
+                    }
+
+                    case PortInfoResponse.Payload portInfoResponse -> {
                     }
 
                     default -> throw new IllegalStateException(
@@ -47,5 +53,4 @@ public class LoginViewMessageHandler implements ICyclePerformer {
             Logger.getGlobal().severe("IOException caught!");
         }
     }
-
 }

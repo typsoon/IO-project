@@ -90,7 +90,10 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
             }
 
             receivingByteBuf.clear();
+
+            Logger.getGlobal().info("RECEIVING OVER UDP");
             datagramSocket.receive(receivedPacket);
+            Logger.getGlobal().info("RECEIVED OVER UDP");
             receivingByteBuf.flip();
         } while (true);
     }

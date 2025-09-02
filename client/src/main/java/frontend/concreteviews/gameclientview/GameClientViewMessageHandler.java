@@ -14,6 +14,7 @@ import gameclient.user.UserInfo;
 import network.client.ClientSideSocketWrapper;
 import network.messages.configurationstate.CreateRoomRequestResponse;
 import network.messages.configurationstate.GameStartMessages.GameStartedNotification;
+import network.messages.loginstate.PortInfoResponse;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utility.ICyclePerformer;
 import utils.BoundedQueue;
@@ -64,6 +65,9 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
                 switch (sendable) {
                     case RoomInfo roomInfo -> {
                         gameClientViewData.addRoom(roomInfo);
+                    }
+
+                    case PortInfoResponse.Payload portInfoResponse -> {
                     }
 
                     case UserMembershipInfo userMembershipInfo -> {

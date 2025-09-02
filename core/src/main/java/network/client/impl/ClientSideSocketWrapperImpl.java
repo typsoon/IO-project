@@ -159,6 +159,8 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                         Logger.getGlobal().severe("An error occured after trying to establish tcp and udp connection");
                         throw new IllegalStateException(e);
                     }
+
+                    super.handleMessage(received);
                 }
 
                 default -> {

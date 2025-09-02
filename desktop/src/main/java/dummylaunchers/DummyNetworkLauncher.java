@@ -2,6 +2,7 @@ package dummylaunchers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -26,6 +27,7 @@ import network.messages.configurationstate.GameStartMessages.StartGameRequest;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.messages.loginstate.LogInQuery;
 import network.messages.loginstate.LogInResponse;
+import network.messages.loginstate.PortInfoResponse;
 import network.messages.userstate.GameConfirmation;
 import network.messages.userstate.GameConfirmation.Confirmation;
 import network.messages.userstate.GameConfirmationRequestMessage;
@@ -33,61 +35,69 @@ import network.utils.ConnectionData;
 import viewmodel.impl.BasicViewManagerInjector;
 
 class DummyNetworkGameLauncher extends Game {
-
-    @Override
-    public void create() {
+    private void mockingLoop() throws IOException, Exception {
         ClientSideSocketWrapper socketWrapper = new ClientSideSocketWrapperFactory().getClientSideSocketWrapper();
         var objectDecoder = new ConcreteObjectDecoder();
 
-        try {
-            socketWrapper.dispatchMessage(new LogInQuery("u1", "p1"));
+        var propertiesLoager = new PropertiesLoader();
+        var res = socketWrapper
+                .establishConnection(
+                        new ConnectionData(propertiesLoager.hostname, propertiesLoager.port,
+                                propertiesLoager.udpPort));
 
-            var propertiesLoager = new PropertiesLoader();
-            var res = socketWrapper
-                    .establishConnection(
-                            new ConnectionData(propertiesLoager.hostname, propertiesLoager.port,
-                                    propertiesLoager.udpPort));
+        if (res == EstablishConnectionResult.FAILED) {
+            Logger.getGlobal().info("Failed to establish connection");
+            return;
+        }
 
-            if (res == EstablishConnectionResult.FAILED) {
-                Logger.getGlobal().info("Failed to establish connection");
-                return;
-            }
+        var viewManager = new BasicViewManagerInjector(this).getViewManager();
+        int userId = -1;
 
-            var viewManager = new BasicViewManagerInjector(this).getViewManager();
-            int userId = -1;
+        socketWrapper.dispatchMessage(new LogInQuery("u1", "p1"));
+        while (true) {
+            var sendables = socketWrapper.getSendables();
 
-            while (true) {
-                var sendables = socketWrapper.getSendables();
+            for (ISendable sendable : sendables) {
+                switch (sendable) {
+                    case LogInResponse.Payload logInResponse -> {
+                        userId = logInResponse.userId();
+                    }
 
-                for (ISendable sendable : sendables) {
-                    switch (sendable) {
-                        case LogInResponse.Payload logInResponse -> {
-                            socketWrapper.dispatchMessage(
-                                    objectDecoder.decodeFromRecord(new RoomConfig("asd", "", 1, false)));
-                            userId = logInResponse.userId();
-                        }
+                    case PortInfoResponse.Payload portInfoResponsePayload -> {
+                        socketWrapper.dispatchMessage(
+                                objectDecoder.decodeFromRecord(new RoomConfig("asd", "", 1, false)));
 
-                        case CreateRoomRequestResponse.Payload createRoomRequestResponse -> {
-                            assert createRoomRequestResponse.request().equals(RoomRequest.SUCCESSFUL);
+                    }
 
-                            socketWrapper
-                                    .dispatchMessage(objectDecoder.decodeFromRecord(new StartGameRequest.Payload()));
-                        }
+                    case CreateRoomRequestResponse.Payload createRoomRequestResponse -> {
+                        assert createRoomRequestResponse.request().equals(RoomRequest.SUCCESSFUL);
 
-                        case GameConfirmationRequestMessage.Payload confirmationRequest -> {
-                            viewManager.moveToGameClient(socketWrapper, userId);
-                            socketWrapper.dispatchMessage(
-                                    objectDecoder.decodeFromRecord(new GameConfirmation(Confirmation.CONFIRMED)));
-                        }
+                        socketWrapper
+                                .dispatchMessage(objectDecoder.decodeFromRecord(new StartGameRequest.Payload()));
+                    }
 
-                        default -> {
-                            Logger.getGlobal().severe("Illegal state");
-                        }
+                    case GameConfirmationRequestMessage.Payload confirmationRequest -> {
+                        viewManager.moveToGameClient(socketWrapper, userId);
+                        socketWrapper.dispatchMessage(
+                                objectDecoder.decodeFromRecord(new GameConfirmation(Confirmation.CONFIRMED)));
+                        return;
+                    }
+
+                    default -> {
+                        Logger.getGlobal().severe("Illegal state %s".formatted(sendable));
                     }
                 }
             }
+        }
+    }
 
+    @Override
+    public void create() {
+        try {
+
+            mockingLoop();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException(e);
         }
     }
@@ -112,7 +122,7 @@ class DummyNetworkLauncher {
         // config.setWindowedMode(800, 720);
         // TODO: remove magic numbers and strings
         config.setWindowedMode(720, 720);
-        new Lwjgl3Application(new GameLauncher(), config);
+        new Lwjgl3Application(new DummyNetworkGameLauncher(), config);
     }
 
 }
