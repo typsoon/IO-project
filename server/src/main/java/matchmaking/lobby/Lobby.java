@@ -32,7 +32,7 @@ public class Lobby {
     void processSendable(ISubscribablePlayerConnector playerConnector, ISendable sendable) {
         switch (sendable) {
             case IAction action -> {
-                Logger.getGlobal().info("Sending action to sessionManager %s".formatted(action));
+                Logger.getGlobal().info("Sending action to sessionManager %s %s".formatted(playerConnector, action));
                 sessionManager.sendAction(playerConnector, action);
             }
             default -> {

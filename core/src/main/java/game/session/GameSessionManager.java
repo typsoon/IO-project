@@ -1,16 +1,23 @@
 package game.session;
 
-import game.actions.IAction;
-import game.engine.Event;
-import game.engine.IGameEngine;
-import game.gamestates.IGameState;
-
 import java.io.Closeable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
+import game.actions.IAction;
+import game.engine.Event;
+import game.engine.IGameEngine;
+import game.gamestates.IGameState;
 
 public class GameSessionManager implements IActionReceiver, Closeable {
     private IGameEngine gameEngine;
@@ -26,6 +33,10 @@ public class GameSessionManager implements IActionReceiver, Closeable {
     @Override
     public void sendAction(ISubscribablePlayerConnector player, IAction action) {
         eventQueue.add(new Event(playerGameStateSenders.get(player), action));
+        eventQueue.add(new Event(playerGameStateSenders.get(player), action));
+
+        Logger.getGlobal().info("Input received by GameSessionManager %s %s".formatted(action, player));
+        Logger.getGlobal().info("%s playerGameStateSenders".formatted(playerGameStateSenders));
     }
 
     public void startGameLoop() {

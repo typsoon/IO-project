@@ -1,18 +1,21 @@
 package game.engine;
 
-import game.engine.entities.*;
-import game.engine.modules.IGeometryRepresentation;
-import game.session.IPlayerGamesStateSender;
-import game.actions.PlayerMove;
-import game.actions.PlayerSlotUse;
-import game.engine.modules.IGeometryModule;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import game.actions.PlayerMove;
+import game.actions.PlayerSlotUse;
+import game.engine.entities.EntityFactory;
 import game.engine.entities.IAIEntity;
+import game.engine.entities.IEntity;
+import game.engine.entities.MoveSet;
+import game.engine.entities.Player;
+import game.engine.modules.IGeometryModule;
+import game.engine.modules.IGeometryRepresentation;
+import game.session.IPlayerGamesStateSender;
 
 public class GameEngine implements IGameEngine, IWorldView {
 
@@ -24,10 +27,12 @@ public class GameEngine implements IGameEngine, IWorldView {
 
     private final Collection<IAIEntity> thinkers = new java.util.ArrayList<>();
 
-
     @Override
     public void performCycle(Collection<Event> events) {
         for (Event event : events) {
+
+            Logger.getGlobal().info("Handling event %s".formatted(event));
+
             Player player = players.get(event.playerGamesStateSender());
 
             if (player != null) {
@@ -39,7 +44,7 @@ public class GameEngine implements IGameEngine, IWorldView {
                 }
             }
         }
-        //this is quick fix
+        // this is quick fix
         Collection<IAIEntity> thinkersCopy = new java.util.ArrayList<>(thinkers);
         thinkersCopy.forEach(thinker -> thinker.think(this));
         geometryModule.cycle();
@@ -70,7 +75,8 @@ public class GameEngine implements IGameEngine, IWorldView {
         this.entityFactory = entityFactory;
         this.resourcesToClose = resourcesToClose;
 
-        //probably should be done by a decorator ObservableEntityFactory but building process would be complex
+        // probably should be done by a decorator ObservableEntityFactory but building
+        // process would be complex
         entityFactory.setCallbacks(
                 entity -> entities.put(entity.geometryRepresentation(), entity),
                 thinkers::add,

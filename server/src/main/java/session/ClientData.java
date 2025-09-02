@@ -27,6 +27,7 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final ObjectToMessageDecoder objectToMessageDecoder;
     private final ISendableConsumer defaultSendableReceiver;
     private final IDatabaseManager databaseManager;
+    private final IPlayerConnector playerConnector;
 
     private final UserId userId;
 
@@ -48,6 +49,20 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
                 usersHandles.matchmakingHandle());
         this.sendableReceiver = defaultSendableReceiver;
         this.userId = userId;
+
+        this.playerConnector = (gameStates) -> {
+            try {
+                for (IGameState gameState : gameStates) {
+                    var msg = objectToMessageDecoder.decodeFromRecord(gameState);
+                    messageDispatcher.dispatchMessage(msg);
+                }
+            } catch (IOException e) {
+                Logger.getGlobal().severe("An IOException caught");
+            } catch (Exception e) {
+                Logger.getGlobal().severe("An unpredictable error occured %s".formatted(e));
+                e.printStackTrace();
+            }
+        };
     }
 
     @Override
@@ -99,18 +114,6 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
 
     @Override
     public IPlayerConnector getPlayerConnector() {
-        return (gameStates) -> {
-            try {
-                for (IGameState gameState : gameStates) {
-                    var msg = objectToMessageDecoder.decodeFromRecord(gameState);
-                    messageDispatcher.dispatchMessage(msg);
-                }
-            } catch (IOException e) {
-                Logger.getGlobal().severe("An IOException caught");
-            } catch (Exception e) {
-                Logger.getGlobal().severe("An unpredictable error occured %s".formatted(e));
-                e.printStackTrace();
-            }
-        };
+        return playerConnector;
     }
 }
