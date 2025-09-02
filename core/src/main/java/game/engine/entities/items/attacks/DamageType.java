@@ -1,4 +1,4 @@
-package game.engine.entities.items.weapons;
+package game.engine.entities.items.attacks;
 
 public enum DamageType {
     PIERCE,

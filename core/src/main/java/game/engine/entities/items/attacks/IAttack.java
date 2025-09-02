@@ -1,4 +1,4 @@
-package game.engine.entities.items.weapons;
+package game.engine.entities.items.attacks;
 
 import game.engine.IWorldView;
 import game.engine.entities.IEntity;

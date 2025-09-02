@@ -1,6 +1,6 @@
 package game.engine.entities.items;
 
-import game.engine.entities.items.weapons.DamageModifier;
+import game.engine.entities.items.attacks.DamageModifier;
 
 public interface UsageModifiers {
     DamageModifier getDamageModifier();

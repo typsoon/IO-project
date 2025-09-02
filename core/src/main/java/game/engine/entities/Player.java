@@ -2,11 +2,12 @@ package game.engine.entities;
 
 import game.actions.Direction;
 import game.actions.PlayerSlotUse;
-import game.actions.UsageType;
 import game.engine.IWorldView;
 import game.engine.PlayerConfig;
-import game.engine.entities.items.weapons.IAttack;
-import game.engine.entities.items.weapons.RectangleSlash;
+import game.engine.entities.inventory.IInventory;
+import game.engine.entities.inventory.Inventory;
+import game.engine.entities.items.UsageModifiers;
+import game.engine.entities.items.items.BasicSword;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
@@ -21,9 +22,9 @@ public class Player implements IAIEntity {
     private final IManagingGeometryRepresentation geometryRepresentation;
     private final MoveSet moveset = new MoveSet();
 
-    private final IAttack weapon = new RectangleSlash();
-    private final int attackTime = 60; // in ticks
-    private int attackClock = 0;
+    private final IInventory inventory;
+    private final UsageModifiers modifiers;
+
 
     // should be from file or config
     private final float speed = 8f;
@@ -34,6 +35,9 @@ public class Player implements IAIEntity {
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
+        this.inventory = new Inventory(1);
+        inventory.getSlot(0).addItems(1,new BasicSword());
+        this.modifiers = () -> Damage -> Damage;
     }
 
     public MoveSet getMoveSet(){
@@ -52,14 +56,8 @@ public class Player implements IAIEntity {
 
     private void slotUse(IWorldView view) {
         geometryRepresentation.setRotation(moveset.slotUse.direction().angle());
-        if(moveset.slotUse.usageType() == UsageType.PRIMARY){
-            attackClock++;
-            if(attackClock >= attackTime){
-                weapon.attack(view,this, Damage -> Damage);
-                attackClock = 0;
-                moveset.slotUse = new PlayerSlotUse(UsageType.NONE, moveset.slotUse.direction(), 0);
-            }
-        }
+        PlayerSlotUse ps = moveset.slotUse;
+        inventory.UseSlot(ps.slot(),ps.usageType(),view,this,modifiers);
     }
 
     @Override
