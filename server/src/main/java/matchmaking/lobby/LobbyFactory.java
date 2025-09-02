@@ -16,8 +16,8 @@ public class LobbyFactory {
         var lobby = new Lobby(pendingLobby.members(), sessionManager, lobbyId);
         for (LobbyMember member : pendingLobby.members()) {
             var subscribableConnector = member.matchmakingUserHandle().getPlayerData().connector();
-            member.matchmakingUserHandle().
-                    gameStarted(sendable -> lobby.processSendable(subscribableConnector, sendable));
+            member.matchmakingUserHandle()
+                    .gameStarted(sendable -> lobby.processSendable(subscribableConnector, sendable));
         }
         return lobby;
     }

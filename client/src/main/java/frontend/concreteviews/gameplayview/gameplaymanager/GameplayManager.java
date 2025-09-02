@@ -28,8 +28,21 @@ public class GameplayManager implements ICycleTimedPerformer {
         this.gameStateProcessor = gameStateProcessor;
     }
 
+    // private long lastLogTimeNs = 0;
+    // private long second = 1_000_000_000L;
+
     @Override
     public void performCycle(float deltaTime) {
+        // long now = System.nanoTime();
+
+        // if (now - lastLogTimeNs > second) {
+        // double secondsSinceLast = (now - lastLogTimeNs) / second;
+        // Logger.getGlobal().info(
+        // String.format("performCycle called, last call was %.3f seconds ago",
+        // secondsSinceLast));
+        // lastLogTimeNs = now;
+        // }
+        //
         Collection<IGameState> gameStates = new ArrayList<>();
         try {
             var sendables = clientSideSocketWrapper.getSendables();

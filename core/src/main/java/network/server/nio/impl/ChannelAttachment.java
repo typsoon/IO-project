@@ -132,9 +132,10 @@ abstract class ConnectionBasedChannelAttachment<T extends SessionContract, U ext
 
                 msg.encodeAndWrite(consumer);
 
-                Logger.getGlobal()
-                        .info(() -> "Sending message %s with payload %s".formatted(msg.getClass().getSimpleName(),
-                                msg.getSendable()));
+                // Logger.getGlobal()
+                // .info(() -> "Sending message %s with payload
+                // %s".formatted(msg.getClass().getSimpleName(),
+                // msg.getSendable()));
             }
             msgQueue.clear();
 

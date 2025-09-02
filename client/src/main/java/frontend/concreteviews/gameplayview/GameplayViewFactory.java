@@ -50,14 +50,20 @@ public class GameplayViewFactory {
 
         final ObjectToMessageDecoder objectDecoder = new ConcreteObjectDecoder();
         final IActionSender actionSender = action -> {
-            final var msg = objectDecoder.decodeFromRecord(action);
             try {
+                final var msg = objectDecoder.decodeFromRecord(action);
+
                 Logger.getGlobal().finer("Message dispatched. Payload: %s".formatted(action));
+                // Logger.getGlobal().info("Message dispatched. Payload: %s".formatted(action));
                 clientSideSocketWrapper.dispatchMessage(msg);
             } catch (final ConnectionEndedException e) {
+                Logger.getGlobal().severe("Connection ended here %s".formatted(e));
                 throw new IllegalStateException("Connection ended", e);
             } catch (final IOException e) {
+                Logger.getGlobal().severe("IOException caught here %s".formatted(e));
                 throw new IllegalStateException("Error while sending message", e);
+            } catch (final Throwable e) {
+                Logger.getGlobal().severe("Throwable caught here %s".formatted(e));
             }
         };
 

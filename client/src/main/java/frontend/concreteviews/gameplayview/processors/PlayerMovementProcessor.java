@@ -3,12 +3,12 @@ package frontend.concreteviews.gameplayview.processors;
 import java.util.EnumSet;
 
 import com.badlogic.gdx.Input.Keys;
-import utils.ObserverWithATwist.Subscribable;
 import com.badlogic.gdx.InputAdapter;
 
 import game.actions.Direction;
 import game.actions.PlayerMove;
 import utility.IActionSender;
+import utils.ObserverWithATwist.Subscribable;
 
 //TODO: consider dispatching these actions after every cycle
 public class PlayerMovementProcessor extends InputAdapter {
@@ -42,7 +42,10 @@ public class PlayerMovementProcessor extends InputAdapter {
         }
 
         gameCycles.registerSubscriber(
-                deltaTime -> actionSender.sendIAction(new PlayerMove(getDirection())));
+                deltaTime -> {
+                    // Logger.getGlobal().info("HEHRERH");
+                    actionSender.sendIAction(new PlayerMove(getDirection()));
+                });
     }
 
     public PlayerMovementProcessor(IActionSender actionSender, Subscribable gameCycles) {

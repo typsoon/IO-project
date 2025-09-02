@@ -2,6 +2,7 @@ package network.messages.defaultmessage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 // import java.util.Objects;
 import java.util.function.Function;
 
@@ -15,8 +16,8 @@ public class ConcreteObjectDecoder implements ObjectToMessageDecoder {
 
     @Override
     public Message decodeFromRecord(Object record) {
-        // return Objects.requireNonNull(recordDecoders.get(record.getClass()),
-        // "Unexpected object here %s".formatted(record)).apply(record);
-        return recordDecoders.get(record.getClass()).apply(record);
+        return Objects.requireNonNull(recordDecoders.get(record.getClass()),
+                "Unexpected object here %s".formatted(record)).apply(record);
+        // return recordDecoders.get(record.getClass()).apply(record);
     }
 }

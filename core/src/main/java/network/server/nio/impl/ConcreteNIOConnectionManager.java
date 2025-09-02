@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import database.IDatabaseManager;
@@ -34,11 +36,11 @@ import network.server.AuthenticationService;
 import network.server.AuthenticationService.Token;
 import network.server.nio.NIOConnectionManager;
 import network.server.nio.NIOConnectionManager.SessionContract;
+import network.server.nio.NIOSSLSocketServer;
+import network.server.nio.NIOSocketServer;
 import network.utils.AccumulatorAdapters;
 import network.utils.BytesAccumulator.WhatWasRead;
 import network.utils.impl.OnlyMessagesBytesAccumulator;
-import network.server.nio.NIOSSLSocketServer;
-import network.server.nio.NIOSocketServer;
 
 public class ConcreteNIOConnectionManager<T extends SessionContract> implements NIOConnectionManager<T> {
 
@@ -101,6 +103,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
     private static final int initialInterestSet = SelectionKey.OP_READ;
 
+    private final ExecutorService sendingExecutor = Executors.newSingleThreadExecutor();
+
     public ConcreteNIOConnectionManager(final IDatabaseManager databaseManager,
             final AuthenticationService authenticationService, final NIOSocketServer udpServer,
             final NIOSocketServer tcpServer,
@@ -158,6 +162,15 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 if (key.isWritable() && key.attachment() != null) {
                     // Logger.getGlobal().info("Am I even entering this place?");
                     final var attachment = (ChannelAttachment<?>) key.attachment();
+                    //
+                    // sendingExecutor.submit(() -> {
+                    // try {
+                    // attachment.dispatchMessages();
+                    // } catch (Throwable e) {
+                    // Logger.getGlobal().severe("An error occured %s".formatted(e));
+                    // }
+                    // });
+                    // sendingExecutor.submit(attachment::dispatchMessages).get();
                     attachment.dispatchMessages();
                 }
 
@@ -180,6 +193,9 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
             } catch (final Exception e) {
                 logger.severe(String.format("An error occured at server loop %s", e));
+                // TODO: handle disconnecting
+                // e.printStackTrace();
+                // key.cancel();
                 throw e;
             } finally {
                 iter.remove();
