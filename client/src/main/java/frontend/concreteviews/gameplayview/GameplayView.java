@@ -126,6 +126,10 @@ public class GameplayView extends ScreenAdapter {
 
     @Override
     public void render(final float delta) {
+        //this kinda fix weird issue on windows
+        if(this.stage==null){
+            return;
+        }
         ScreenUtils.clear(0, 0, 0, 0);
 
         stage.act(delta);
