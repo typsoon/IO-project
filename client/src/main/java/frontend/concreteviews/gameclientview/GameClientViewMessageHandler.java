@@ -38,9 +38,22 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
         this.userId = userId;
     }
 
+    // private long lastLogTimeNs = 0;
+    // private long second = 1_000_000_000L;
+
     @Override
     public void performCycle() {
         try {
+            // long now = System.nanoTime();
+            //
+            // if (now - lastLogTimeNs > second) {
+            // double secondsSinceLast = (now - lastLogTimeNs) / second;
+            // Logger.getGlobal().info(
+            // String.format("performCycle called, last call was %.3f seconds ago",
+            // secondsSinceLast));
+            // lastLogTimeNs = now;
+            // }
+
             var sendables = clientSideSocketWrapper.getSendables();
 
             if (!sendables.isEmpty()) {
@@ -61,6 +74,7 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
                     }
 
                     case GameConfirmationRequestMessage.Payload gameConfirmationRequest -> {
+                        Logger.getGlobal().info("Moving to confirmation screen");
                         displayHandler.processSendable(gameConfirmationRequest);
                     }
 

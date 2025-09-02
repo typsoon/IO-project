@@ -2,10 +2,9 @@ package frontend.concreteviews.gameclientview;
 
 import com.badlogic.gdx.Game;
 
-import frontend.ViewWithEventLoop;
+import frontend.concreteviews.gameclientview.subscreens.GameClientSubviewsFactory;
 import network.client.ClientSideSocketWrapper;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
-import utility.ICyclePerformer;
 import viewmodel.ITextureManager;
 import viewmodel.IView;
 import viewmodel.IViewManager;
@@ -28,11 +27,12 @@ public class GameClientViewFactory {
 
         var gameClientViewData = new GameClientViewData(userID);
 
-        var view = new GameClientView(game, textureManager, eventListener, gameClientViewData);
+        var subscreensFactory = new GameClientSubviewsFactory(sendableConsumer -> new GameClientViewMessageHandler(
+                gameClientViewData, clientSideSocketWrapper, viewManager, sendableConsumer,
+                userID));
 
-        ICyclePerformer cyclePerformer = new GameClientViewMessageHandler(gameClientViewData, clientSideSocketWrapper,
-                viewManager, view, userID);
+        var view = new GameClientView(game, textureManager, eventListener, gameClientViewData, subscreensFactory);
 
-        return new ViewWithEventLoop(cyclePerformer, view, game);
+        return subscreensFactory.wrapScreen(view, view, game);
     }
 }

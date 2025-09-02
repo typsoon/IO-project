@@ -71,15 +71,18 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
 
         protected void handleMessage(Message received) {
             pendingSendables.add(received.getSendable());
+            Logger.getGlobal()
+                    .finest("Adding %s to pendingSendables".formatted(received.getSendable()));
         }
 
         @Override
         public final void run() {
             while (true) {
                 try {
-                    Logger.getGlobal().info("%s RECEIVING".formatted(socketWrapper));
+                    // Logger.getGlobal().info("%s RECEIVING".formatted(socketWrapper));
                     var received = socketWrapper.receiveMessage();
-                    Logger.getGlobal().info("Received %s".formatted(received.getClass().getSimpleName()));
+                    Logger.getGlobal()
+                            .info("Received %s".formatted(received.getClass().getSimpleName()));
 
                     synchronized (pendingSendables) {
                         handleMessage(received);

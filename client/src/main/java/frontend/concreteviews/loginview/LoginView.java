@@ -29,7 +29,7 @@ public class LoginView extends ScreenAdapter implements IView {
 
     // TODO view: refactor to make similar to MainMenuView
     public LoginView(final Game game, final EventListener loginViewEventListener,
-                     ITextureManager textureManager, IViewManager viewManager) {
+            ITextureManager textureManager, IViewManager viewManager) {
         this.game = game;
         this.textureManager = textureManager;
         this.loginViewEventListener = loginViewEventListener;

@@ -1,6 +1,7 @@
 package frontend.concreteviews.gameclientview;
 
 import java.util.Stack;
+import java.util.logging.Logger;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import frontend.concreteviews.gameclientview.subscreens.ConfirmationPromptScreen;
+import frontend.concreteviews.gameclientview.subscreens.GameClientSubviewsFactory;
 import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
 import game.session.ISendableConsumer;
 import game.utility.ISendable;
@@ -31,17 +33,20 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     private final ITextureManager textureManager;
     private final EventListener gameClientViewEventListener;
     private final GameClientViewData gameClientViewData;
+    private final GameClientSubviewsFactory gameClientSubscreensFactory;
 
     private Stack<Screen> activeSubscreens = new Stack<>();
 
     private Stage stage;
 
     public GameClientView(final Game game, ITextureManager textureManager,
-            GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData) {
+            GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
+            GameClientSubviewsFactory gameClientSubscreensFactory) {
         this.game = game;
         this.textureManager = textureManager;
         this.gameClientViewEventListener = gameClientViewEventListener;
         this.gameClientViewData = gameClientViewData;
+        this.gameClientSubscreensFactory = gameClientSubscreensFactory;
     }
 
     @Override
@@ -58,9 +63,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
 
     @Override
     public void show() {
-        // FIXME: I have a feeling that this will blow up
         activeSubscreens.clear();
-        activeSubscreens.add(game.getScreen());
+        activeSubscreens.add(this);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -146,25 +150,28 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     @Override
     public void changeSubscreen(final Screen newScreen) {
         // Logger.getGlobal().info(activeSubscreens.toString());
-        activeSubscreens.add(newScreen);
-        game.setScreen(newScreen);
-        // Gdx.app.postRunnable(() -> {
-        // Logger.getGlobal().info(activeSubscreens.toString());
         // activeSubscreens.add(newScreen);
         // game.setScreen(newScreen);
-        // });
+        Gdx.app.postRunnable(() -> {
+            Logger.getGlobal().info(activeSubscreens.toString());
+            activeSubscreens.add(newScreen);
+            var view = gameClientSubscreensFactory.wrapScreen(this, newScreen, game);
+            view.display();
+        });
     }
 
     @Override
     public void moveToPreviousSubscreen() {
         // Logger.getGlobal().info(activeSubscreens.toString());
-        activeSubscreens.pop();
-        game.setScreen(activeSubscreens.peek());
-        // Gdx.app.postRunnable(() -> {
-        // Logger.getGlobal().info(activeSubscreens.toString());
         // activeSubscreens.pop();
         // game.setScreen(activeSubscreens.peek());
-        // });
+        Gdx.app.postRunnable(() -> {
+            Logger.getGlobal().info(activeSubscreens.toString());
+            activeSubscreens.pop();
+
+            var view = gameClientSubscreensFactory.wrapScreen(this, activeSubscreens.peek(), game);
+            view.display();
+        });
     }
 
     @Override
@@ -184,6 +191,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
             }
 
             case GameConfirmationRequestMessage.Payload gameConfirmationRequest -> {
+                Logger.getGlobal().info("Moving to confirmation screen");
+
                 var screen = new ConfirmationPromptScreen(this, gameClientViewEventListener, textureManager);
                 changeSubscreen(screen);
             }

@@ -1,7 +1,9 @@
 package frontend;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+
 import utility.ICycleTimedPerformer;
 import viewmodel.IView;
 
@@ -60,6 +62,6 @@ public class ViewWithTimedEventLoop implements Screen, IView {
 
     @Override
     public void display() {
-        game.setScreen(this);
+        Gdx.app.postRunnable(() -> game.setScreen(this));
     }
 }
