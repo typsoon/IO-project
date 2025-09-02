@@ -49,7 +49,7 @@ public class Chicken implements IAIEntity, IDamageable{
                 geometryRepresentation.getVelocity(),
                 geometryRepresentation.getRotation(),
                 entityGroupID,
-                EntityAction.Idle
+                EntityAction.IDLE
         );
     }
 

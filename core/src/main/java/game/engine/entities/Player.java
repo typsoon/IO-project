@@ -71,7 +71,7 @@ public class Player implements IAIEntity {
                 geometryRepresentation.getVelocity(),
                 geometryRepresentation.getRotation(),
                 entityGroupID,
-                EntityAction.Idle);
+                EntityAction.IDLE);
     }
 
     public PlayerState getPlayerState() {
@@ -82,7 +82,7 @@ public class Player implements IAIEntity {
                 geometryRepresentation.getVelocity(),
                 geometryRepresentation.getRotation(),
                 entityGroupID,
-                EntityAction.Idle,
+                EntityAction.IDLE,
                 sightRange);
     }
 
