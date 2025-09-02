@@ -37,7 +37,7 @@ public class OrdinaryBytesAccumulator implements BytesAccumulator {
         }
 
         msgSizeBuf.flip();
-        logger.finer(
+        logger.finest(
                 "limit %d position %d remaining %d capacity %d".formatted(msgSizeBuf.limit(), msgSizeBuf.position(),
                         msgSizeBuf.remaining(), msgSizeBuf.capacity()));
         var msgSize = msgSizeBuf.get();

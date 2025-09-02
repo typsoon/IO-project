@@ -310,7 +310,7 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
             synchronized (selectionKey) {
                 // logger.info("Message %s enqueued, user %s".formatted(message.getSendable(),
                 // socketAddress));
-
+                //
                 pendingMessages.add(new ReceiverAndMessages(socketAddress, queue));
 
                 selectionKey.interestOpsOr(SelectionKey.OP_WRITE);
@@ -333,14 +333,13 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
 
                 // TODO: maybe send more messages in a single Datagram
                 for (final Message msg : nextVal.messageQueue) {
-
-                    logger.finer("Message %s sent to user %s".formatted(msg.getSendable(),
-                            nextVal.socketAdress));
-
                     sendingByteBuffer.clear();
 
                     msg.encodeAndWrite(sendingBufferDataConsumer);
                     datagramChannel.send(sendingByteBuffer, nextVal.socketAdress);
+
+                    logger.info("Message %s sent to user %s".formatted(msg.getSendable(),
+                            nextVal.socketAdress));
                 }
 
                 iter.remove();

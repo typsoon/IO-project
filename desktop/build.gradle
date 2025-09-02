@@ -28,6 +28,23 @@ tasks.register("dummylauncher", JavaExec) {
     mainClass = 'dummylaunchers.DummyGameLauncher'
 }
 
+tasks.register("dummynetworklauncher", JavaExec) {
+    group = 'Mocking the game'
+    description = 'Running the game in the single player mode'
+
+    // group = ApplicationPlugin.APPLICATION_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+
+    mainClass = 'dummylaunchers.DummyNetworkLauncher'
+}
+
+tasks.register("runServerAndDummy") {
+    group = "Mocking the game"
+    description = "Run server first, then dummy network launcher"
+
+    dependsOn(":server:run", "dummynetworklauncher")
+}
+
 run {
     if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
         jvmArgs += "-XstartOnFirstThread"

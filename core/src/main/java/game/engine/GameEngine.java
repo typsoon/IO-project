@@ -30,9 +30,6 @@ public class GameEngine implements IGameEngine, IWorldView {
     @Override
     public void performCycle(Collection<Event> events) {
         for (Event event : events) {
-
-            Logger.getGlobal().info("Handling event %s".formatted(event));
-
             Player player = players.get(event.playerGamesStateSender());
 
             if (player != null) {
