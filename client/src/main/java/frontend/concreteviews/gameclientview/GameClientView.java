@@ -149,11 +149,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
 
     @Override
     public void changeSubscreen(final Screen newScreen) {
-        // Logger.getGlobal().info(activeSubscreens.toString());
-        // activeSubscreens.add(newScreen);
-        // game.setScreen(newScreen);
         Gdx.app.postRunnable(() -> {
-            Logger.getGlobal().info(activeSubscreens.toString());
+            // Logger.getGlobal().info(activeSubscreens.toString());
             activeSubscreens.add(newScreen);
             var view = gameClientSubscreensFactory.wrapScreen(this, newScreen, game);
             view.display();
@@ -162,9 +159,6 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
 
     @Override
     public void moveToPreviousSubscreen() {
-        // Logger.getGlobal().info(activeSubscreens.toString());
-        // activeSubscreens.pop();
-        // game.setScreen(activeSubscreens.peek());
         Gdx.app.postRunnable(() -> {
             Logger.getGlobal().info(activeSubscreens.toString());
             activeSubscreens.pop();

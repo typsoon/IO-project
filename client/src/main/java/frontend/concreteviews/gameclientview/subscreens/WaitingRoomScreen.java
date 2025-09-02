@@ -92,13 +92,15 @@ public class WaitingRoomScreen extends ScreenAdapter {
         }
 
         var backButton = textureManager.getTextButton("Back to Browse Rooms");
-        backButton.addListener(e -> {
-            if (backButton.isPressed()) {
-                screenSwitchingUtils.moveToPreviousSubscreen();
-                return true;
-            }
-            return false;
-        });
+        backButton.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                            final int button) {
+                        screenSwitchingUtils.moveToPreviousSubscreen();
+                        return true;
+                    }
+                });
 
         rootTable.add(backButton).colspan(2).padTop(20);
 
