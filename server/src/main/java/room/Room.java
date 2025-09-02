@@ -7,15 +7,16 @@ import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomInfo;
 import gameclient.user.IUserView;
 
-public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomConfig) {
+public record Room(int roomID, Collection<RoomMember> members, Admin admin, RoomConfig roomConfig) {
 
-    public Room(RoomMember admin, RoomConfig roomConfig) {
-        this(new ArrayList<>(), new Admin(admin.userView()), roomConfig);
+    public Room(RoomMember admin, RoomConfig roomConfig, int roomID) {
+        this(roomID, new ArrayList<>(), new Admin(admin.userView()), roomConfig);
         this.members().add(admin);
     }
 
     public RoomInfo getRoomInfo() {
         return new RoomInfo(
+                roomID,
                 roomConfig.name(),
                 roomConfig.isPublic(),
                 members.size(),
@@ -27,7 +28,7 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
         return roomConfig.password() != null;
     }
 
-    public void setAdmin(RoomMember newAdmin) {
+    public synchronized void setAdmin(RoomMember newAdmin) {
         if (members.contains(newAdmin)) {
             admin.changeAdmin(newAdmin.userView());
         }
@@ -37,14 +38,14 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
         return admin.admin().equals(user.userView());
     }
 
-    public void addMember(RoomMember member) {
+    public synchronized void addMember(RoomMember member) {
         if (members.size() < roomConfig.maxPlayers()) {
             members.add(member);
             member.roomsUserHandle().joinRoomCommand(this);
         }
     }
 
-    public void removeMember(RoomMember member) {
+    public synchronized void removeMember(RoomMember member) {
         if (members.remove(member)) {
             member.roomsUserHandle().leaveRoomCommand();
             if (members.isEmpty())
@@ -55,7 +56,7 @@ public record Room(Collection<RoomMember> members, Admin admin, RoomConfig roomC
         }
     }
 
-    public void removeAllMembers() {
+    public synchronized void removeAllMembers() {
         for (RoomMember member : members) {
             member.roomsUserHandle().leaveRoomCommand();
         }

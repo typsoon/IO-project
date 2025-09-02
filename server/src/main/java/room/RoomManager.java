@@ -4,17 +4,16 @@ import matchmaking.IMatchmakingEngine;
 import matchmaking.MatchmakingParameters;
 import matchmaking.lobby.LobbyMember;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomRequest;
 
 public class RoomManager implements IRoomManager {
     private final IMatchmakingEngine matchmakingEngine;
-    private final List<Room> rooms = new ArrayList<>();
+    private final Map<Integer, Room> rooms = new ConcurrentHashMap<>();
+    private int currentRoomID = 0; // for now
 
     public RoomManager(IMatchmakingEngine matchmakingEngine) {
         this.matchmakingEngine = matchmakingEngine;
@@ -24,8 +23,8 @@ public class RoomManager implements IRoomManager {
     public RoomRequest createRoom(RoomMember user, RoomConfig roomConfig) {
         if (user.roomsUserHandle().getRoom().isPresent())
             return RoomRequest.FAILED;
-        var newRoom = new Room(user, roomConfig);
-        rooms.add(newRoom);
+        var newRoom = new Room(user, roomConfig, currentRoomID++);
+        rooms.put(newRoom.roomID(), newRoom);
         user.roomsUserHandle().joinRoomCommand(newRoom);
         return RoomRequest.SUCCESSFUL;
     }
@@ -38,7 +37,7 @@ public class RoomManager implements IRoomManager {
         if (!room.isAdmin(user))
             return RoomRequest.NOT_AUTHORIZED;
         room.removeAllMembers();
-        rooms.remove(room);
+        rooms.remove(room.roomID());
         return RoomRequest.SUCCESSFUL;
     }
 
@@ -68,7 +67,7 @@ public class RoomManager implements IRoomManager {
             return RoomRequest.FAILED;
         var room = user.roomsUserHandle().getRoom().get();
         if (room.isEmpty())
-            rooms.remove(room);
+            rooms.remove(room.roomID());
         return RoomRequest.SUCCESSFUL;
     }
 
@@ -113,11 +112,13 @@ public class RoomManager implements IRoomManager {
 
     @Override
     public List<Room> listRooms() {
-        return rooms;
+        return new ArrayList<>(rooms.values());
     }
 
     @Override
     public Optional<Room> getRoom(String roomName) {
-        return rooms.stream().filter(room -> room.roomConfig().name().equals(roomName)).findFirst();
+        return rooms.values().stream()
+                .filter(room -> room.roomConfig().name().equals(roomName))
+                .findFirst();
     }
 }
