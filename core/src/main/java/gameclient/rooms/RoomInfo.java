@@ -1,8 +1,8 @@
 package gameclient.rooms;
 
-import game.utility.ISendable;
+import utils.ISendable;
 
 public record RoomInfo(int roomID, String roomName, boolean isPublic, int numberOfMembers, int maxMembers,
-                       boolean hasPassword)
+        boolean hasPassword)
         implements ISendable {
 }

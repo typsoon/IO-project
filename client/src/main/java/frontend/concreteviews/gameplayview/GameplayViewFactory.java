@@ -20,12 +20,11 @@ import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import utility.IActionSender;
+import utility.ICycleTimedPerformer;
 import utils.ObserverWithATwist.ObserverImpl;
 import viewmodel.ITextureManager;
 import viewmodel.IView;
 import viewmodel.IViewManager;
-
-import utility.ICycleTimedPerformer;
 
 public class GameplayViewFactory {
     public IView getGameplayView(

@@ -4,8 +4,8 @@ import game.actions.IAction;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
 import game.session.PlayerData;
-import game.utility.ISendable;
 import user.IMatchmakingUserHandle;
+import utils.ISendable;
 
 import java.util.Collection;
 import java.util.UUID;

@@ -21,10 +21,11 @@ import frontend.concreteviews.gameclientview.subscreens.ConfirmationPromptScreen
 import frontend.concreteviews.gameclientview.subscreens.GameClientSubviewsFactory;
 import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
 import game.session.ISendableConsumer;
-import game.utility.ISendable;
-import gameclient.rooms.RoomRequest;
-import network.messages.configurationstate.CreateRoomRequestResponse;
+import gameclient.rooms.RequestResult;
+import gameclient.rooms.RoomRequestResult;
+import gameclient.rooms.RoomRequestType;
 import network.messages.userstate.GameConfirmationRequestMessage;
+import utils.ISendable;
 import viewmodel.ITextureManager;
 
 public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
@@ -173,11 +174,25 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     @Override
     public void processSendable(ISendable sendable) {
         switch (sendable) {
-            case CreateRoomRequestResponse.Payload requestResponse -> {
-                if (requestResponse.request() == RoomRequest.SUCCESSFUL) {
-                    var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData, requestResponse.roomName(),
-                            textureManager, gameClientViewEventListener);
-                    changeSubscreen(waitingRoomScreen);
+            case RoomRequestResult requestResponse -> {
+                switch (requestResponse.roomRequestType()) {
+                    case RoomRequestType.CREATE -> {
+                        if (requestResponse.result() == RequestResult.SUCCESSFUL) {
+                            var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData,
+                                    requestResponse.roomName(),
+                                    textureManager, gameClientViewEventListener);
+                            changeSubscreen(waitingRoomScreen);
+                        }
+                    }
+
+                    case RoomRequestType.JOIN -> {
+                        if (requestResponse.result() == RequestResult.SUCCESSFUL) {
+                            var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData,
+                                    requestResponse.roomName(),
+                                    textureManager, gameClientViewEventListener);
+                            changeSubscreen(waitingRoomScreen);
+                        }
+                    }
                 }
             }
 

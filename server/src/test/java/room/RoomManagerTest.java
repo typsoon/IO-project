@@ -2,7 +2,7 @@ package room;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static gameclient.rooms.RoomRequest.*;
+import static gameclient.rooms.RequestResult.*;
 
 import java.util.Optional;
 

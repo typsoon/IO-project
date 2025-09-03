@@ -1,6 +1,7 @@
 package network.socketwrappers;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import network.messages.Message;
 
@@ -19,6 +20,12 @@ public final class SocketTypes {
         /**
          * @param message
          */
-        void sendMessage(SentMessage message) throws IOException;
+        void sendMessage(final SentMessage message) throws IOException;
+
+        default void sendMessages(final Collection<SentMessage> messages) throws IOException {
+            for (SentMessage sentMessage : messages) {
+                sendMessage(sentMessage);
+            }
+        }
     }
 }

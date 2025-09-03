@@ -1,6 +1,6 @@
 package network.messages.userstate;
 
-import game.utility.ISendable;
+import utils.ISendable;
 
 public record GameConfirmation(Confirmation confirmation) implements ISendable {
     public enum Confirmation {

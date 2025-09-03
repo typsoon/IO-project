@@ -3,6 +3,7 @@ package session.receivers;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import database.IDatabaseManager.UserId;
 import game.session.ISendableConsumer;
 import network.MessageDispatcher;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
@@ -26,7 +27,7 @@ public class ConfigurationStateConsumerFactory implements IConfigurationStateCon
 
     @Override
     public ConfigurationStateConsumer getConfigurationStateConsumer(final IUsersRoomHandle userRoomHandle,
-            final IUsersMatchmakingHandle matchmakingHandle) {
+            final IUsersMatchmakingHandle matchmakingHandle, final UserId userId) {
         final ISendableConsumer sendableDispatcher = sendable -> {
             try {
                 final var msg = objectToMessageDecoder.decodeFromRecord(sendable);
@@ -38,6 +39,6 @@ public class ConfigurationStateConsumerFactory implements IConfigurationStateCon
             }
         };
 
-        return new ConfigurationStateConsumer(userRoomHandle, matchmakingHandle, sendableDispatcher);
+        return new ConfigurationStateConsumer(userRoomHandle, matchmakingHandle, sendableDispatcher, userId);
     }
 }

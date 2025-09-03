@@ -12,10 +12,11 @@
 | 7  | PlayerSlotUse    | Player Uses an item from inventory slot when in game |
 | 8  | RoomInfoMessage    | Message containing info about a specified room |
 | 9  | RoomMembershipMessage    |  |
-| 10  | CreateRoomRequestResponse    |  |
+| 10  | RoomRequestResponse    |  |
 | 11  | GameConfirmationRequestMessage    |  |
 | 12  | StartGameRequest    |  |
 | 13  | GameStartedNotification    |  |
 | 14  | PlayerStateMessage     |  |
 | 15  | EntityStateMessage    |  |
+| 16  | JoinRoomRequest    |  |
 <!-- | 16  | ReadyForDataMessage    |  | -->

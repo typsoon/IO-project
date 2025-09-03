@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import network.messages.Message.EncryptedMessage;
-import game.utility.ISendable;
 import network.messages.utils.DataConsumer;
+import utils.ISendable;
 
 public final class LogInResponse extends EncryptedMessage {
     public static int NO_AUTH_TOKEN = -1;

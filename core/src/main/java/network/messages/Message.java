@@ -2,9 +2,9 @@ package network.messages;
 
 import java.io.IOException;
 
-import game.utility.ISendable;
 import messagetraits.MessageTraits;
 import network.messages.utils.DataConsumer;
+import utils.ISendable;
 
 @MessageTraits
 public sealed abstract class Message permits Message.EncryptedMessage, Message.UDPMessage, Message.TCPMessage {

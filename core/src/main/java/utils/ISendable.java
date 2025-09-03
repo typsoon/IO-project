@@ -1,4 +1,4 @@
-package game.utility;
+package utils;
 
 public interface ISendable {
 }

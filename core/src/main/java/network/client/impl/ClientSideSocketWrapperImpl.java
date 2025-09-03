@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
-import game.utility.ISendable;
 import network.MessageDispatcher;
 import network.client.ClientSideSocketWrapper;
 import network.impl.SingleWriteSocketContainer;
@@ -31,6 +30,7 @@ import network.socketwrappers.concretesocketwrappers.ClientSessionSocket;
 import network.socketwrappers.concretesocketwrappers.ClientSessionUDPSocket;
 import network.utils.ConnectionData;
 import network.utils.TokenHolder;
+import utils.ISendable;
 
 public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     private final MessageDispatcher messageDispatcher;

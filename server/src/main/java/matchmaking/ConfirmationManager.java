@@ -2,7 +2,6 @@ package matchmaking;
 
 import database.IDatabaseManager.UserId;
 import game.session.ISendableConsumer;
-import game.utility.ISendable;
 import gameclient.user.IUserView;
 import matchmaking.lobby.Lobby;
 import matchmaking.lobby.LobbyFactory;
@@ -10,6 +9,7 @@ import matchmaking.lobby.LobbyMember;
 import matchmaking.lobby.PendingLobby;
 import network.messages.userstate.GameConfirmation;
 import user.UserState;
+import utils.ISendable;
 
 import java.time.Instant;
 import java.util.Collection;

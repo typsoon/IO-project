@@ -7,17 +7,17 @@ import java.util.logging.Logger;
 import database.IDatabaseManager.UserId;
 import game.gamestates.IGameState;
 import game.session.ISendableConsumer;
-import game.utility.ISendable;
 import gameclient.rooms.RoomInfo;
+import gameclient.rooms.RoomRequestResult;
 import gameclient.rooms.UserMembershipInfo;
 import gameclient.user.UserInfo;
 import network.client.ClientSideSocketWrapper;
-import network.messages.configurationstate.CreateRoomRequestResponse;
 import network.messages.configurationstate.GameStartMessages.GameStartedNotification;
 import network.messages.loginstate.PortInfoResponse;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utility.ICyclePerformer;
 import utils.BoundedQueue;
+import utils.ISendable;
 import viewmodel.IViewManager;
 
 public class GameClientViewMessageHandler implements ICyclePerformer {
@@ -82,8 +82,8 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
                         displayHandler.processSendable(gameConfirmationRequest);
                     }
 
-                    case CreateRoomRequestResponse.Payload createRoomResponse -> {
-                        displayHandler.processSendable(createRoomResponse);
+                    case RoomRequestResult roomRequestResponse -> {
+                        displayHandler.processSendable(roomRequestResponse);
                     }
 
                     case GameStartedNotification.Payload gameStartedNotificationPayload -> {

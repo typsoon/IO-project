@@ -5,29 +5,31 @@ import java.util.List;
 import java.util.Optional;
 
 import gameclient.rooms.RoomConfig;
-import gameclient.rooms.RoomRequest;
+import gameclient.rooms.RequestResult;
 import room.Room;
 import room.RoomMember;
 
 // Interface that allows communication from the user to the room
 public interface IUsersRoomHandle {
-    RoomRequest createRoomRequest(RoomConfig roomConfig);
+    RequestResult createRoomRequest(RoomConfig roomConfig);
 
-    RoomRequest deleteRoomRequest();
+    RequestResult deleteRoomRequest();
 
-    RoomRequest joinRoomRequest(Room room);
+    RequestResult joinRoomRequest(Room room);
 
-    RoomRequest joinRoomRequest(Room room, String password);
+    RequestResult joinRoomRequest(Room room, String password);
 
-    RoomRequest leaveRoomRequest();
+    RequestResult leaveRoomRequest();
 
-    RoomRequest changeAdminRequest(RoomMember newAdmin);
+    RequestResult changeAdminRequest(RoomMember newAdmin);
 
-    RoomRequest kickUserRequest(RoomMember user);
+    RequestResult kickUserRequest(RoomMember user);
 
-    RoomRequest createGameRequest();
+    RequestResult createGameRequest();
 
     List<Room> getPublicRooms();
+
+    // Optional<Room> getMyRoom();
 
     Optional<Room> getRoom(String roomName);
 

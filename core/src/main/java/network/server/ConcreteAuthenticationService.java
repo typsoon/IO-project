@@ -1,20 +1,21 @@
 package network.server;
 
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import database.IDatabaseManager;
 import database.IDatabaseManager.UserId;
-import java.util.Set;
 
 public class ConcreteAuthenticationService implements AuthenticationService {
     private final IDatabaseManager databaseManager;
-    private final Set<Integer> possibleTokenVals = new HashSet<>();
-    private final Map<Integer, UserId> tokenToUserMap = new HashMap<>();
-    private final Map<UserId, Set<Token>> userToTokenMap = new HashMap<>();
+    private final Set<Integer> possibleTokenVals = ConcurrentHashMap.newKeySet();
+    private final Map<Integer, UserId> tokenToUserMap = new ConcurrentHashMap<>();
+    private final Map<UserId, Set<Token>> userToTokenMap = new ConcurrentHashMap<>();
 
     public ConcreteAuthenticationService(IDatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
@@ -31,10 +32,13 @@ public class ConcreteAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public int renewToken(UserId userId) {
+    public synchronized int renewToken(UserId userId) {
         // TODO: Make this better
 
-        var tokenVal = possibleTokenVals.iterator().next();
+        var tokenIter = possibleTokenVals.iterator();
+        var tokenVal = tokenIter.next();
+        tokenIter.remove();
+
         tokenToUserMap.put(tokenVal, userId);
         userToTokenMap.putIfAbsent(userId, new HashSet<>());
         var userTokens = userToTokenMap.get(userId);
@@ -44,7 +48,7 @@ public class ConcreteAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public Token tryAuth(UserId userId, String password) {
+    public synchronized Token tryAuth(UserId userId, String password) {
         var actualPassword = databaseManager.getPassword(userId);
 
         if (!Objects.equals(password, actualPassword)) {

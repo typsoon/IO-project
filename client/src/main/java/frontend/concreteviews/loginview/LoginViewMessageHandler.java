@@ -3,11 +3,11 @@ package frontend.concreteviews.loginview;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import game.utility.ISendable;
 import network.client.ClientSideSocketWrapper;
 import network.messages.loginstate.LogInResponse;
 import network.messages.loginstate.PortInfoResponse;
 import utility.ICyclePerformer;
+import utils.ISendable;
 import viewmodel.IViewManager;
 
 public class LoginViewMessageHandler implements ICyclePerformer {

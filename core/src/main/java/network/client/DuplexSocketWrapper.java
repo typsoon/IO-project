@@ -3,8 +3,8 @@ package network.client;
 import java.io.IOException;
 import java.util.Collection;
 
-import game.utility.ISendable;
 import network.messages.Message;
+import utils.ISendable;
 
 public interface DuplexSocketWrapper {
     class ConnectionEndedException extends Exception {

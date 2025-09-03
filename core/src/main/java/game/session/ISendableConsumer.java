@@ -1,6 +1,6 @@
 package game.session;
 
-import game.utility.ISendable;
+import utils.ISendable;
 
 @FunctionalInterface
 public interface ISendableConsumer {

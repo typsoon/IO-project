@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import gameclient.rooms.RoomConfig;
-import gameclient.rooms.RoomRequest;
+import gameclient.rooms.RequestResult;
 
 public class RoomManager implements IRoomManager {
     private final IMatchmakingEngine matchmakingEngine;
@@ -20,94 +20,94 @@ public class RoomManager implements IRoomManager {
     }
 
     @Override
-    public RoomRequest createRoom(RoomMember user, RoomConfig roomConfig) {
+    public RequestResult createRoom(RoomMember user, RoomConfig roomConfig) {
         if (user.roomsUserHandle().getRoom().isPresent())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         var newRoom = new Room(user, roomConfig, currentRoomID++);
         rooms.put(newRoom.roomID(), newRoom);
         user.roomsUserHandle().joinRoomCommand(newRoom);
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest deleteRoom(RoomMember user) {
+    public RequestResult deleteRoom(RoomMember user) {
         if (user.roomsUserHandle().getRoom().isEmpty())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         Room room = user.roomsUserHandle().getRoom().get();
         if (!room.isAdmin(user))
-            return RoomRequest.NOT_AUTHORIZED;
+            return RequestResult.NOT_AUTHORIZED;
         room.removeAllMembers();
         rooms.remove(room.roomID());
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest joinRoom(RoomMember user, Room room) {
+    public RequestResult joinRoom(RoomMember user, Room room) {
         if (room.isFull())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         if (room.roomConfig().password() != null)
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         room.addMember(user);
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest joinRoom(RoomMember user, Room room, String password) {
+    public RequestResult joinRoom(RoomMember user, Room room, String password) {
         if (room.isFull())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         if (!room.roomConfig().password().equals(password))
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         room.addMember(user);
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest leaveRoom(RoomMember user) {
+    public RequestResult leaveRoom(RoomMember user) {
         if (user.roomsUserHandle().getRoom().isEmpty())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         var room = user.roomsUserHandle().getRoom().get();
         if (room.isEmpty())
             rooms.remove(room.roomID());
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest changeAdmin(RoomMember user, RoomMember newAdmin) {
+    public RequestResult changeAdmin(RoomMember user, RoomMember newAdmin) {
         if (user.roomsUserHandle().getRoom().isEmpty())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         var room = user.roomsUserHandle().getRoom().get();
         if (!room.isAdmin(user))
-            return RoomRequest.NOT_AUTHORIZED;
+            return RequestResult.NOT_AUTHORIZED;
         if (!room.members().contains(newAdmin))
-            return RoomRequest.NOT_AUTHORIZED;
+            return RequestResult.NOT_AUTHORIZED;
         room.admin().changeAdmin(newAdmin.userView());
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest kickUser(RoomMember user, RoomMember kickedUser) {
+    public RequestResult kickUser(RoomMember user, RoomMember kickedUser) {
         if (user.roomsUserHandle().getRoom().isEmpty())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         var room = user.roomsUserHandle().getRoom().get();
         if (!room.isAdmin(user))
-            return RoomRequest.NOT_AUTHORIZED;
+            return RequestResult.NOT_AUTHORIZED;
         if (!room.members().contains(kickedUser))
-            return RoomRequest.NOT_AUTHORIZED;
+            return RequestResult.NOT_AUTHORIZED;
         room.removeMember(kickedUser);
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override
-    public RoomRequest createGame(RoomMember user) {
+    public RequestResult createGame(RoomMember user) {
         if (user.roomsUserHandle().getRoom().isEmpty())
-            return RoomRequest.FAILED;
+            return RequestResult.FAILED;
         var room = user.roomsUserHandle().getRoom().get();
         if (!room.isAdmin(user))
-            return RoomRequest.NOT_AUTHORIZED;
+            return RequestResult.NOT_AUTHORIZED;
 
         Collection<LobbyMember> members = room.members().stream().map(RoomMember::getLobbyMember).toList();
         matchmakingEngine.createGame(members, new MatchmakingParameters(members.size()));
-        return RoomRequest.SUCCESSFUL;
+        return RequestResult.SUCCESSFUL;
     }
 
     @Override

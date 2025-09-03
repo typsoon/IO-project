@@ -3,7 +3,6 @@ package network.messages.utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.logging.Logger;
 
 import network.messages.MessagesConfig;
 
@@ -17,23 +16,26 @@ public class ByteBufferDataProducer implements DataProducer {
 
     @Override
     public int getInt() throws IOException {
-        Logger.getGlobal().finest("Pos: %d, Capacity: %d".formatted(byteBuffer.remaining(), byteBuffer.capacity()));
+        // Logger.getGlobal().finest("Pos: %d, Capacity:
+        // %d".formatted(byteBuffer.remaining(), byteBuffer.capacity()));
         return byteBuffer.getInt();
     }
 
     @Override
     public byte getByte() throws IOException {
-        Logger.getGlobal().finest(
-                "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(), byteBuffer.capacity(),
-                        byteBuffer.limit()));
+        // Logger.getGlobal().finest(
+        // "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(),
+        // byteBuffer.capacity(),
+        // byteBuffer.limit()));
         return byteBuffer.get();
     }
 
     @Override
     public String getString() throws IOException {
-        Logger.getGlobal().finest(
-                "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(), byteBuffer.capacity(),
-                        byteBuffer.limit()));
+        // Logger.getGlobal().finest(
+        // "Pos: %d, Capacity: %d, Limit: %d".formatted(byteBuffer.position(),
+        // byteBuffer.capacity(),
+        // byteBuffer.limit()));
 
         byte len = byteBuffer.get();
 

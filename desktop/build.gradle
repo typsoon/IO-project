@@ -36,6 +36,10 @@ tasks.register("dummynetworklauncher", JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
     mainClass = 'dummylaunchers.DummyNetworkLauncher'
+
+    if (project.hasProperty("appArgs")) {
+        args = project.appArgs.split(",")
+    }
 }
 
 tasks.register("runServerAndDummy") {

@@ -7,9 +7,9 @@ import java.util.logging.Logger;
 
 import frontend.gamestate.processor.IGameStateProcessor;
 import game.gamestates.IGameState;
-import game.utility.ISendable;
 import network.client.DuplexSocketWrapper;
 import utility.ICycleTimedPerformer;
+import utils.ISendable;
 import viewmodel.IViewManager;
 
 /**

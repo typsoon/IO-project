@@ -213,6 +213,7 @@ class TCPChannelAttachment<T extends SessionContract> extends ConnectionBasedCha
                 ChannelAttachmentLoggingUtils.logNewSessionWillBeCreated(logger, userTokenVal, userId);
 
                 sessionContract = sessionCreator.getSession(userId);
+                Logger.getGlobal().info("Session contract %s".formatted(sessionContract));
                 sessionContract.getMessageDispatcher().connectTCPSender(getSender());
 
                 state = State.AFTER_VALIDATION;
@@ -322,10 +323,19 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
 
     private final DataConsumer sendingBufferDataConsumer = new ByteBufferDataConsumer(sendingByteBuffer);
 
+    private final int sendingThreeshold = sendingByteBuffer.capacity() / 2;
+
+    private final void sendbufferContents(final SocketAddress socketAddress) throws IOException {
+        sendingByteBuffer.flip();
+        datagramChannel.send(sendingByteBuffer, socketAddress);
+        sendingByteBuffer.clear();
+    }
+
     @Override
     public void dispatchMessages() throws IOException {
         // TODO: do this in a nonblocking way
         synchronized (selectionKey) {
+            sendingByteBuffer.clear();
             final var iter = pendingMessages.iterator();
 
             while (iter.hasNext()) {
@@ -336,15 +346,19 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
                 while (!msgQueue.isEmpty()) {
                     final var msg = msgQueue.poll();
 
-                    sendingByteBuffer.clear();
                     msg.encodeAndWrite(sendingBufferDataConsumer);
-                    sendingByteBuffer.flip();
-                    datagramChannel.send(sendingByteBuffer, nextVal.socketAdress);
+                    if (sendingByteBuffer.position() >= sendingThreeshold) {
+                        sendbufferContents(nextVal.socketAdress);
+                    }
 
-                    logger.info("Message %s sent to user %s".formatted(msg.getSendable(),
+                    logger.finer("Message %s sent to user %s".formatted(msg.getSendable(),
                             nextVal.socketAdress));
                 }
 
+                // If there are still some messages waiting to be sent
+                if (sendingByteBuffer.position() > 0) {
+                    sendbufferContents(nextVal.socketAdress);
+                }
                 iter.remove();
             }
 
@@ -357,7 +371,6 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
     public List<ClientAndTheirMessage<T>> readIncomingMessages() throws IOException {
         receivingByteBuffer.clear();
         final var address = datagramChannel.receive(receivingByteBuffer);
-
         receivingByteBuffer.flip();
         // logger.finest("Received %d bytes".formatted(receivingByteBuffer.limit()));
 

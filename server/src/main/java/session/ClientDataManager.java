@@ -2,6 +2,7 @@ package session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import database.IDatabaseManager;
 import database.IDatabaseManager.UserId;
@@ -27,6 +28,8 @@ public class ClientDataManager implements SessionCreator<ClientData> {
 
         final var configurationStateConsumerFactory = new ConfigurationStateConsumerFactory(dispatcher);
         final var objectToMessageDecoder = new ConcreteObjectDecoder();
+
+        Logger.getGlobal().info(address.toString());
 
         return activeClientsData.computeIfAbsent(address,
                 _address -> new ClientData(dispatcher, configurationStateConsumerFactory,

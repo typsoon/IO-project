@@ -20,7 +20,7 @@ import game.engine.entities.GeometryConfigID;
 import game.session.GameSessionFactory;
 import game.session.IPlayerConnector;
 import game.session.PlayerData;
-import game.utility.ISendable;
+import utils.ISendable;
 import viewmodel.ITextureManager;
 import viewmodel.impl.BasicTextureManager;
 

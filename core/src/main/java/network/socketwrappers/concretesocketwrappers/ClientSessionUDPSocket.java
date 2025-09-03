@@ -48,7 +48,7 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
     private final DataConsumer consumer = new ByteBufferDataConsumer(sendingByteBuf);
 
     @Override
-    public void sendMessage(UDPMessage message) throws IOException {
+    public final void sendMessage(UDPMessage message) throws IOException {
         // TODO: maybe send multiple messages in one Datagram
         sendingByteBuf.clear();
 
@@ -75,14 +75,15 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
             .getByteBufferAdapter(receivingByteBuf);
 
     @Override
-    public Message receiveMessage() throws IOException {
+    public final Message receiveMessage() throws IOException {
         do {
             if (receivingByteBuf.hasRemaining()) {
                 var readRes = bytesAccumulator.accumulateBytes(receivingByteBufAdapter);
 
                 if (readRes.isPresent()) {
-                    Logger.getGlobal().info("%s %d bytes remaining".formatted(readRes.get().whatWasRead(),
-                            readRes.get().byteBuf().remaining()));
+                    // Logger.getGlobal().info("%s %d bytes
+                    // remaining".formatted(readRes.get().whatWasRead(),
+                    // readRes.get().byteBuf().remaining()));
 
                     var dataProducer = new ByteBufferDataProducer(readRes.get().byteBuf());
                     return messageDecoder.decodeMessage(dataProducer);
@@ -93,8 +94,8 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
 
             // Logger.getGlobal().info("RECEIVING OVER UDP");
             datagramSocket.receive(receivedPacket);
-            Logger.getGlobal().info(
-                    "RECEIVED %d BYTES OVER UDP".formatted(receivedPacket.getLength()));
+            // Logger.getGlobal().info(
+            // "RECEIVED %d BYTES OVER UDP".formatted(receivedPacket.getLength()));
             receivingByteBuf.limit(receivedPacket.getLength());
         } while (true);
     }

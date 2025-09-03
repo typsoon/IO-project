@@ -4,24 +4,24 @@ import java.util.List;
 import java.util.Optional;
 
 import gameclient.rooms.RoomConfig;
-import gameclient.rooms.RoomRequest;
+import gameclient.rooms.RequestResult;
 
 public interface IRoomManager {
-    RoomRequest createRoom(RoomMember user, RoomConfig roomConfig);
+    RequestResult createRoom(RoomMember user, RoomConfig roomConfig);
 
-    RoomRequest deleteRoom(RoomMember user);
+    RequestResult deleteRoom(RoomMember user);
 
-    RoomRequest joinRoom(RoomMember user, Room room);
+    RequestResult joinRoom(RoomMember user, Room room);
 
-    RoomRequest joinRoom(RoomMember user, Room room, String password);
+    RequestResult joinRoom(RoomMember user, Room room, String password);
 
-    RoomRequest leaveRoom(RoomMember user);
+    RequestResult leaveRoom(RoomMember user);
 
-    RoomRequest changeAdmin(RoomMember user, RoomMember newAdmin);
+    RequestResult changeAdmin(RoomMember user, RoomMember newAdmin);
 
-    RoomRequest kickUser(RoomMember user, RoomMember kickedUser);
+    RequestResult kickUser(RoomMember user, RoomMember kickedUser);
 
-    RoomRequest createGame(RoomMember user);
+    RequestResult createGame(RoomMember user);
 
     List<Room> listRooms();
 

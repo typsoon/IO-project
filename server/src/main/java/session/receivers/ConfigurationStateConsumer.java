@@ -1,32 +1,35 @@
 package session.receivers;
 
+import static gameclient.rooms.RequestResult.FAILED;
+import static gameclient.rooms.RequestResult.SUCCESSFUL;
+import static gameclient.rooms.RoomRequestType.CREATE;
+import static gameclient.rooms.RoomRequestType.JOIN;
+
 import java.util.logging.Logger;
 
+import database.IDatabaseManager.UserId;
 import game.session.ISendableConsumer;
-import game.utility.ISendable;
 import gameclient.rooms.RoomConfig;
-import gameclient.rooms.RoomRequest;
+import gameclient.rooms.RoomRequestResult;
 import gameclient.rooms.UserMembershipInfo;
-import network.messages.configurationstate.CreateRoomRequestResponse;
 import network.messages.configurationstate.GameStartMessages.StartGameRequest;
-import room.Room;
+import network.messages.configurationstate.RoomMessages.JoinRoomRequest;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
+import utils.ISendable;
 
 public class ConfigurationStateConsumer implements ISendableConsumer {
     private final IUsersRoomHandle userRoomHandle;
     private final IUsersMatchmakingHandle matchmakingHandle;
     private final ISendableConsumer sendableDispatcher;
+    private final UserId id;
 
     public ConfigurationStateConsumer(IUsersRoomHandle userRoomHandle, IUsersMatchmakingHandle matchmakingHandle,
-            ISendableConsumer sendableDispatcher) {
+            ISendableConsumer sendableDispatcher, UserId id) {
         this.userRoomHandle = userRoomHandle;
         this.matchmakingHandle = matchmakingHandle;
         this.sendableDispatcher = sendableDispatcher;
-    }
-
-    private void sendDataAboutARoom(Room room) {
-        sendableDispatcher.processSendable(room.getRoomInfo());
+        this.id = id;
     }
 
     @Override
@@ -37,32 +40,36 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
             case RoomConfig createRoomRequest -> {
                 synchronized (userRoomHandle) {
                     var result = userRoomHandle.createRoomRequest(createRoomRequest);
-                    var createRoomResponsePayload = new CreateRoomRequestResponse.Payload(result,
-                            createRoomRequest.name());
+                    var createRoomResponsePayload = new RoomRequestResult(result,
+                            CREATE, createRoomRequest.name());
 
                     Logger.getGlobal().info("%s response payload".formatted(createRoomResponsePayload.toString()));
 
-                    if (result == RoomRequest.SUCCESSFUL) {
-                        var roomInfoMessage = userRoomHandle.getRoom(createRoomRequest.name());
-
-                        if (roomInfoMessage.isEmpty()) {
-                            Logger.getGlobal().info("We should not have encountered this state");
-                            break;
-                        }
-
-                        var room = roomInfoMessage.get();
-                        sendDataAboutARoom(room);
-                        var user = userRoomHandle.getRoomMembers().iterator().next().userView();
-                        var roomMembershipMsgPayload = new UserMembershipInfo(room.getRoomInfo().roomName(),
-                                user.id().id(),
-                                user.username(),
-                                true);
-
-                        sendableDispatcher.processSendable(roomMembershipMsgPayload);
+                    if (result == SUCCESSFUL) {
+                        sendOneRoomData(createRoomRequest.name());
                     }
 
                     sendableDispatcher.processSendable(createRoomResponsePayload);
                 }
+            }
+
+            case JoinRoomRequest.Payload joinRoomRequest -> {
+                var room = userRoomHandle.getRoom(joinRoomRequest.roomName());
+                final RoomRequestResult response;
+                if (room.isEmpty()) {
+                    response = new RoomRequestResult(FAILED, JOIN, joinRoomRequest.roomName());
+                    sendableDispatcher.processSendable(response);
+                    break;
+                }
+
+                var result = userRoomHandle.joinRoomRequest(room.get(), joinRoomRequest.password());
+
+                response = new RoomRequestResult(result, JOIN, joinRoomRequest.roomName());
+                if (result == SUCCESSFUL) {
+                    sendOneRoomData(joinRoomRequest.roomName());
+                }
+
+                sendableDispatcher.processSendable(response);
             }
 
             case StartGameRequest.Payload startGameReqPayload -> {
@@ -74,6 +81,27 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
 
             default -> {
             }
+        }
+    }
+
+    // TODO: replace with getRoom() calls
+    private void sendOneRoomData(String roomName) {
+        var roomOptional = userRoomHandle.getRoom(roomName);
+
+        if (roomOptional.isEmpty()) {
+            Logger.getGlobal().info("We should not have encountered this state");
+            return;
+        }
+
+        final var room = roomOptional.get();
+        sendableDispatcher.processSendable(room.getRoomInfo());
+
+        for (final var member : userRoomHandle.getRoomMembers()) {
+            final var roomMembershipInfo = new UserMembershipInfo(roomName, id.id(),
+                    member.userView().username(),
+                    id.equals(room.admin().admin().id()));
+
+            sendableDispatcher.processSendable(roomMembershipInfo);
         }
     }
 

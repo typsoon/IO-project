@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import gameclient.rooms.RoomConfig;
-import gameclient.rooms.RoomRequest;
+import gameclient.rooms.RequestResult;
 import gameclient.user.IUserView;
 
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
@@ -44,42 +44,42 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     }
 
     @Override
-    public RoomRequest createRoomRequest(RoomConfig roomConfig) {
+    public RequestResult createRoomRequest(RoomConfig roomConfig) {
         return roomManager.createRoom(member, roomConfig);
     }
 
     @Override
-    public RoomRequest deleteRoomRequest() {
+    public RequestResult deleteRoomRequest() {
         return roomManager.deleteRoom(member);
     }
 
     @Override
-    public RoomRequest joinRoomRequest(Room room) {
+    public RequestResult joinRoomRequest(Room room) {
         return roomManager.joinRoom(member, room);
     }
 
     @Override
-    public RoomRequest joinRoomRequest(Room room, String password) {
+    public RequestResult joinRoomRequest(Room room, String password) {
         return roomManager.joinRoom(member, room, password);
     }
 
     @Override
-    public RoomRequest leaveRoomRequest() {
+    public RequestResult leaveRoomRequest() {
         return roomManager.leaveRoom(member);
     }
 
     @Override
-    public RoomRequest changeAdminRequest(RoomMember newAdmin) {
+    public RequestResult changeAdminRequest(RoomMember newAdmin) {
         return roomManager.changeAdmin(member, newAdmin);
     }
 
     @Override
-    public RoomRequest kickUserRequest(RoomMember user) {
+    public RequestResult kickUserRequest(RoomMember user) {
         return roomManager.kickUser(member, user);
     }
 
     @Override
-    public RoomRequest createGameRequest() {
+    public RequestResult createGameRequest() {
         return roomManager.createGame(member);
     }
 

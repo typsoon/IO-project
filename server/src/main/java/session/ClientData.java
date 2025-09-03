@@ -31,34 +31,35 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
 
     private final UserId userId;
 
-    public ClientData(MessageDispatcher messageDispatcher, IConfigurationStateConsumerFactory sendableReceiverFactory,
-            ObjectToMessageDecoder objectToMessageDecoder, IUsersHandlesFactory usersHandlesFactory,
-            UserId userId,
-            IDatabaseManager databaseManager) {
+    public ClientData(final MessageDispatcher messageDispatcher,
+            final IConfigurationStateConsumerFactory sendableReceiverFactory,
+            final ObjectToMessageDecoder objectToMessageDecoder, final IUsersHandlesFactory usersHandlesFactory,
+            final UserId userId,
+            final IDatabaseManager databaseManager) {
         this.messageDispatcher = messageDispatcher;
         this.objectToMessageDecoder = objectToMessageDecoder;
         this.databaseManager = databaseManager;
 
         this.playerConfig = databaseManager.getPlayerConfig(userId);
 
-        var userName = databaseManager.getPlayerUsername(userId);
+        final var userName = databaseManager.getPlayerUsername(userId);
 
-        var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this);
+        final var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this);
 
-        this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
-                usersHandles.matchmakingHandle());
-        this.sendableReceiver = defaultSendableReceiver;
         this.userId = userId;
+        this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
+                usersHandles.matchmakingHandle(), userId);
+        this.sendableReceiver = defaultSendableReceiver;
 
         this.playerConnector = (gameStates) -> {
             try {
-                for (IGameState gameState : gameStates) {
-                    var msg = objectToMessageDecoder.decodeFromRecord(gameState);
+                for (final IGameState gameState : gameStates) {
+                    final var msg = objectToMessageDecoder.decodeFromRecord(gameState);
                     messageDispatcher.dispatchMessage(msg);
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Logger.getGlobal().severe("An IOException caught");
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Logger.getGlobal().severe("An unpredictable error occured %s".formatted(e));
                 e.printStackTrace();
             }
@@ -70,17 +71,17 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
         return messageDispatcher;
     }
 
-    public void handleMessage(Message message) {
+    public void handleMessage(final Message message) {
         sendableReceiver.processSendable(message.getSendable());
     }
 
     @Override
-    public void gameStarted(ISendableConsumer lobby) {
+    public void gameStarted(final ISendableConsumer lobby) {
         try {
             messageDispatcher
                     .dispatchMessage(
                             objectToMessageDecoder.decodeFromRecord(new GameStartedNotification.Payload()));
-        } catch (IOException ioException) {
+        } catch (final IOException ioException) {
             Logger.getGlobal().severe("IOException should not have occured there!!!");
             return;
         }
@@ -89,12 +90,12 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     }
 
     @Override
-    public void moveToConfirmationState(ISendableConsumer confirmationReceiver) {
+    public void moveToConfirmationState(final ISendableConsumer confirmationReceiver) {
         try {
             messageDispatcher
                     .dispatchMessage(
                             objectToMessageDecoder.decodeFromRecord(new GameConfirmationRequestMessage.Payload()));
-        } catch (IOException ioException) {
+        } catch (final IOException ioException) {
             Logger.getGlobal().severe("IOException should not have occured there!!!");
             return;
         }

@@ -10,10 +10,10 @@ import game.actions.IAction;
 import game.gamestates.IGameState;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
-import game.utility.ISendable;
 import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper;
 import network.messages.Message;
+import utils.ISendable;
 import viewmodel.ITextureManager;
 import viewmodel.IViewManager;
 

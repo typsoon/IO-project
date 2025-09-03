@@ -1,6 +1,6 @@
 package gameclient.rooms;
 
-public enum RoomRequest {
+public enum RequestResult {
     SUCCESSFUL,
     FAILED,
     NOT_AUTHORIZED,

@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import network.messages.Message;
+import utils.ISendable;
 
 public class ConcreteObjectDecoder implements ObjectToMessageDecoder {
     private static final Map<Class<?>, Function<Object, ? extends Message>> recordDecoders = new HashMap<>();
@@ -15,7 +16,7 @@ public class ConcreteObjectDecoder implements ObjectToMessageDecoder {
     }
 
     @Override
-    public Message decodeFromRecord(Object record) {
+    public Message decodeFromRecord(ISendable record) {
         return Objects.requireNonNull(recordDecoders.get(record.getClass()),
                 "Unexpected object here %s".formatted(record)).apply(record);
         // return recordDecoders.get(record.getClass()).apply(record);

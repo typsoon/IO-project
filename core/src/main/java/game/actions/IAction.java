@@ -1,6 +1,6 @@
 package game.actions;
 
-import game.utility.ISendable;
+import utils.ISendable;
 
 public interface IAction extends ISendable {
 }

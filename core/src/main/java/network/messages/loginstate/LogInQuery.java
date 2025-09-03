@@ -5,9 +5,9 @@ import java.nio.charset.Charset;
 
 import network.messages.Message.EncryptedMessage;
 import network.messages.MessagesConfig;
-import game.utility.ISendable;
 import network.messages.utils.DataConsumer;
 import network.utils.Credentials;
+import utils.ISendable;
 
 public final class LogInQuery extends EncryptedMessage {
     // TODO: import charset from config
