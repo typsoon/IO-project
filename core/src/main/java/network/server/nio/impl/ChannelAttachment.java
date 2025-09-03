@@ -332,9 +332,11 @@ class UDPChannelAttachment<T extends SessionContract> extends ChannelAttachmentT
                 final var nextVal = iter.next();
 
                 // TODO: maybe send more messages in a single Datagram
-                for (final Message msg : nextVal.messageQueue) {
-                    sendingByteBuffer.clear();
+                final var msgQueue = nextVal.messageQueue;
+                while (!msgQueue.isEmpty()) {
+                    final var msg = msgQueue.poll();
 
+                    sendingByteBuffer.clear();
                     msg.encodeAndWrite(sendingBufferDataConsumer);
                     sendingByteBuffer.flip();
                     datagramChannel.send(sendingByteBuffer, nextVal.socketAdress);
