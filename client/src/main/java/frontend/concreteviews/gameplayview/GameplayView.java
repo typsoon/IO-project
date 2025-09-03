@@ -126,10 +126,6 @@ public class GameplayView extends ScreenAdapter {
 
     @Override
     public void render(final float delta) {
-        //this kinda fix weird issue on windows
-        if(this.stage==null){
-            return;
-        }
         ScreenUtils.clear(0, 0, 0, 0);
 
         stage.act(delta);
@@ -160,26 +156,25 @@ public class GameplayView extends ScreenAdapter {
         gameCamera.setToOrtho(false);
         viewport = new FitViewport(0, 0, gameCamera);
         gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition);
-
-        Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
-
+        
         stage = new Stage();
+        
         for (EventListener eventListener : gameplayViewEventListeners) {
             stage.addListener(eventListener);
         }
         final Table table = textureManager.getTable();
         stage.addActor(table);
-
+        
         var multiplexer = new InputMultiplexer(stage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
             multiplexer
-                    .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
+            .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
         }
         Gdx.input.setInputProcessor(multiplexer);
-
-        // viewport = new FitViewport(WIDTH, HEIGHT);
-
+        
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
+        
+        Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     @Override
