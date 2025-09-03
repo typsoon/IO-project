@@ -21,6 +21,11 @@ public class RoomManager implements IRoomManager {
 
     @Override
     public RequestResult createRoom(RoomMember user, RoomConfig roomConfig) {
+        if (rooms.values().stream()
+                .anyMatch(room -> Objects.equals(room.getRoomInfo().roomName(), roomConfig.name()))) {
+            return RequestResult.FAILED;
+        }
+
         if (user.roomsUserHandle().getRoom().isPresent())
             return RequestResult.FAILED;
         var newRoom = new Room(user, roomConfig, currentRoomID++);

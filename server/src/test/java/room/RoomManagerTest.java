@@ -1,13 +1,13 @@
 package room;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static gameclient.rooms.RequestResult.FAILED;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static gameclient.rooms.RequestResult.*;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import database.IDatabaseManager.UserId;
@@ -51,7 +51,6 @@ public class RoomManagerTest {
     }
 
     @Test
-    @Disabled
     void creatingRoomWithTheSameNameAsAnExistingOneShouldFail() {
         var roomConfig = new RoomConfig("R1", "", 2, false);
         roomManager.createRoom(user1, roomConfig);
