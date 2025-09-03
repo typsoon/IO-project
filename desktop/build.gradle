@@ -28,6 +28,16 @@ tasks.register("dummylauncher", JavaExec) {
     mainClass = 'dummylaunchers.DummyGameLauncher'
 }
 
+tasks.register("2playerslaunch", Exec) {
+    group = "Mocking the game"
+    description = "Launch two dummy network launchers with different args"
+
+    commandLine "sh", "-c", """
+        ./gradlew dummynetworklauncher --args="0 2" &
+        ./gradlew dummynetworklauncher --args="1 2" &
+    """
+}
+
 tasks.register("dummynetworklauncher", JavaExec) {
     group = 'Mocking the game'
     description = 'Running the game in the single player mode'

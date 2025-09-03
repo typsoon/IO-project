@@ -2,9 +2,10 @@ package dummylaunchers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.time.Duration;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,12 +45,15 @@ class DummyNetworkGameLauncher extends Game {
     private final ClientSideSocketWrapper socketWrapper = new ClientSideSocketWrapperFactory()
             .getClientSideSocketWrapper();
     private final ObjectToMessageDecoder objectDecoder = new ConcreteObjectDecoder();
-    private final RoomConfig roomConfig = new RoomConfig("asd", "", 1, false);
+    private final RoomConfig roomConfig;
 
     private final LogInQuery myLogInQuery;
+    private final int maxPlayersInRoom;
 
-    public DummyNetworkGameLauncher(int whichPlayer) {
+    public DummyNetworkGameLauncher(int whichPlayer, int maxPlayersInRoom) {
         myLogInQuery = logInQueries[whichPlayer];
+        roomConfig = new RoomConfig("asd", "", maxPlayersInRoom, false);
+        this.maxPlayersInRoom = maxPlayersInRoom;
     }
 
     private void mockingLoop() throws IOException, Exception {
@@ -117,6 +121,13 @@ class DummyNetworkGameLauncher extends Game {
             case CREATE -> {
                 switch (roomRequestResult.result()) {
                     case RequestResult.SUCCESSFUL -> {
+                        if (maxPlayersInRoom > 1) {
+                            try {
+                                Thread.sleep(Duration.ofSeconds(1));
+                            } catch (Exception e) {
+                            }
+                        }
+
                         socketWrapper.dispatchMessage(
                                 objectDecoder.decodeFromRecord(new StartGameRequest.Payload()));
                     }
@@ -143,15 +154,27 @@ class DummyNetworkGameLauncher extends Game {
 class DummyNetworkLauncher {
     public static void main(String[] args) throws DuplexSocketWrapper.ConnectionEndedException, IOException {
         int whichPlayer = args.length > 0 ? Integer.parseInt(args[0]) : 0;
+
+        int maxPlayersInRoom = args.length > 1 ? Integer.parseInt(args[1]) : 1;
         // Logger.getGlobal().info(Arrays.asList(args).toString());
         Logger.getGlobal().info(String.valueOf(whichPlayer));
 
         var applog = Logger.getGlobal();
         Handler systemOut = new ConsoleHandler();
+
+        var logPath = "logs/player_u%d.log".formatted(whichPlayer + 1);
+        var logFile = new java.io.File(logPath);
+        logFile.getParentFile().mkdirs(); // Create parent directories if needed
+        logFile.createNewFile(); // Create the file if it doesn't exist
+        var fileHandler = new FileHandler(logPath, false);
+
         // var level = Level.FINEST;
         var level = Level.INFO;
         systemOut.setLevel(level);
-        applog.addHandler(systemOut);
+        if (maxPlayersInRoom == 0) {
+            applog.addHandler(systemOut);
+        }
+        applog.addHandler(fileHandler);
         applog.setLevel(level);
 
         applog.setUseParentHandlers(false);
@@ -162,7 +185,7 @@ class DummyNetworkLauncher {
         // config.setWindowedMode(800, 720);
         // TODO: remove magic numbers and strings
         config.setWindowedMode(720, 720);
-        new Lwjgl3Application(new DummyNetworkGameLauncher(whichPlayer), config);
+        new Lwjgl3Application(new DummyNetworkGameLauncher(whichPlayer, maxPlayersInRoom), config);
     }
 
 }

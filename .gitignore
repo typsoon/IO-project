@@ -9,3 +9,5 @@ keystore.jks
 important_todos.md
 how_to_use_github_in_intellij
 bugslogs
+logs
+gradlew*
