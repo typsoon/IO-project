@@ -123,7 +123,7 @@ class DummyNetworkGameLauncher extends Game {
                     case RequestResult.SUCCESSFUL -> {
                         if (maxPlayersInRoom > 1) {
                             try {
-                                Thread.sleep(Duration.ofSeconds(1));
+                                Thread.sleep(Duration.ofSeconds(3));
                             } catch (Exception e) {
                             }
                         }

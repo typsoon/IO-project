@@ -157,13 +157,12 @@ public class GameplayView extends ScreenAdapter {
         viewport = new FitViewport(0, 0, gameCamera);
         gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition);
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
+        stage = new Stage();
 
         final var rangeOfView = getVisibilityRange();
         viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
         viewport.apply();
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        stage = new Stage();
 
         for (EventListener eventListener : gameplayViewEventListeners) {
             stage.addListener(eventListener);

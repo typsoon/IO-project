@@ -33,9 +33,11 @@ tasks.register("2playerslaunch", Exec) {
     description = "Launch two dummy network launchers with different args"
 
     commandLine "sh", "-c", """
-        ./gradlew dummynetworklauncher --args="0 2" &
-        ./gradlew dummynetworklauncher --args="1 2" &
+        ../gradlew dummynetworklauncher --args="0 2" &
+        ../gradlew dummynetworklauncher --args="1 2" &
     """
+    // gradle dummynetworklauncher --args="0 2" &
+    // gradle dummynetworklauncher --args="1 2" &
 }
 
 tasks.register("dummynetworklauncher", JavaExec) {
