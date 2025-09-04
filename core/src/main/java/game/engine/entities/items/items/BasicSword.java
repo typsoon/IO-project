@@ -17,7 +17,7 @@ public class BasicSword extends BasicItem
     );
 
     IAttack attack = new RectangleSlash();
-    private final int attackTime = 60; // in ticks
+    private final int attackTime = 3; // in ticks
     private int attackClock = 0;
 
 
