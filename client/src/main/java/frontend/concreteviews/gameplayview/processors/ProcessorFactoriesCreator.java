@@ -29,7 +29,7 @@ public class ProcessorFactoriesCreator {
 
         Function<DataNeededForCreation, InputProcessor> mouseClickProcessorCreator = data -> new MouseClickProcessor(
                 actionSender,
-                data.infoProvider);
+                data.infoProvider, data.gameCycles);
 
         return List.of(playerMovementProcessorFactory, mouseClickProcessorCreator);
     }

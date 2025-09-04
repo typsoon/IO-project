@@ -22,7 +22,7 @@ public record Vector2F(
         return new Vector2F(this.x * scalar, this.y * scalar);
     }
 
-    public float angle(){
+    public float angle() {
         return (float) Math.atan2(y, x);
     }
 
@@ -36,7 +36,7 @@ public record Vector2F(
 
     public Vector2F normalize() {
         final float len = length();
-        if (len == 0)
+        if (len == 0f)
             return new Vector2F(0, 0);
         return new Vector2F(x / len, y / len);
     }

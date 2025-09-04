@@ -66,8 +66,6 @@ public class GameplayView extends ScreenAdapter {
 
     private final Point2F getCameraPosition() {
         var playerDrawableInfo = gameState.getPlayerData().iterator().next().getDrawableInfo();
-        // Logger.getGlobal().info("%f %f".formatted(playerDrawableInfo.getX(),
-        // playerDrawableInfo.getY()));
         return new Point2F(playerDrawableInfo.getX(), playerDrawableInfo.getY());
     }
 
@@ -124,6 +122,8 @@ public class GameplayView extends ScreenAdapter {
         shapeRenderer.end();
     }
 
+    private static final float eps = 1e-9f;
+
     @Override
     public void render(final float delta) {
         ScreenUtils.clear(0, 0, 0, 0);
@@ -135,7 +135,7 @@ public class GameplayView extends ScreenAdapter {
         gameCamera.position.set(cameraPos.x(), cameraPos.y(), 0);
 
         var rangeOfView = getVisibilityRange();
-        viewport.setWorldSize(rangeOfView.x(), rangeOfView.y());
+        viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
         viewport.apply();
 
         // this is for debug puposes, to see the grid
@@ -156,25 +156,27 @@ public class GameplayView extends ScreenAdapter {
         gameCamera.setToOrtho(false);
         viewport = new FitViewport(0, 0, gameCamera);
         gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition);
-        
+        entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
+
+        final var rangeOfView = getVisibilityRange();
+        viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
+        viewport.apply();
+        Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
+
         stage = new Stage();
-        
+
         for (EventListener eventListener : gameplayViewEventListeners) {
             stage.addListener(eventListener);
         }
         final Table table = textureManager.getTable();
         stage.addActor(table);
-        
+
         var multiplexer = new InputMultiplexer(stage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
             multiplexer
-            .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
+                    .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
         }
         Gdx.input.setInputProcessor(multiplexer);
-        
-        entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
-        
-        Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     @Override

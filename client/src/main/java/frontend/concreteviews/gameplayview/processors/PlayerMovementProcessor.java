@@ -43,8 +43,7 @@ public class PlayerMovementProcessor extends InputAdapter {
 
         gameCycles.registerSubscriber(
                 deltaTime -> {
-                    // Logger.getGlobal().info("HEHRERH");
-                    actionSender.sendIAction(new PlayerMove(getDirection()));
+                    actionSender.sendAction(new PlayerMove(getDirection()));
                 });
     }
 
@@ -58,7 +57,7 @@ public class PlayerMovementProcessor extends InputAdapter {
         var dir = keyToDirections[keycode];
         if (dir != null) {
             pressedKeys.add(dir);
-            actionSender.sendIAction(new PlayerMove(getDirection()));
+            actionSender.sendAction(new PlayerMove(getDirection()));
         }
         return super.keyDown(keycode);
     }
@@ -68,7 +67,7 @@ public class PlayerMovementProcessor extends InputAdapter {
         var dir = keyToDirections[keycode];
         if (dir != null) {
             pressedKeys.remove(dir);
-            actionSender.sendIAction(new PlayerMove(getDirection()));
+            actionSender.sendAction(new PlayerMove(getDirection()));
         }
         return super.keyUp(keycode);
     }

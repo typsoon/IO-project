@@ -9,30 +9,45 @@ import game.actions.UsageType;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 import utility.IActionSender;
+import utils.ObserverWithATwist.Subscribable;
 
 public class MouseClickProcessor extends InputAdapter {
     private final IGameplayInfoProvider gameplayInfoProvider;
     private final IActionSender actionSender;
+    private int currentMouseX = 0;
+    private int currentMouseY = 0;
+
+    private final Subscribable gameCycles;
 
     private final Point2F getPlaceOfInterest() {
         return gameplayInfoProvider.getCenterOfInterest();
     }
 
-    private final Vector2F getDirectionVector(Point2F placeOfInterestPosition, Point2F clickedPointInScreenCords) {
-        var clickedPointInGameCords = gameplayInfoProvider.castScreenCordinatesToGameCordinates(
+    private final Vector2F getDirectionVector(final Point2F placeOfInterestPosition,
+            final Point2F clickedPointInScreenCords) {
+        final var clickedPointInGameCords = gameplayInfoProvider.castScreenCordinatesToGameCordinates(
                 clickedPointInScreenCords.x(),
                 clickedPointInScreenCords.y());
 
-        float dx = clickedPointInGameCords.x() - placeOfInterestPosition.x();
-        float dy = clickedPointInGameCords.y() - placeOfInterestPosition.y();
+        final float dx = clickedPointInGameCords.x() - placeOfInterestPosition.x();
+        final float dy = clickedPointInGameCords.y() - placeOfInterestPosition.y();
 
-        var vector = new Vector2F(dx, dy).normalize();
+        final var vector = new Vector2F(dx, dy).normalize();
         return vector;
     }
 
-    public MouseClickProcessor(IActionSender actionSender, IGameplayInfoProvider gameplayInfoProvider) {
+    public MouseClickProcessor(final IActionSender actionSender, final IGameplayInfoProvider gameplayInfoProvider,
+            final Subscribable gameCycles) {
         this.gameplayInfoProvider = gameplayInfoProvider;
         this.actionSender = actionSender;
+        this.gameCycles = gameCycles;
+
+        gameCycles.registerSubscriber(deltaTime -> {
+            final var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(currentMouseX, currentMouseY));
+            final var action = new PlayerSlotUse(UsageType.NONE, direction, 0);
+
+            actionSender.sendAction(action);
+        });
     }
 
     private static UsageType[] buttonToUsageTypeMapping = new UsageType[10];
@@ -44,6 +59,7 @@ public class MouseClickProcessor extends InputAdapter {
         buttonToUsageTypeMapping[Buttons.LEFT] = UsageType.PRIMARY;
         buttonToUsageTypeMapping[Buttons.RIGHT] = UsageType.SECONDARY;
         buttonToUsageTypeMapping[Buttons.MIDDLE] = UsageType.SPECIAL;
+
     }
 
     // @Override
@@ -63,15 +79,20 @@ public class MouseClickProcessor extends InputAdapter {
     // }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        var usageType = buttonToUsageTypeMapping[button];
-        var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(screenX, screenY));
+    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
+        final var usageType = buttonToUsageTypeMapping[button];
+        final var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(screenX, screenY));
+        final var action = new PlayerSlotUse(usageType, direction, 0);
 
-        // Logger.getGlobal().info("%s".formatted(direction));
+        actionSender.sendAction(action);
 
-        var action = new PlayerSlotUse(usageType, direction, 0);
-        actionSender.sendIAction(action);
+        return false;
+    }
 
+    @Override
+    public boolean mouseMoved(final int screenX, final int screenY) {
+        currentMouseX = screenX;
+        currentMouseY = screenY;
         return false;
     }
 }
