@@ -64,7 +64,6 @@ public class MouseClickProcessor extends InputAdapter {
         buttonToUsageTypeMapping[Buttons.LEFT] = UsageType.PRIMARY;
         buttonToUsageTypeMapping[Buttons.RIGHT] = UsageType.SECONDARY;
         buttonToUsageTypeMapping[Buttons.MIDDLE] = UsageType.SPECIAL;
-
     }
 
     private static final int noButton = 8;
@@ -79,13 +78,7 @@ public class MouseClickProcessor extends InputAdapter {
         pressedButton = button;
         observedPointX = screenX;
         observedPointY = screenY;
-        observedPointSet = true;
-        // final var direction = getDirectionVector(getPlaceOfInterest(), new
-        // Point2F(screenX, screenY));
-        // final var action = new PlayerSlotUse(usageType, direction, 0);
-        //
-        // actionSender.sendAction(action);
-
+        // observedPointSet = true;
         return false;
     }
 
@@ -97,6 +90,15 @@ public class MouseClickProcessor extends InputAdapter {
 
     @Override
     public boolean mouseMoved(final int screenX, final int screenY) {
+        if (!observedPointSet) {
+            observedPointX = screenX;
+            observedPointY = screenY;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (!observedPointSet) {
             observedPointX = screenX;
             observedPointY = screenY;
