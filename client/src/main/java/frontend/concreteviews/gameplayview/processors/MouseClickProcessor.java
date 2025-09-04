@@ -14,8 +14,9 @@ import utils.ObserverWithATwist.Subscribable;
 public class MouseClickProcessor extends InputAdapter {
     private final IGameplayInfoProvider gameplayInfoProvider;
     private final IActionSender actionSender;
-    private int currentMouseX = 0;
-    private int currentMouseY = 0;
+    private int observedPointX = 0;
+    private int observedPointY = 0;
+    private boolean observedPointSet = false;
 
     private final Subscribable gameCycles;
 
@@ -43,8 +44,12 @@ public class MouseClickProcessor extends InputAdapter {
         this.gameCycles = gameCycles;
 
         gameCycles.registerSubscriber(deltaTime -> {
-            final var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(currentMouseX, currentMouseY));
-            final var action = new PlayerSlotUse(UsageType.NONE, direction, 0);
+            final var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(observedPointX, observedPointY));
+            final var action = new PlayerSlotUse(getUsageType(), direction, 0);
+
+            if (pressedButton == noButton) {
+                observedPointSet = false;
+            }
 
             actionSender.sendAction(action);
         });
@@ -62,37 +67,40 @@ public class MouseClickProcessor extends InputAdapter {
 
     }
 
-    // @Override
-    // public boolean touchCancelled(int screenX, int screenY, int pointer, int
-    // button) {
-    // return false;
-    // }
-    //
-    // @Override
-    // public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    // return false;
-    // }
-    //
-    // @Override
-    // public boolean touchDragged(int screenX, int screenY, int pointer) {
-    // return false;
-    // }
+    private static final int noButton = 8;
+    private int pressedButton = noButton;
+
+    private UsageType getUsageType() {
+        return buttonToUsageTypeMapping[pressedButton];
+    }
 
     @Override
-    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
-        final var usageType = buttonToUsageTypeMapping[button];
-        final var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(screenX, screenY));
-        final var action = new PlayerSlotUse(usageType, direction, 0);
-
-        actionSender.sendAction(action);
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        pressedButton = button;
+        observedPointX = screenX;
+        observedPointY = screenY;
+        observedPointSet = true;
+        // final var direction = getDirectionVector(getPlaceOfInterest(), new
+        // Point2F(screenX, screenY));
+        // final var action = new PlayerSlotUse(usageType, direction, 0);
+        //
+        // actionSender.sendAction(action);
 
         return false;
     }
 
     @Override
+    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
+        pressedButton = noButton;
+        return false;
+    }
+
+    @Override
     public boolean mouseMoved(final int screenX, final int screenY) {
-        currentMouseX = screenX;
-        currentMouseY = screenY;
+        if (!observedPointSet) {
+            observedPointX = screenX;
+            observedPointY = screenY;
+        }
         return false;
     }
 }

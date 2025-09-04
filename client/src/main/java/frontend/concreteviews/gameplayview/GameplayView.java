@@ -162,6 +162,7 @@ public class GameplayView extends ScreenAdapter {
         final var rangeOfView = getVisibilityRange();
         viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
         viewport.apply();
+
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         for (EventListener eventListener : gameplayViewEventListeners) {
