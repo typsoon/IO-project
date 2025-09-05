@@ -10,7 +10,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class Inventory implements IInventory {
-    Map<Materials, Integer> items = new EnumMap<>(Materials.class);
+    Map<Resource, Integer> resources = new EnumMap<>(Resource.class);
     ArrayList<ISlot> slots;
     int activeSlotIndex = -1;
     public Inventory(int slotsNum) {
@@ -18,8 +18,8 @@ public class Inventory implements IInventory {
         for(int i = 0; i < slotsNum; i++){
             slots.add(new ObservableSlot(item -> checkActiveSlot(),new Slot()));
         }
-        for (Materials m : Materials.values()) {
-            items.put(m, 0);
+        for (Resource m : Resource.values()) {
+            resources.put(m, 0);
         }
     }
     private void checkActiveSlot(){
@@ -28,17 +28,17 @@ public class Inventory implements IInventory {
         }
     }
     @Override
-    public int getMaterialsCount(Materials material) {
-        return items.get(material);
+    public int getResourceCount(Resource material) {
+        return resources.get(material);
     }
     @Override
-    public void addMaterials(Materials material, int count) {
-        items.put(material, items.get(material) + count);
+    public void addResource(Resource material, int count) {
+        resources.put(material, resources.get(material) + count);
     }
     @Override
-    public boolean removeMaterials(Materials material, int count) {
-        if (items.get(material) - count >= 0) {
-            items.put(material, items.get(material) - count);
+    public boolean removeResource(Resource material, int count) {
+        if (resources.get(material) - count >= 0) {
+            resources.put(material, resources.get(material) - count);
             return true;
         }
         return false;
@@ -61,7 +61,7 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public void UseSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers) {
+    public void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers) {
         if(slots.get(index).isEmpty()){
             System.out.println("xd");
             return;
@@ -81,4 +81,12 @@ public class Inventory implements IInventory {
         }
     }
 
+    @Override
+    public InventoryInfo getInventoryInfo() {
+        return new InventoryInfo(
+                slots.size(),
+                slots.stream().map(ISlot::getSlotInfo).toList(),
+                resources.entrySet().stream().map(e -> new ResourceInfo(e.getValue(), e.getKey())).toList()
+        );
+    }
 }

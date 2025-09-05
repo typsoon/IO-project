@@ -1,6 +1,6 @@
 package game.engine.entities.inventory;
 
-public enum Materials {
+public enum Resource {
     WOOD,
     STONE
 }

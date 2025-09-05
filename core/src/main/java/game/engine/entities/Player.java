@@ -46,6 +46,7 @@ public class Player implements IAIEntity {
 
     @Override
     public void think(IWorldView view) {
+//        System.out.println(moveset.slotUse);
         move(moveset.move.direction());
         slotUse(view);
     }
@@ -57,7 +58,7 @@ public class Player implements IAIEntity {
     private void slotUse(IWorldView view) {
         geometryRepresentation.setRotation(moveset.slotUse.direction().angle());
         PlayerSlotUse ps = moveset.slotUse;
-        inventory.UseSlot(ps.slot(),ps.usageType(),view,this,modifiers);
+        inventory.useSlot(ps.slot(),ps.usageType(),view,this,modifiers);
     }
 
     @Override
@@ -82,6 +83,7 @@ public class Player implements IAIEntity {
                 entityGroupID,
                 EntityAction.IDLE,
                 sightRange);
+//                inventory.getInventoryInfo());
     }
 
     public Rectangle2F getSightRange() {

@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 //think about dividing into smaller interfaces
 public interface IInventory {
-    int getMaterialsCount(Materials material);
+    int getResourceCount(Resource material);
 
-    void addMaterials(Materials material, int count);
+    void addResource(Resource material, int count);
 
-    boolean removeMaterials(Materials material, int count);
+    boolean removeResource(Resource material, int count);
 
     ArrayList<ISlot> getSlots();
 
@@ -21,5 +21,7 @@ public interface IInventory {
 
     void swapSlots(int index1, int index2);
 
-    void UseSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers);
+    void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers);
+
+    InventoryInfo getInventoryInfo();
 }

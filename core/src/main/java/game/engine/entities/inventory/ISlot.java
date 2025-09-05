@@ -14,4 +14,11 @@ public interface ISlot {
     boolean addItems(int count, IItem item);
 
     boolean removeItems(int count);
+
+    default SlotInfo getSlotInfo(){
+        return new SlotInfo(
+                getItemCount(),
+                getItem().getItemInfo()
+        );
+    }
 }

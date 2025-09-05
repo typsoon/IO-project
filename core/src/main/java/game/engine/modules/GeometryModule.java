@@ -126,7 +126,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
                     return true;
                 },
                 x, y, x + width, y + height);
-        //debuging purposes
+//        debuging purposes
 //        BodyDef bodyDef = new BodyDef();
 //        bodyDef.type = BodyDef.BodyType.StaticBody;
 //        bodyDef.position.set(x + width / 2f, y + height / 2f); // center of AABB
