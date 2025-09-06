@@ -16,6 +16,12 @@ public interface ISlot {
     boolean removeItems(int count);
 
     default SlotInfo getSlotInfo(){
+        if(isEmpty()){
+            return new SlotInfo(
+                    0,
+                    null
+            );
+        }
         return new SlotInfo(
                 getItemCount(),
                 getItem().getItemInfo()

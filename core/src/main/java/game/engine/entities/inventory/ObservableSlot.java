@@ -31,9 +31,10 @@ public class ObservableSlot implements ISlot{
 
     @Override
     public boolean removeItems(int count) {
+        IItem lastItem = slot.getItem();
         boolean ret = slot.removeItems(count);
-        if(slot.isEmpty()){
-            onItemConsumed.accept(slot.getItem());
+        if(ret && slot.isEmpty()){
+            onItemConsumed.accept(lastItem);
         }
         return ret;
     }

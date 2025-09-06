@@ -39,6 +39,9 @@ public class Slot implements ISlot {
     }
     @Override
     public boolean removeItems(int count) {
+        if(this.isEmpty()){
+            return false;
+        }
         if (itemCount - count >= 0) {
             itemCount -= count;
             if(itemCount == 0){

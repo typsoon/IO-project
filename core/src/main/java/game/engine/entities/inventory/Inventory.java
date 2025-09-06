@@ -63,7 +63,6 @@ public class Inventory implements IInventory {
     @Override
     public void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers) {
         if(slots.get(index).isEmpty()){
-            System.out.println("xd");
             return;
         }
         if(activeSlotIndex != index){
