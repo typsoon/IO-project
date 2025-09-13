@@ -8,17 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import game.actions.*;
-import game.engine.entities.EntityGroupID;
-import game.gamestates.IGameState;
-import game.session.IActionReceiver;
-import game.session.ISubscribablePlayerConnector;
-import game.session.PlayerData;
 import game.engine.GameEngine;
 import game.engine.PlayerConfig;
+import game.engine.entities.EntityGroupID;
 import game.engine.entities.GeometryConfigID;
 import game.engine.modules.GeometryModule;
-import game.session.GameSessionFactory;
-import game.session.GameSessionManager;
+import game.gamestates.IGameState;
+import game.session.*;
 import game.utility.Vector2F;
 
 import java.io.IOException;
@@ -77,7 +73,7 @@ public class DebugScreen implements Screen {
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             player2Connector.sendAction(new PlayerSlotUse(UsageType.PRIMARY,
-                    new Vector2F(worldCoords.x,worldCoords.y).normalize(), 0));
+                    new Vector2F(worldCoords.x, worldCoords.y).normalize(), 0));
         }
 
         Direction dir2 = getDirection(

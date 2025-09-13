@@ -5,7 +5,7 @@ import game.engine.entities.items.IItem;
 public interface ISlot {
     IItem getItem();
 
-    default boolean isEmpty(){
+    default boolean isEmpty() {
         return getItemCount() == 0;
     }
 
@@ -15,8 +15,8 @@ public interface ISlot {
 
     boolean removeItems(int count);
 
-    default SlotInfo getSlotInfo(){
-        if(isEmpty()){
+    default SlotInfo getSlotInfo() {
+        if (isEmpty()) {
             return new SlotInfo(
                     0,
                     null

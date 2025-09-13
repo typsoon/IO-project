@@ -42,7 +42,7 @@ class RectangleSlashTest {
         IDamageable inRange = mock(IDamageable.class, withSettings().extraInterfaces(IEntity.class));
         IEntity inRangeAsEntity = (IEntity) inRange;
 
-        when(mockWorldView.getEntitiesInArea((Rectangle2F)any(), any())).thenReturn(List.of(inRangeAsEntity));
+        when(mockWorldView.getEntitiesInArea((Rectangle2F) any(), any())).thenReturn(List.of(inRangeAsEntity));
 
         rectangleSlash.attack(mockWorldView, mockUser, mockModifier);
 
@@ -52,7 +52,7 @@ class RectangleSlashTest {
     @Test
     void testNonDamageableEntityIsIgnored() {
         IEntity nonDamageable = mock(IEntity.class);
-        when(mockWorldView.getEntitiesInArea((Rectangle2F)any(), any())).thenReturn(List.of(nonDamageable));
+        when(mockWorldView.getEntitiesInArea((Rectangle2F) any(), any())).thenReturn(List.of(nonDamageable));
 
         rectangleSlash.attack(mockWorldView, mockUser, mockModifier);
 
@@ -65,7 +65,7 @@ class RectangleSlashTest {
         IDamageable enemy2 = mock(IDamageable.class, withSettings().extraInterfaces(IEntity.class));
         IEntity other = mock(IEntity.class);
 
-        when(mockWorldView.getEntitiesInArea((Rectangle2F)any(), any()))
+        when(mockWorldView.getEntitiesInArea((Rectangle2F) any(), any()))
                 .thenReturn(List.of((IEntity) enemy1, (IEntity) enemy2, other));
 
         rectangleSlash.attack(mockWorldView, mockUser, mockModifier);
@@ -83,7 +83,7 @@ class RectangleSlashTest {
         Damage modifiedDamage = new Damage(DamageType.SLASH, 999);
 
         when(mockModifier.modify(any(Damage.class))).thenReturn(modifiedDamage);
-        when(mockWorldView.getEntitiesInArea((Rectangle2F)any(), any())).thenReturn(List.of(enemyAsEntity));
+        when(mockWorldView.getEntitiesInArea((Rectangle2F) any(), any())).thenReturn(List.of(enemyAsEntity));
 
         rectangleSlash.attack(mockWorldView, mockUser, mockModifier);
 

@@ -1,10 +1,11 @@
 package game.engine.entities.inventory;
 
-import java.util.Collection;
+import utils.FixedSizeArrayWrapper;
 
 public record InventoryInfo(
         int slotNum,
-        Collection<SlotInfo> slots,
-        Collection<ResourceInfo> resources
+        FixedSizeArrayWrapper<SlotInfo> slots,
+        FixedSizeArrayWrapper<ResourceInfo> resources
 ) {
 }
+

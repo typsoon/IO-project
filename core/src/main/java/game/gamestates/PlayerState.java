@@ -1,9 +1,8 @@
 package game.gamestates;
 
 import game.engine.entities.EntityAction;
-import game.engine.entities.GeometryConfigID;
 import game.engine.entities.EntityGroupID;
-import game.engine.entities.inventory.InventoryInfo;
+import game.engine.entities.GeometryConfigID;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
@@ -18,7 +17,7 @@ public record PlayerState(
         Vector2F sightRange
 
         //waiting for messages
-        //InventoryInfo inventory
+//        InventoryInfo inventory
 // this will hold more information than entity state
 ) implements IGameState {
 }

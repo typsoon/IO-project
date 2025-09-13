@@ -1,12 +1,12 @@
 package game.session;
 
-import java.util.Collection;
-
 import game.engine.PlayerConfig;
 import game.gamestates.IGameState;
 
+import java.util.Collection;
+
 public record PlayerData(ISubscribablePlayerConnector connector,
-        PlayerConfig config) {
+                         PlayerConfig config) {
 
     private record SubscribablePlayerConnectorImpl(IPlayerConnector playerConnector)
             implements ISubscribablePlayerConnector {

@@ -1,10 +1,10 @@
 package game.engine.entities;
 
+import org.yaml.snakeyaml.Yaml;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import org.yaml.snakeyaml.Yaml;
 
 public class EntityGeometryConfigFactory {
 
@@ -16,6 +16,7 @@ public class EntityGeometryConfigFactory {
             1f, 1f, BodyType.DYNAMIC, true, 0.5f, 0.5f, 1f, 0f, 0f);
 
     private static final EnumMap<GeometryConfigID, EntityGeometryConfig> geometryConfigMap;
+
     static {
         geometryConfigMap = new EnumMap<>(GeometryConfigID.class);
         for (GeometryConfigID id : GeometryConfigID.values()) {

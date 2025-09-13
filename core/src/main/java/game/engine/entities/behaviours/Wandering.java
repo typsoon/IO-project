@@ -7,7 +7,7 @@ import game.utility.Vector2F;
 
 import static game.utility.Point2F.distance;
 
-public class Wandering implements IBehaviour{
+public class Wandering implements IBehaviour {
 
     private final Point2F startPosition;
     private final float speed;
@@ -23,13 +23,13 @@ public class Wandering implements IBehaviour{
 
     @Override
     public void behave(IMovingGeometryRepresentation geometryRepresentation, IWorldView worldView) {
-        if(counter > 0){
+        if (counter > 0) {
             counter--;
             geometryRepresentation.move(velocity);
             return;
         }
         counter = 30;
-        if(distance(geometryRepresentation.getPosition(),startPosition) > range){
+        if (distance(geometryRepresentation.getPosition(), startPosition) > range) {
             Point2F direction = startPosition.subtract(geometryRepresentation.getPosition());
             float distanceToStart = distance(geometryRepresentation.getPosition(), startPosition);
             if (distanceToStart > 0) {

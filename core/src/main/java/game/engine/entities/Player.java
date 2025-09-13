@@ -36,11 +36,11 @@ public class Player implements IAIEntity {
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
         this.inventory = new Inventory(1);
-        inventory.getSlot(0).addItems(1,new BasicSword());
+        inventory.getSlot(0).addItems(1, new BasicSword());
         this.modifiers = () -> Damage -> Damage;
     }
 
-    public MoveSet getMoveSet(){
+    public MoveSet getMoveSet() {
         return moveset;
     }
 
@@ -58,7 +58,7 @@ public class Player implements IAIEntity {
     private void slotUse(IWorldView view) {
         geometryRepresentation.setRotation(moveset.slotUse.direction().angle());
         PlayerSlotUse ps = moveset.slotUse;
-        inventory.useSlot(ps.slot(),ps.usageType(),view,this,modifiers);
+        inventory.useSlot(ps.slot(), ps.usageType(), view, this, modifiers);
     }
 
     @Override

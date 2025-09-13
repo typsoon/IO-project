@@ -10,4 +10,5 @@ public record EntityGeometryConfig(
         float density,
         float linearDamping,
         float angularDamping
-) {}
+) {
+}

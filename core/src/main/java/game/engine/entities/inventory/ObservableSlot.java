@@ -4,7 +4,7 @@ import game.engine.entities.items.IItem;
 
 import java.util.function.Consumer;
 
-public class ObservableSlot implements ISlot{
+public class ObservableSlot implements ISlot {
 
     Consumer<IItem> onItemConsumed;
     ISlot slot;
@@ -25,15 +25,15 @@ public class ObservableSlot implements ISlot{
     }
 
     @Override
-    public boolean addItems(int count,IItem item) {
-        return slot.addItems(count,item);
+    public boolean addItems(int count, IItem item) {
+        return slot.addItems(count, item);
     }
 
     @Override
     public boolean removeItems(int count) {
         IItem lastItem = slot.getItem();
         boolean ret = slot.removeItems(count);
-        if(ret && slot.isEmpty()){
+        if (ret && slot.isEmpty()) {
             onItemConsumed.accept(lastItem);
         }
         return ret;

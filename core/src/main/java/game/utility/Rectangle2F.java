@@ -3,12 +3,12 @@ package game.utility;
 public record Rectangle2F(
         Point2F begin,
         Point2F end
-){
+) {
     public Rectangle2F(float x1, float y1, float x2, float y2) {
         this(new Point2F(x1, y1), new Point2F(x2, y2));
     }
 
-    public Rectangle2F rotateBB(float angle, Point2F center){
+    public Rectangle2F rotateBB(float angle, Point2F center) {
         Point2F b = this.begin;
         Point2F e = this.end;
 
@@ -24,7 +24,8 @@ public record Rectangle2F(
 
         return new Rectangle2F(new Point2F(minX, minY), new Point2F(maxX, maxY));
     }
-    public Rectangle2F rotateBB(float angle){
-        return rotateBB(angle, new Point2F((begin.x()+end.x())/2,(begin.y()+end.y())/2));
+
+    public Rectangle2F rotateBB(float angle) {
+        return rotateBB(angle, new Point2F((begin.x() + end.x()) / 2, (begin.y() + end.y()) / 2));
     }
 }

@@ -11,11 +11,13 @@ import game.utility.Vector2F;
 public class MoveSet {
     public PlayerMove move;
     public PlayerSlotUse slotUse;
-    public MoveSet(){
+
+    public MoveSet() {
         move = new PlayerMove(Direction.NONE);
-        slotUse = new PlayerSlotUse(UsageType.NONE,new Vector2F(0,0),0);
+        slotUse = new PlayerSlotUse(UsageType.NONE, new Vector2F(0, 0), 0);
     }
-    public MoveSet(PlayerMove move, PlayerSlotUse slotUse){
+
+    public MoveSet(PlayerMove move, PlayerSlotUse slotUse) {
         this.move = move;
         this.slotUse = slotUse;
     }

@@ -8,16 +8,21 @@ import java.util.stream.IntStream;
 
 public interface IUpgradeTree {
     boolean unlock(int nodeId, IInventory inventory);
+
     boolean isUnlocked(int nodeId);
+
     UpgradeNodeInfo getNodeInfo(int nodeId);
+
     int getTreeSize();
+
     default Collection<UpgradeNodeInfo> getUpgrades() {
         return IntStream.range(0, getTreeSize())
                 .mapToObj(this::getNodeInfo)
                 .collect(Collectors.toList());
     }
-    default Collection<Integer> getUnlockedNodes(){
-        return  IntStream.range(0, getTreeSize())
+
+    default Collection<Integer> getUnlockedNodes() {
+        return IntStream.range(0, getTreeSize())
                 .filter(this::isUnlocked)
                 .boxed()
                 .collect(Collectors.toList());

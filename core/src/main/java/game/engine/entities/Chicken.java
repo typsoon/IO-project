@@ -9,7 +9,7 @@ import game.gamestates.EntityState;
 
 import java.util.function.Consumer;
 
-public class Chicken implements IAIEntity, IDamageable{
+public class Chicken implements IAIEntity, IDamageable {
     private final IManagingGeometryRepresentation geometryRepresentation;
     private final int entityId;
     private final GeometryConfigID geometryConfigID;
@@ -21,12 +21,13 @@ public class Chicken implements IAIEntity, IDamageable{
     private int health = 50;
 
     public Chicken(IManagingGeometryRepresentation geometryRepresentation, int entityId, GeometryConfigID geometryConfigID,
-                   EntityGroupID entityGroupID,IBehaviour behaviour) {
-        this(geometryRepresentation,entityId,geometryConfigID,entityGroupID,behaviour, entity -> {});
+                   EntityGroupID entityGroupID, IBehaviour behaviour) {
+        this(geometryRepresentation, entityId, geometryConfigID, entityGroupID, behaviour, entity -> {
+        });
     }
 
     public Chicken(IManagingGeometryRepresentation geometryRepresentation, int entityId, GeometryConfigID geometryConfigID,
-                   EntityGroupID entityGroupID,IBehaviour behaviour, Consumer<IEntity> onDeath) {
+                   EntityGroupID entityGroupID, IBehaviour behaviour, Consumer<IEntity> onDeath) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = geometryConfigID;
@@ -60,8 +61,8 @@ public class Chicken implements IAIEntity, IDamageable{
 
     @Override
     public void takeDamage(Damage damage, IEntity source) {
-        health-=damage.value();
-        if(health<=0){
+        health -= damage.value();
+        if (health <= 0) {
             geometryRepresentation.dispose();
             onDeath.accept(this);
         }

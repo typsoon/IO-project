@@ -8,6 +8,8 @@ import game.engine.entities.items.UsageModifiers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -137,9 +139,9 @@ class InventoryTest {
         InventoryInfo info = inventory.getInventoryInfo();
 
         assertEquals(3, info.slotNum());
-        assertEquals(3, info.slots().size());
-        assertEquals(Resource.values().length, info.resources().size());
+        assertEquals(3, info.slots().getData().length);
+        assertEquals(Resource.values().length, info.resources().getData().length);
 
-        assertTrue(info.resources().stream().anyMatch(r -> r.resource() == Resource.WOOD && r.amount() == 7));
+        assertTrue(Arrays.stream(info.resources().getData()).anyMatch(r -> r.resource() == Resource.WOOD && r.amount() == 7));
     }
 }

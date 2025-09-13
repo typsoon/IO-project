@@ -12,10 +12,13 @@ public enum Direction {
     W(new Vector2F(-1, 0)),
     NW(new Vector2F(-1, 1).normalize()),
     NONE(new Vector2F(0, 0));
+
     public Direction opposite() {
         return values()[(this.ordinal() + 4) % 8];
     }
+
     private final Vector2F vector;
+
     public Vector2F vector() {
         return vector;
     }

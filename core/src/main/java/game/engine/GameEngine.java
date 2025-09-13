@@ -1,21 +1,16 @@
 package game.engine;
 
+import game.actions.PlayerMove;
+import game.actions.PlayerSlotUse;
+import game.engine.entities.*;
+import game.engine.modules.IGeometryModule;
+import game.engine.modules.IGeometryRepresentation;
+import game.session.IPlayerGamesStateSender;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import game.actions.PlayerMove;
-import game.actions.PlayerSlotUse;
-import game.engine.entities.EntityFactory;
-import game.engine.entities.IAIEntity;
-import game.engine.entities.IEntity;
-import game.engine.entities.MoveSet;
-import game.engine.entities.Player;
-import game.engine.modules.IGeometryModule;
-import game.engine.modules.IGeometryRepresentation;
-import game.session.IPlayerGamesStateSender;
 
 public class GameEngine implements IGameEngine, IWorldView {
 
@@ -66,7 +61,7 @@ public class GameEngine implements IGameEngine, IWorldView {
     }
 
     protected GameEngine(Collection<EnginePlayerData> players, IGeometryModule geometryModule,
-            EntityFactory entityFactory, Collection<Closeable> resourcesToClose) {
+                         EntityFactory entityFactory, Collection<Closeable> resourcesToClose) {
 
         this.geometryModule = geometryModule;
         this.entityFactory = entityFactory;

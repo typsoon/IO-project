@@ -2,7 +2,8 @@ package game.utility;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Rectangle2FTest {
 
@@ -29,6 +30,7 @@ class Rectangle2FTest {
         assertTrue(rotated.begin().x() <= rotated.end().x());
         assertTrue(rotated.begin().y() <= rotated.end().y());
     }
+
     @Test
     void testRotateBBAxisAligned() {
         Rectangle2F rect = new Rectangle2F(0f, 0f, 2f, 1f); // prostokąt 2x1
@@ -40,10 +42,10 @@ class Rectangle2FTest {
         assertTrue(rotated.begin().y() <= rotated.end().y());
 
         Point2F[] corners = {
-                new Point2F(rect.begin().x(), rect.begin().y()).rotation((float) Math.PI/2, center),
-                new Point2F(rect.end().x(), rect.begin().y()).rotation((float) Math.PI/2, center),
-                new Point2F(rect.end().x(), rect.end().y()).rotation((float) Math.PI/2, center),
-                new Point2F(rect.begin().x(), rect.end().y()).rotation((float) Math.PI/2, center)
+                new Point2F(rect.begin().x(), rect.begin().y()).rotation((float) Math.PI / 2, center),
+                new Point2F(rect.end().x(), rect.begin().y()).rotation((float) Math.PI / 2, center),
+                new Point2F(rect.end().x(), rect.end().y()).rotation((float) Math.PI / 2, center),
+                new Point2F(rect.begin().x(), rect.end().y()).rotation((float) Math.PI / 2, center)
         };
 
         for (Point2F p : corners) {

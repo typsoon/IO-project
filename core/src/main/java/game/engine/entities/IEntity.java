@@ -5,5 +5,6 @@ import game.gamestates.EntityState;
 
 public interface IEntity {
     EntityState getEntityState();
+
     IGeometryRepresentation geometryRepresentation();
 }

@@ -1,23 +1,16 @@
 package game.session;
 
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-
 import game.actions.IAction;
 import game.engine.Event;
 import game.engine.IGameEngine;
 import game.gamestates.IGameState;
+
+import java.io.Closeable;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameSessionManager implements IActionReceiver, Closeable {
     private IGameEngine gameEngine;
@@ -25,7 +18,7 @@ public class GameSessionManager implements IActionReceiver, Closeable {
     private final HashMap<ISubscribablePlayerConnector, Queue<IGameState>> playerGameStateQueues = new HashMap<>();
 
     private final Queue<Event> eventQueue = new ConcurrentLinkedQueue<>(); // TOdo rethink this, maybe use a more
-                                                                           // sophisticated approach
+    // sophisticated approach
 
     private static final int CYCLE_TIME = 15625; // microseconds 64 ticks in second
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();

@@ -2,6 +2,7 @@ package game.engine.modules;
 
 import game.utility.Point2F;
 import game.utility.Rectangle2F;
+
 import java.util.Collection;
 
 public interface IGeometryModule {

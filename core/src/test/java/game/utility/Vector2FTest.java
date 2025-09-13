@@ -1,9 +1,9 @@
 package game.utility;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import org.junit.jupiter.api.Test;
 
 class Vector2FTest {
 
@@ -25,6 +25,7 @@ class Vector2FTest {
         assertEquals(0f, normalized.x());
         assertEquals(0f, normalized.y());
     }
+
     @Test
     void testAdd() {
         Vector2F v1 = new Vector2F(1f, 2f);

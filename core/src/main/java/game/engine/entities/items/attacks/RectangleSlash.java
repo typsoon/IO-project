@@ -11,13 +11,13 @@ public class RectangleSlash implements IAttack {
 
     private final float attackRangeHeight = 2f;
     private final float attackRangeWidth = 2f;
-    private final Damage damage = new Damage(DamageType.SLASH,100);
+    private final Damage damage = new Damage(DamageType.SLASH, 100);
 
     @Override
     public void attack(IWorldView view, IEntity user, DamageModifier modifier) {
         float x1 = user.geometryRepresentation().getPosition().x();
-        float y1 = user.geometryRepresentation().getPosition().y()-attackRangeHeight/2;
-        Rectangle2F attackArea = new Rectangle2F(x1,y1,
+        float y1 = user.geometryRepresentation().getPosition().y() - attackRangeHeight / 2;
+        Rectangle2F attackArea = new Rectangle2F(x1, y1,
                 x1 + attackRangeWidth,
                 y1 + attackRangeHeight
         );
@@ -26,9 +26,9 @@ public class RectangleSlash implements IAttack {
         //need predicate that really checks if entity is in area
         Collection<IEntity> entities = view.getEntitiesInArea(attackArea, entity -> true);
 
-        for(IEntity entity : entities){
-            if(entity instanceof IDamageable damageable){
-                damageable.takeDamage(modifier.modify(damage),user);
+        for (IEntity entity : entities) {
+            if (entity instanceof IDamageable damageable) {
+                damageable.takeDamage(modifier.modify(damage), user);
             }
         }
     }

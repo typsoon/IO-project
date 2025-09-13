@@ -1,13 +1,11 @@
 package utils;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FixedSizeArrayWrapperTest {
     private FixedSizeArrayWrapper<Integer> arrayWrapper;
@@ -27,7 +25,7 @@ public class FixedSizeArrayWrapperTest {
         var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize + 1);
 
         assertThrows(AssertionError.class, () -> {
-            arrayWrapper = new FixedSizeArrayWrapper<>(list);
+            arrayWrapper = new FixedSizeArrayWrapper<>(list, Integer.class);
         });
     }
 
@@ -36,7 +34,7 @@ public class FixedSizeArrayWrapperTest {
         var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize);
 
         assertDoesNotThrow(() -> {
-            arrayWrapper = new FixedSizeArrayWrapper<>(list);
+            arrayWrapper = new FixedSizeArrayWrapper<>(list, Integer.class);
         });
     }
 
@@ -44,7 +42,7 @@ public class FixedSizeArrayWrapperTest {
     void testWhetherTheContentsAreActuallyPresentInTheWrappedArray() {
         var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize);
 
-        arrayWrapper = new FixedSizeArrayWrapper<>(list);
+        arrayWrapper = new FixedSizeArrayWrapper<>(list, Integer.class);
 
         assertArrayEquals(list.toArray(), arrayWrapper.getData());
     }

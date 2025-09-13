@@ -1,5 +1,11 @@
 package game.engine.modules;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
+import game.engine.entities.EntityGeometryConfig;
+import game.utility.Point2F;
+import game.utility.Vector2F;
+
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,16 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import game.engine.entities.EntityGeometryConfig;
-import game.utility.Point2F;
-import game.utility.Vector2F;
-
 public class GeometryModule implements IGeometryModule, IGeometryFactory, Closeable {
 
     private static final Logger LOGGER = Logger.getLogger(GeometryModule.class.getName());
-    private final World world = new World(new Vector2(0,0), true);
+    private final World world = new World(new Vector2(0, 0), true);
     private final float timeStep;
     private final int velocityIterations;
     private final int positionIterations;
@@ -24,16 +24,18 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
     //if map performance is an issue we can use setUserData (using Object)
     private final Map<Body, IManagingGeometryRepresentation> geometryRepresentationMap = new HashMap<>();
 
-    public GeometryModule(float timeStep, int velocityIterations, int positionIterations ) {
+    public GeometryModule(float timeStep, int velocityIterations, int positionIterations) {
         this.timeStep = timeStep;
         this.velocityIterations = velocityIterations;
         this.positionIterations = positionIterations;
     }
+
     public GeometryModule(float timeStep) {
         this(timeStep, 6, 2);
     }
+
     public GeometryModule() {
-        this(1/64f);
+        this(1 / 64f);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
         bodyDef.fixedRotation = !config.isRotatable();
         Body body = world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(config.width()/2, config.height()/2);
+        shape.setAsBox(config.width() / 2, config.height() / 2);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = config.density();
@@ -60,48 +62,78 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
         shape.dispose();
         IManagingGeometryRepresentation geometryRepresentation = new IManagingGeometryRepresentation() {
             private boolean disposed = false;
+
             private void checkDisposed(String methodName) {
                 if (disposed) {
                     LOGGER.warning("Warning: called " + methodName + " on disposed geometry.");
                 }
             }
+
             @Override
             public Point2F getPosition() {
-                if (disposed) { checkDisposed("getPosition"); return new Point2F(0, 0); }
+                if (disposed) {
+                    checkDisposed("getPosition");
+                    return new Point2F(0, 0);
+                }
                 return new Point2F(body.getPosition().x, body.getPosition().y);
             }
+
             @Override
             public Vector2F getVelocity() {
-                if (disposed) { checkDisposed("getVelocity"); return new Vector2F(0, 0); }
+                if (disposed) {
+                    checkDisposed("getVelocity");
+                    return new Vector2F(0, 0);
+                }
                 Vector2 velocity = body.getLinearVelocity();
                 return new Vector2F(velocity.x, velocity.y);
             }
+
             @Override
             public float getRotation() {
-                if (disposed) { checkDisposed("getRotation"); return 0; }
+                if (disposed) {
+                    checkDisposed("getRotation");
+                    return 0;
+                }
                 return body.getAngle();
             }
+
             @Override
             public void move(float dx, float dy) {
-                if (disposed) { checkDisposed("move"); return; }
+                if (disposed) {
+                    checkDisposed("move");
+                    return;
+                }
 //                body.applyLinearImpulse(dx,dy, body.getWorldCenter().x, body.getWorldCenter().y, true);
                 body.setLinearVelocity(dx, dy);
             }
+
             @Override
             public void setPosition(float x, float y) {
-                if (disposed) { checkDisposed("setPosition"); return; }
+                if (disposed) {
+                    checkDisposed("setPosition");
+                    return;
+                }
                 body.setTransform(x, y, body.getAngle());
             }
+
             @Override
             public void setVelocity(float vx, float vy) {
-                if (disposed) { checkDisposed("setVelocity"); return; }
+                if (disposed) {
+                    checkDisposed("setVelocity");
+                    return;
+                }
                 body.setLinearVelocity(vx, vy);
             }
+
             @Override
             public void setRotation(float angle) {
-                if (disposed) { checkDisposed("setRotation"); return; }
+                if (disposed) {
+                    checkDisposed("setRotation");
+                    return;
+                }
                 body.setTransform(body.getPosition(), angle);
             }
+
             @Override
             public void dispose() {
                 if (!disposed) {
@@ -121,7 +153,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
         Collection<IMovingGeometryRepresentation> entitiesInArea = new ArrayList<>();
         world.QueryAABB(
                 fixture -> {
-                    if(geometryRepresentationMap.get(fixture.getBody())!=null)
+                    if (geometryRepresentationMap.get(fixture.getBody()) != null)
                         entitiesInArea.add(geometryRepresentationMap.get(fixture.getBody()));
                     return true;
                 },

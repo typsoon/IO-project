@@ -8,8 +8,7 @@ import game.engine.entities.items.UsageModifiers;
 import game.engine.entities.items.attacks.IAttack;
 import game.engine.entities.items.attacks.RectangleSlash;
 
-public class BasicSword extends BasicItem
-{
+public class BasicSword extends BasicItem {
     ItemInfo itemInfo = new ItemInfo(
             "Basic Sword",
             "A simple sword. Reliable and sturdy.",
@@ -33,14 +32,14 @@ public class BasicSword extends BasicItem
 
     @Override
     public void itemUnequip(IWorldView view, IEntity user, UsageModifiers modifiers) {
-        attackClock=0;
+        attackClock = 0;
     }
 
     @Override
     public void primaryAction(IWorldView view, IEntity user, UsageModifiers modifiers) {
         attackClock++;
-        if(attackClock >= attackTime){
-            attack.attack(view,user, modifiers.getDamageModifier());
+        if (attackClock >= attackTime) {
+            attack.attack(view, user, modifiers.getDamageModifier());
             attackClock = 0;
         }
     }
