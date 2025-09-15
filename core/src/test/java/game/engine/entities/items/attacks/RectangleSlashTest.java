@@ -1,7 +1,6 @@
 package game.engine.entities.items.attacks;
 
 import game.engine.IWorldView;
-import game.engine.entities.IDamageable;
 import game.engine.entities.IEntity;
 import game.engine.modules.IMovingGeometryRepresentation;
 import game.utility.Rectangle2F;

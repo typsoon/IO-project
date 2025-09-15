@@ -1,0 +1,9 @@
+width: 0.2
+height: 0.2
+bodyType: DYNAMIC
+isRotatable: false
+friction: 0.0
+restitution: 0.0
+density: 1.0
+linearDamping: 0.0
+angularDamping: 0.0

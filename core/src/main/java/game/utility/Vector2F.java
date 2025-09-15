@@ -40,4 +40,13 @@ public record Vector2F(
             return new Vector2F(0, 0);
         return new Vector2F(x / len, y / len);
     }
+
+    public Vector2F rotate(float angleRadians) {
+        float cos = (float) Math.cos(angleRadians);
+        float sin = (float) Math.sin(angleRadians);
+        return new Vector2F(
+                x * cos - y * sin,
+                x * sin + y * cos
+        );
+    }
 }

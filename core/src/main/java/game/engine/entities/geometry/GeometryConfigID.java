@@ -1,6 +1,7 @@
-package game.engine.entities;
+package game.engine.entities.geometry;
 
 public enum GeometryConfigID {
     CHICKEN,
     HUMAN,
+    ARROW
 }

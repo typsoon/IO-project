@@ -2,7 +2,11 @@ package game.engine;
 
 import game.actions.PlayerMove;
 import game.actions.PlayerSlotUse;
-import game.engine.entities.*;
+import game.engine.entities.EntityFactory;
+import game.engine.entities.IAIEntity;
+import game.engine.entities.IEntity;
+import game.engine.entities.MoveSet;
+import game.engine.entities.concreteentities.Player;
 import game.engine.modules.IGeometryModule;
 import game.engine.modules.IGeometryRepresentation;
 import game.session.IPlayerGamesStateSender;

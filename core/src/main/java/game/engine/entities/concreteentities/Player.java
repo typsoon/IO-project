@@ -1,13 +1,17 @@
-package game.engine.entities;
+package game.engine.entities.concreteentities;
 
 import game.actions.Direction;
 import game.actions.PlayerSlotUse;
 import game.engine.IWorldView;
 import game.engine.PlayerConfig;
+import game.engine.entities.*;
+import game.engine.entities.geometry.GeometryConfigID;
+import game.engine.entities.inventory.IHaveInventory;
 import game.engine.entities.inventory.IInventory;
 import game.engine.entities.inventory.Inventory;
 import game.engine.entities.items.UsageModifiers;
-import game.engine.entities.items.items.BasicSword;
+import game.engine.entities.items.attacks.Damage;
+import game.engine.entities.items.attacks.IDamageable;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
@@ -15,7 +19,9 @@ import game.gamestates.PlayerState;
 import game.utility.Rectangle2F;
 import game.utility.Vector2F;
 
-public class Player implements IAIEntity {
+import java.util.function.Consumer;
+
+public class Player implements IAIEntity, IHaveInventory, IDamageable {
     private final int entityId;
     private final GeometryConfigID geometryConfigID;
     private final EntityGroupID entityGroupID;
@@ -24,20 +30,22 @@ public class Player implements IAIEntity {
 
     private final IInventory inventory;
     private final UsageModifiers modifiers;
-
+    private final Consumer<IEntity> onDeath;
 
     // should be from file or config
+    private int health = 100;
     private final float speed = 8f;
     private final Vector2F sightRange = new Vector2F(10, 10);
 
-    public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId) {
+    public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<IEntity> onDeath) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
-        this.inventory = new Inventory(1);
-        inventory.getSlot(0).addItems(1, new BasicSword());
+        this.inventory = new Inventory(3);
+//        inventory.getSlot(0).addItems(1, new BasicSword());
         this.modifiers = () -> Damage -> Damage;
+        this.onDeath = onDeath;
     }
 
     public MoveSet getMoveSet() {
@@ -93,8 +101,21 @@ public class Player implements IAIEntity {
     }
 
     @Override
+    public IInventory getInventory() {
+        return inventory;
+    }
+
+    @Override
     public IGeometryRepresentation geometryRepresentation() {
         return geometryRepresentation;
     }
 
+    @Override
+    public void takeDamage(Damage damage, IEntity source) {
+        health -= damage.value();
+        if (health <= 0) {
+            geometryRepresentation.dispose();
+            onDeath.accept(this);
+        }
+    }
 }

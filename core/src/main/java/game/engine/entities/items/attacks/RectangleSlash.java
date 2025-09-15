@@ -1,7 +1,6 @@
 package game.engine.entities.items.attacks;
 
 import game.engine.IWorldView;
-import game.engine.entities.IDamageable;
 import game.engine.entities.IEntity;
 import game.utility.Rectangle2F;
 
@@ -27,7 +26,7 @@ public class RectangleSlash implements IAttack {
         Collection<IEntity> entities = view.getEntitiesInArea(attackArea, entity -> true);
 
         for (IEntity entity : entities) {
-            if (entity instanceof IDamageable damageable) {
+            if (entity != user && entity instanceof IDamageable damageable) {
                 damageable.takeDamage(modifier.modify(damage), user);
             }
         }

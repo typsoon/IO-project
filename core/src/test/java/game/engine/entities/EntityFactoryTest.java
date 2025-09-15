@@ -1,6 +1,7 @@
 package game.engine.entities;
 
 import game.engine.PlayerConfig;
+import game.engine.entities.concreteentities.Player;
 import game.engine.modules.IGeometryFactory;
 import game.engine.modules.IManagingGeometryRepresentation;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class EntityFactoryTest {

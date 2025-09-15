@@ -1,6 +1,6 @@
-package game.engine.entities;
+package game.engine.entities.items.attacks;
 
-import game.engine.entities.items.attacks.Damage;
+import game.engine.entities.IEntity;
 
 public interface IDamageable {
     void takeDamage(Damage weapon, IEntity source);

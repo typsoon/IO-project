@@ -31,3 +31,16 @@ entitygroups/chicken/idle_front
   orig: 52, 46
   offset: 0, 0
   index: -1
+
+graphicsAtlas2.png
+size: 64, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+entitygroups/arrow/idle_front
+  rotate: false
+  xy: 2, 2
+  size: 52, 46
+  orig: 52, 46
+  offset: 0, 0
+  index: -1

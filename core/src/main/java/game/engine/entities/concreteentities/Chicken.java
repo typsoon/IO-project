@@ -1,8 +1,14 @@
-package game.engine.entities;
+package game.engine.entities.concreteentities;
 
 import game.engine.IWorldView;
+import game.engine.entities.EntityAction;
+import game.engine.entities.EntityGroupID;
+import game.engine.entities.IAIEntity;
+import game.engine.entities.IEntity;
 import game.engine.entities.behaviours.IBehaviour;
+import game.engine.entities.geometry.GeometryConfigID;
 import game.engine.entities.items.attacks.Damage;
+import game.engine.entities.items.attacks.IDamageable;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;

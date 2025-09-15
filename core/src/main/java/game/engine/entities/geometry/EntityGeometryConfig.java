@@ -1,4 +1,4 @@
-package game.engine.entities;
+package game.engine.entities.geometry;
 
 public record EntityGeometryConfig(
         float width,

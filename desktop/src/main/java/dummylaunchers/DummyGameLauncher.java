@@ -1,5 +1,20 @@
 package dummylaunchers;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import frontend.assetsloading.impl.AtlasLoader;
+import frontend.concreteviews.gameplayview.GameplayViewFactory;
+import game.engine.PlayerConfig;
+import game.engine.entities.EntityGroupID;
+import game.engine.entities.geometry.GeometryConfigID;
+import game.session.GameSessionFactory;
+import game.session.IPlayerConnector;
+import game.session.PlayerData;
+import utils.ISendable;
+import viewmodel.ITextureManager;
+import viewmodel.impl.BasicTextureManager;
+
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,22 +22,6 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-
-import frontend.assetsloading.impl.AtlasLoader;
-import frontend.concreteviews.gameplayview.GameplayViewFactory;
-import game.engine.PlayerConfig;
-import game.engine.entities.EntityGroupID;
-import game.engine.entities.GeometryConfigID;
-import game.session.GameSessionFactory;
-import game.session.IPlayerConnector;
-import game.session.PlayerData;
-import utils.ISendable;
-import viewmodel.ITextureManager;
-import viewmodel.impl.BasicTextureManager;
 
 class GameLauncher extends Game {
     @Override
@@ -44,8 +43,8 @@ class GameLauncher extends Game {
                 dummyPlayerData.connector());
         var viewManager = new Utility.NoInteractionViewManager();
 
-        Constructor<? extends ITextureManager> basicTexManagerConstructor = null;
-        ITextureManager textureManager = null;
+        Constructor<? extends ITextureManager> basicTexManagerConstructor;
+        ITextureManager textureManager;
         try {
             basicTexManagerConstructor = BasicTextureManager.class
                     .getDeclaredConstructor();

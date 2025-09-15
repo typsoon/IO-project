@@ -11,7 +11,7 @@ import game.actions.*;
 import game.engine.GameEngine;
 import game.engine.PlayerConfig;
 import game.engine.entities.EntityGroupID;
-import game.engine.entities.GeometryConfigID;
+import game.engine.entities.geometry.GeometryConfigID;
 import game.engine.modules.GeometryModule;
 import game.gamestates.IGameState;
 import game.session.*;

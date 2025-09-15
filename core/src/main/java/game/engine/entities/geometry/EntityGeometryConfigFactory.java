@@ -1,4 +1,4 @@
-package game.engine.entities;
+package game.engine.entities.geometry;
 
 import org.yaml.snakeyaml.Yaml;
 

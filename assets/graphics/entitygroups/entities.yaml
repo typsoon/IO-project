@@ -6,3 +6,6 @@ human_basic:
 
 chicken:
   - idle_front: 0.0
+
+arrow:
+  - idle_front: 0.0

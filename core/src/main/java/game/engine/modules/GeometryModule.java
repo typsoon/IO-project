@@ -2,7 +2,7 @@ package game.engine.modules;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import game.engine.entities.EntityGeometryConfig;
+import game.engine.entities.geometry.EntityGeometryConfig;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
@@ -39,13 +39,14 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
     }
 
     @Override
-    public IManagingGeometryRepresentation createGeometryRepresentation(EntityGeometryConfig config, float startingX, float startingY) {
+    public IManagingGeometryRepresentation createGeometryRepresentation(EntityGeometryConfig config, float startingX, float startingY, boolean isSensor) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = switch (config.bodyType()) {
             case STATIC -> BodyDef.BodyType.StaticBody;
             case DYNAMIC -> BodyDef.BodyType.DynamicBody;
             case KINEMATIC -> BodyDef.BodyType.KinematicBody;
         };
+
         bodyDef.position.set(startingX, startingY);
         bodyDef.linearDamping = config.linearDamping();
         bodyDef.angularDamping = config.angularDamping();
@@ -58,6 +59,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
         fixtureDef.density = config.density();
         fixtureDef.friction = config.friction();
         fixtureDef.restitution = config.restitution();
+        fixtureDef.isSensor = isSensor;
         body.createFixture(fixtureDef);
         shape.dispose();
         IManagingGeometryRepresentation geometryRepresentation = new IManagingGeometryRepresentation() {
@@ -65,7 +67,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
 
             private void checkDisposed(String methodName) {
                 if (disposed) {
-                    LOGGER.warning("Warning: called " + methodName + " on disposed geometry.");
+                    LOGGER.info("INFO: called " + methodName + " on disposed geometry.");
                 }
             }
 

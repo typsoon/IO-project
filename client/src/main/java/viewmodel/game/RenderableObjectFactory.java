@@ -3,8 +3,8 @@ package viewmodel.game;
 import frontend.gamestate.DrawableInfo;
 import frontend.gamestate.EntityVisibleState;
 import game.engine.PlayerConfig;
-import game.engine.entities.EntityGeometryConfigFactory;
 import game.engine.entities.EntityGroupID;
+import game.engine.entities.geometry.EntityGeometryConfigFactory;
 import game.engine.modules.IGeometryFactory;
 import game.gamestates.EntityState;
 
