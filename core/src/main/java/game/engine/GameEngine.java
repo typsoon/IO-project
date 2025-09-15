@@ -94,6 +94,9 @@ public class GameEngine implements IGameEngine, IWorldView {
         entityFactory.createChicken(0, 0);
         entityFactory.createChicken(0, 0);
 
+        entityFactory.createStump(5, 5);
+        entityFactory.createRock(-5, -5);
+
     }
 
     @Override

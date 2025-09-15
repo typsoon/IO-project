@@ -9,3 +9,9 @@ chicken:
 
 arrow:
   - idle_front: 0.0
+
+rock:
+  - idle_front: 0.0
+
+stump:
+  - idle_front: 0.0

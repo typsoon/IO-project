@@ -12,6 +12,7 @@ import game.engine.entities.inventory.Inventory;
 import game.engine.entities.items.UsageModifiers;
 import game.engine.entities.items.attacks.Damage;
 import game.engine.entities.items.attacks.IDamageable;
+import game.engine.entities.items.items.BasicSword;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
@@ -43,7 +44,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
         this.inventory = new Inventory(3);
-//        inventory.getSlot(0).addItems(1, new BasicSword());
+        inventory.getSlot(0).addItems(1, new BasicSword());
         this.modifiers = () -> Damage -> Damage;
         this.onDeath = onDeath;
     }

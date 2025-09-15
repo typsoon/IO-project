@@ -1,0 +1,9 @@
+width: 1
+height: 1
+bodyType: STATIC
+isRotatable: false
+friction: 0.0
+restitution: 0.0
+density: 1.0
+linearDamping: 0.0
+angularDamping: 0.0

@@ -13,6 +13,10 @@ public interface IInventory {
 
     void addResource(Resource material, int count);
 
+    default void addResource(ResourceInfo resourceInfo) {
+        addResource(resourceInfo.resource(), resourceInfo.amount());
+    }
+
     boolean removeResource(Resource material, int count);
 
     ArrayList<ISlot> getSlots();

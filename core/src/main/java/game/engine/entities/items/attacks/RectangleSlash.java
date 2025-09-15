@@ -10,7 +10,7 @@ public class RectangleSlash implements IAttack {
 
     private final float attackRangeHeight = 2f;
     private final float attackRangeWidth = 2f;
-    private final Damage damage = new Damage(DamageType.SLASH, 100);
+    private final Damage damage = new Damage(DamageType.SLASH, 30);
 
     @Override
     public void attack(IWorldView view, IEntity user, DamageModifier modifier) {
