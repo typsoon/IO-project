@@ -43,6 +43,11 @@ public class BasicViewManager implements IViewManager {
     }
 
     @Override
+    public void moveToSettings() {
+        viewFactory.getSettingsView().display();
+    }
+
+    @Override
     public void moveToPlayView() {
         viewFactory.getPlayView().display();
     }

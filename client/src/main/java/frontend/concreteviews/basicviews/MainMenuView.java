@@ -58,7 +58,7 @@ public class MainMenuView extends ScreenAdapter implements IView {
         final Button buttonSettings = viewManager.getTextureManager().getTextButton("Settings");
         buttonSettings.addListener(new ClickListener() {
             public void clicked(final InputEvent event, final float x, final float y) {
-                viewManager.moveToPlayView();
+                viewManager.moveToSettings();
             }
         });
 

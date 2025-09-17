@@ -14,6 +14,8 @@ public interface IViewManager extends IAbstractGeneralViewManager {
 
     void moveToMainMenu();
 
+    void moveToSettings();
+
     void moveToLoginView(ClientSideSocketWrapper clientSideSocketWrapper);
 
     void moveToGameClient(ClientSideSocketWrapper clientSideSocketWrapper, int id);

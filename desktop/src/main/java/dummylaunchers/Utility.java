@@ -72,6 +72,12 @@ public class Utility {
         }
 
         @Override
+        public void moveToSettings() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'moveToSettings'");
+        }
+
+        @Override
         public void moveToLoginView(ClientSideSocketWrapper clientSideSocketWrapper) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'moveToLoginView'");
