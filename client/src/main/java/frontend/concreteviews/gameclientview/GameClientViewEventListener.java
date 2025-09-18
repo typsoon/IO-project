@@ -24,7 +24,7 @@ public class GameClientViewEventListener implements EventListener {
     private final Logger logger = Logger.getGlobal();
 
     public GameClientViewEventListener(IViewManager viewManager,
-            ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
+                                       ClientSideSocketWrapper clientSideSocketWrapper, ObjectToMessageDecoder objectToMessageDecoder) {
         this.viewManager = viewManager;
         this.clientSideSocketWrapper = clientSideSocketWrapper;
         this.objectToMessageDecoder = objectToMessageDecoder;
@@ -35,9 +35,8 @@ public class GameClientViewEventListener implements EventListener {
         try {
             switch (event) {
                 case CreateRoomEvent createRoomEvent -> {
-
-                    // TODO: change this so it has all the info
-                    var msgPayload = new RoomConfig(createRoomEvent.getName(), "", 1, true);
+                    var msgPayload = new RoomConfig(createRoomEvent.getName(), createRoomEvent.getPassword(),
+                            createRoomEvent.getMaxPlayers(), createRoomEvent.isPublic());
                     var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
 
                     logger.info("Sent create room request");
@@ -66,9 +65,11 @@ public class GameClientViewEventListener implements EventListener {
                 default -> {
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             logger.info(String.format("Error occured while sending message %s", e));
-        } catch (ConnectionEndedException connectionEndedException) {
+        }
+        catch (ConnectionEndedException connectionEndedException) {
             // FIXME: Security issue: doing this here can grow stack infinitely and we don't
             // want that
 
