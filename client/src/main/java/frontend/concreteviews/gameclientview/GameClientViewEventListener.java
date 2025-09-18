@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.ConfirmGameEvent;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.RequestGameStartEvent;
+import frontend.concreteviews.gameclientview.GameClientViewEvents.FindGameEvent;
 import gameclient.rooms.RoomConfig;
 import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper.ConnectionEndedException;
@@ -58,6 +59,15 @@ public class GameClientViewEventListener implements EventListener {
                     var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
 
                     logger.info("Confirmed game %s".formatted(confirmGameEvent.getConfirmationVal()));
+                    clientSideSocketWrapper.dispatchMessage(msg);
+                    return true;
+                }
+
+                case FindGameEvent findGameEvent -> {
+                    var msgPayload = findGameEvent.getMatchmakingParameters();
+                    var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
+
+                    logger.info("Sent find game request");
                     clientSideSocketWrapper.dispatchMessage(msg);
                     return true;
                 }

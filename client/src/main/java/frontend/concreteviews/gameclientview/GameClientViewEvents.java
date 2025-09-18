@@ -1,6 +1,7 @@
 package frontend.concreteviews.gameclientview;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
+import matchmaking.MatchmakingParameters;
 import network.messages.userstate.GameConfirmation;
 import network.messages.userstate.GameConfirmation.Confirmation;
 
@@ -36,6 +37,18 @@ public class GameClientViewEvents {
     }
 
     public static final class RequestGameStartEvent extends Event {
+    }
+
+    public static final class FindGameEvent extends Event {
+        private final MatchmakingParameters matchmakingParameters;
+
+        public FindGameEvent(final MatchmakingParameters matchmakingParameters) {
+            this.matchmakingParameters = matchmakingParameters;
+        }
+
+        public MatchmakingParameters getMatchmakingParameters() {
+            return matchmakingParameters;
+        }
     }
 
     public static final class ConfirmGameEvent extends Event {
