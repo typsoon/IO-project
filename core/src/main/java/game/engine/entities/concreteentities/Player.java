@@ -1,6 +1,8 @@
 package game.engine.entities.concreteentities;
 
 import game.actions.Direction;
+import game.actions.InteractionType;
+import game.actions.PlayerInteraction;
 import game.actions.PlayerSlotUse;
 import game.engine.IWorldView;
 import game.engine.PlayerConfig;
@@ -17,6 +19,7 @@ import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
 import game.gamestates.PlayerState;
+import game.utility.Point2F;
 import game.utility.Rectangle2F;
 import game.utility.Vector2F;
 
@@ -37,6 +40,9 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
     private int health = 100;
     private final float speed = 8f;
     private final Vector2F sightRange = new Vector2F(10, 10);
+    private final float interactRange = 2f;
+
+    private IInteractable currentInteraction = null;
 
     public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<IEntity> onDeath) {
         this.geometryRepresentation = geometryRepresentation;
@@ -53,11 +59,20 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
         return moveset;
     }
 
+    public boolean isInteracting() {
+        return currentInteraction != null;
+    }
+
+    public IInteractable getCurrentInteraction() {
+        return currentInteraction;
+    }
+
     @Override
     public void think(IWorldView view) {
 //        System.out.println(moveset.slotUse);
         move(moveset.move.direction());
         slotUse(view);
+        interact(view);
     }
 
     private void move(Direction direction) {
@@ -68,6 +83,33 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
         geometryRepresentation.setRotation(moveset.slotUse.direction().angle());
         PlayerSlotUse ps = moveset.slotUse;
         inventory.useSlot(ps.slot(), ps.usageType(), view, this, modifiers);
+    }
+
+    private void interact(IWorldView view) {
+        if (currentInteraction != null && Point2F.distance(currentInteraction.getGeometryRepresentation().getPosition(), geometryRepresentation.getPosition()) > interactRange) {
+            currentInteraction.endInteract(this);
+            currentInteraction = null;
+            moveset.interaction = new PlayerInteraction(new Point2F(0, 0), InteractionType.NONE);
+            return;
+        }
+        if (moveset.interaction.interactionType() == InteractionType.NONE) {
+            if (currentInteraction != null) {
+                currentInteraction.endInteract(this);
+            }
+            currentInteraction = null;
+
+        } else {
+            if (currentInteraction == null) {
+                for (IEntity entity : view.getEntitiesInArea(geometryRepresentation.getPosition(), interactRange)) {
+                    if (entity instanceof IInteractable interactable) {
+                        if (Point2F.distance(interactable.getGeometryRepresentation().getPosition(), geometryRepresentation.getPosition()) <= interactRange) {
+                            currentInteraction = interactable;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

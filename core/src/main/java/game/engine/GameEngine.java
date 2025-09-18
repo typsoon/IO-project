@@ -1,5 +1,7 @@
 package game.engine;
 
+import game.actions.IInteraction;
+import game.actions.PlayerInteraction;
 import game.actions.PlayerMove;
 import game.actions.PlayerSlotUse;
 import game.engine.entities.EntityFactory;
@@ -36,6 +38,12 @@ public class GameEngine implements IGameEngine, IWorldView {
                 switch (event.action()) {
                     case PlayerMove playerMove -> moveSet.move = playerMove;
                     case PlayerSlotUse playerSlotUse -> moveSet.slotUse = playerSlotUse;
+                    case PlayerInteraction playerInteraction -> moveSet.interaction = playerInteraction;
+                    case IInteraction interaction -> {
+                        if (player.isInteracting()) {
+                            player.getCurrentInteraction().interact(interaction, player);
+                        }
+                    }
                     default -> throw new IllegalArgumentException("Unknown action: " + event.action());
                 }
             }
@@ -49,11 +57,13 @@ public class GameEngine implements IGameEngine, IWorldView {
             IPlayerGamesStateSender sender = entry.getKey();
             Player player = entry.getValue();
             sender.sendGameState(player.getPlayerState());
-            for (IGeometryRepresentation geometryRepresentation : geometryModule
-                    .getEntitiesInArea(player.getSightRange())) {
+            for (IGeometryRepresentation geometryRepresentation : geometryModule.getEntitiesInArea(player.getSightRange())) {
                 if (geometryRepresentation == player.geometryRepresentation())
                     continue; // Skip sending the player's own state
                 sender.sendGameState(entities.get(geometryRepresentation).getEntityState());
+            }
+            if (player.isInteracting()) {
+                sender.sendGameState(player.getCurrentInteraction().getState());
             }
         }
     }

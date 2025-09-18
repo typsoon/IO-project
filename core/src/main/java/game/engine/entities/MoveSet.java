@@ -1,9 +1,7 @@
 package game.engine.entities;
 
-import game.actions.Direction;
-import game.actions.PlayerMove;
-import game.actions.PlayerSlotUse;
-import game.actions.UsageType;
+import game.actions.*;
+import game.utility.Point2F;
 import game.utility.Vector2F;
 
 
@@ -11,14 +9,17 @@ import game.utility.Vector2F;
 public class MoveSet {
     public PlayerMove move;
     public PlayerSlotUse slotUse;
+    public PlayerInteraction interaction;
 
     public MoveSet() {
         move = new PlayerMove(Direction.NONE);
         slotUse = new PlayerSlotUse(UsageType.NONE, new Vector2F(0, 0), 0);
+        interaction = new PlayerInteraction(new Point2F(0, 0), InteractionType.NONE);
     }
 
-    public MoveSet(PlayerMove move, PlayerSlotUse slotUse) {
+    public MoveSet(PlayerMove move, PlayerSlotUse slotUse, PlayerInteraction interaction) {
         this.move = move;
         this.slotUse = slotUse;
+        this.interaction = interaction;
     }
 }

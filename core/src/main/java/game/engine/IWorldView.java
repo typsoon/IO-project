@@ -30,4 +30,8 @@ public interface IWorldView {
         return getEntitiesInArea(rectangle).stream().filter(filter).toList();
     }
 
+    default Collection<IEntity> getEntitiesInArea(Point2F center, float radius) {
+        return getEntitiesInArea(center.x() - radius, center.y() - radius, center.x() + radius, center.y() + radius);
+    }
+
 }
