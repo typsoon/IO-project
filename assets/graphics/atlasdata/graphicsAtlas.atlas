@@ -26,7 +26,7 @@ entitygroups/chicken/idle_front
   index: -1
 
 graphicsAtlas3.png
-size: 64, 64
+size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -39,7 +39,7 @@ entitygroups/human_basic/idle_back
   index: -1
 entitygroups/human_basic/idle_front
   rotate: false
-  xy: 2, 2
+  xy: 56, 2
   size: 52, 46
   orig: 52, 46
   offset: 0, 0
