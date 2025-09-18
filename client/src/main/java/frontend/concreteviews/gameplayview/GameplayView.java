@@ -1,14 +1,6 @@
 package frontend.concreteviews.gameplayview;
 
-import java.util.Collection;
-import java.util.function.Function;
-
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -17,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameclientview.GameClientView;
 import frontend.concreteviews.gameplayview.impl.GameplayInfoProviderImpl;
@@ -29,6 +20,9 @@ import game.utility.Vector2F;
 import utils.ObserverWithATwist.Subscribable;
 import viewmodel.ITextureManager;
 
+import java.util.Collection;
+import java.util.function.Function;
+
 //NOTE: this class doesn't implement View, nor does it contain GameplayManager. We use ViewWithEventLoop class to wrap
 //GameplayView and provide required functionalities
 
@@ -36,7 +30,7 @@ import viewmodel.ITextureManager;
  * This class serves as a {@link Screen} displayed during the gameplay, it uses
  * {@link EventListener}s and {@link InputProcessor}s to
  * handle user input
- * 
+ *
  * @see LoginView
  * @see GameClientView
  */
@@ -75,9 +69,9 @@ public class GameplayView extends ScreenAdapter {
     }
 
     GameplayView(Game game, Collection<EventListener> gameplayViewEventListeners,
-            Collection<Function<DataNeededForCreation, InputProcessor>> gameplayViewInputProcessorsFactories,
-            ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
-            TexturesProvider texturesProvider, Subscribable gameCycles) {
+                 Collection<Function<DataNeededForCreation, InputProcessor>> gameplayViewInputProcessorsFactories,
+                 ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
+                 TexturesProvider texturesProvider, Subscribable gameCycles) {
         this.game = game;
         this.gameplayViewEventListeners = gameplayViewEventListeners;
         this.gameplayViewInputProcessorsFactories = gameplayViewInputProcessorsFactories;
@@ -143,6 +137,7 @@ public class GameplayView extends ScreenAdapter {
 
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
+        //TODO add gui
     }
 
     @Override
