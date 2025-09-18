@@ -112,10 +112,10 @@ public class GameplayView extends ScreenAdapter {
         int startY = (int) (camY - worldHeight / 2) / gridSize * gridSize;
         int endY = (int) (camY + worldHeight / 2);
 
-        for (int x = startX; x < endX; x += gridSize) {
+        for (int x = startX; x <= endX; x += gridSize) {
             shapeRenderer.line(x, camY - worldHeight / 2, x, camY + worldHeight / 2);
         }
-        for (int y = startY; y < endY; y += gridSize) {
+        for (int y = startY; y <= endY; y += gridSize) {
             shapeRenderer.line(camX - worldWidth / 2, y, camX + worldWidth / 2, y);
         }
 
