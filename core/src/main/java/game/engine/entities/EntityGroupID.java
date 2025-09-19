@@ -5,5 +5,6 @@ public enum EntityGroupID {
     CHICKEN,
     ARROW,
     ROCK,
-    STUMP
+    STUMP,
+    BORDER
 }

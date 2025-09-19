@@ -15,3 +15,6 @@ rock:
 
 stump:
   - idle_front: 0.0
+
+border:
+  - idle_front: 0.0

@@ -107,6 +107,16 @@ public class GameEngine implements IGameEngine, IWorldView {
         entityFactory.createStump(5, 5);
         entityFactory.createRock(-5, -5);
 
+        float worldSize = 15f;          //TODO: should be more global and tied to geometryConfig of border
+        float borderSize = 60f;         //the same as in assets/geometryconfigs/border.yaml
+        //border east
+        entityFactory.createBorder(worldSize + borderSize / 2, -worldSize + borderSize / 2);
+        //border north
+        entityFactory.createBorder(worldSize - borderSize / 2, worldSize + borderSize / 2);
+        //border west
+        entityFactory.createBorder(-worldSize - borderSize / 2, worldSize - borderSize / 2);
+        //border south
+        entityFactory.createBorder(-worldSize + borderSize / 2, -worldSize - borderSize / 2);
     }
 
     @Override

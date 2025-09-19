@@ -17,6 +17,19 @@ size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+entitygroups/border/idle_front
+  rotate: false
+  xy: 2, 2
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+
+graphicsAtlas3.png
+size: 64, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
 entitygroups/chicken/idle_front
   rotate: false
   xy: 2, 2
@@ -25,7 +38,7 @@ entitygroups/chicken/idle_front
   offset: 0, 0
   index: -1
 
-graphicsAtlas3.png
+graphicsAtlas4.png
 size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -45,7 +58,7 @@ entitygroups/human_basic/idle_front
   offset: 0, 0
   index: -1
 
-graphicsAtlas4.png
+graphicsAtlas5.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -58,7 +71,7 @@ entitygroups/rock/idle_front
   offset: 0, 0
   index: -1
 
-graphicsAtlas5.png
+graphicsAtlas6.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest

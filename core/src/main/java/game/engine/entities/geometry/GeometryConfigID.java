@@ -5,5 +5,6 @@ public enum GeometryConfigID {
     HUMAN,
     ARROW,
     ROCK,
-    STUMP
+    STUMP,
+    BORDER
 }

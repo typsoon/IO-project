@@ -2,6 +2,7 @@ package game.engine.entities;
 
 import game.engine.PlayerConfig;
 import game.engine.entities.behaviours.Wandering;
+import game.engine.entities.concreteentities.Border;
 import game.engine.entities.concreteentities.Chicken;
 import game.engine.entities.concreteentities.Player;
 import game.engine.entities.concreteentities.ResourceDeposit;
@@ -96,6 +97,17 @@ public class EntityFactory {
         );
         entityCallback.accept(stump);
         return stump;
+    }
+
+    public IEntity createBorder(float startingX, float startingY) {
+        IEntity border = new Border(
+                geometryFactory.createGeometryRepresentation(
+                        EntityGeometryConfigFactory.createEntityGeometryConfig(GeometryConfigID.BORDER),
+                        startingX, startingY),
+                entityId.next(), GeometryConfigID.BORDER, EntityGroupID.BORDER
+        );
+        entityCallback.accept(border);
+        return border;
     }
 
     private static class Incrementer {
