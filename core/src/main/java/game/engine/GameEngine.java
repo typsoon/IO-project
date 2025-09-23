@@ -98,12 +98,11 @@ public class GameEngine implements IGameEngine, IWorldView {
             this.players.put(playerData.playerGamesStateSender(), player);
         }
 
-        entityFactory.createChicken(0, 0);
-        entityFactory.createChicken(0, 0);
-        entityFactory.createChicken(0, 0);
-        entityFactory.createChicken(0, 0);
-        entityFactory.createChicken(0, 0);
 
+        int count = 10;
+        while (count-- > 0) {
+            entityFactory.createChicken(0, 0);
+        }
         entityFactory.createStump(5, 5);
         entityFactory.createRock(-5, -5);
 
