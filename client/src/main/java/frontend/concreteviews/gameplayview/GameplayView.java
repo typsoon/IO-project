@@ -3,6 +3,8 @@ package frontend.concreteviews.gameplayview;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -97,7 +99,7 @@ public class GameplayView extends ScreenAdapter {
 
         Vector2F rangeOfView = getVisibilityRange();
 
-        int gridSize = 2;
+        int gridSize = 1;
         float worldWidth = rangeOfView.x();
         float worldHeight = rangeOfView.y();
         int startX = (int) (camX - worldWidth / 2) / gridSize * gridSize;
@@ -116,6 +118,24 @@ public class GameplayView extends ScreenAdapter {
         shapeRenderer.end();
     }
 
+    //TODO: make more general, should be received from the server (bc map may vary from game to game)
+    private void map() {
+        var spriteBatch = new SpriteBatch();
+        var mapAtlas = new TextureAtlas(Gdx.files.internal("graphics/atlasdata/graphicsAtlas.atlas"));
+        var picture = mapAtlas.findRegions("background/map").first();
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.begin();
+
+        float worldSize = 15f;          //should definitely be global
+        spriteBatch.draw(picture,
+                -worldSize, -worldSize, 1, 1,
+                2 * worldSize, 2 * worldSize, 1, 1, 0);
+
+        spriteBatch.end();
+        //keep for debug purposes
+        grid();
+    }
+
     private static final float eps = 1e-9f;
 
     @Override
@@ -132,9 +152,7 @@ public class GameplayView extends ScreenAdapter {
         viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
         viewport.apply();
 
-        // this is for debug puposes, to see the grid
-        grid();
-
+        map();
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
         //TODO add gui
