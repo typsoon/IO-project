@@ -2,12 +2,16 @@ package viewmodel.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-
 import viewmodel.ITextureManager;
 
 public class BasicTextureManager implements ITextureManager {
@@ -18,6 +22,7 @@ public class BasicTextureManager implements ITextureManager {
     private final TextButton.TextButtonStyle textButtonStyle;
     private final TextField.TextFieldStyle textFieldStyle;
     private final Label.LabelStyle labelStyle;
+    private final ProgressBar.ProgressBarStyle progressBarStyle;
 
     BasicTextureManager() {
         // TODO view: use config instead of hardcoded names
@@ -41,6 +46,25 @@ public class BasicTextureManager implements ITextureManager {
         textFieldStyle.background = skin.getDrawable("buttonBackground");
 
         this.labelStyle = new Label.LabelStyle(font, Color.WHITE);
+
+        Pixmap bgPixmap = new Pixmap(200, 20, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(Color.DARK_GRAY); // kolor tła
+        bgPixmap.fill();
+        Texture bgTexture = new Texture(bgPixmap);
+        bgPixmap.dispose();
+        Drawable bgDrawable = new TextureRegionDrawable(new TextureRegion(bgTexture));
+
+        Pixmap fillPixmap = new Pixmap(200, 20, Pixmap.Format.RGBA8888);
+        fillPixmap.setColor(Color.RED); // kolor wypełnienia
+        fillPixmap.fill();
+        Texture fillTexture = new Texture(fillPixmap);
+        fillPixmap.dispose();
+        Drawable fillDrawable = new TextureRegionDrawable(new TextureRegion(fillTexture));
+        
+        this.progressBarStyle = new ProgressBar.ProgressBarStyle();
+        progressBarStyle.background = bgDrawable;
+        progressBarStyle.knobBefore = null;
+        progressBarStyle.knobBefore = fillDrawable;
     }
 
     public TextButton getTextButton(String name) {
@@ -67,4 +91,10 @@ public class BasicTextureManager implements ITextureManager {
         return heading;
     }
 
+    @Override
+    public ProgressBar getProgressBar(float min, float max, float stepSize, boolean vertical) {
+        ProgressBar progressBar = new ProgressBar(min, max, stepSize, vertical, progressBarStyle);
+        progressBar.setAnimateDuration(0.25f);
+        return progressBar;
+    }
 }

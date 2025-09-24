@@ -8,7 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import frontend.assetsloading.TexturesProvider;
@@ -57,6 +60,10 @@ public class GameplayView extends ScreenAdapter {
     private FitViewport viewport;
     private IGameplayInfoProvider gameplayInfoProvider;
 
+    private FitViewport hudViewport;
+    private Stage hudStage;
+    private Label hpLabel;
+    private ProgressBar hpBar;
     // private final TextureRegion test;
     // private final SpriteBatch spriteBatch = new SpriteBatch();
 
@@ -156,6 +163,11 @@ public class GameplayView extends ScreenAdapter {
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
         //TODO add gui
+        var playerInfo = gameState.getPlayerData().iterator().next();
+        hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue()) * 100);
+        hpLabel.setText(String.format("HP: %3d/%3d", playerInfo.getHpValue(), playerInfo.getMaxHpValue()));
+        hudStage.act(delta);
+        hudStage.draw();
     }
 
     @Override
@@ -176,20 +188,42 @@ public class GameplayView extends ScreenAdapter {
         viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
         viewport.apply();
 
-        Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
-
         for (EventListener eventListener : gameplayViewEventListeners) {
             stage.addListener(eventListener);
         }
         final Table table = textureManager.getTable();
         stage.addActor(table);
 
-        var multiplexer = new InputMultiplexer(stage);
+        hudStage = new Stage();
+        hudViewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT, gameCamera);
+
+        hpBar = textureManager.getProgressBar(0, 100, 1, false);
+        hpBar.setColor(Color.RED);
+        hpBar.setValue(100);
+        hpBar.setWidth(200);
+        hpLabel = textureManager.getHeading("HP: 100/100");
+        hpLabel.setAlignment(Align.center);
+        float maxWidth = 200;
+        float scale = Math.min(1f, maxWidth / hpLabel.getPrefWidth());
+        hpLabel.setFontScale(scale);
+        Table hudTable = textureManager.getTable();
+        hudTable.setFillParent(true);
+        hudTable.top().left();
+        hudTable.add(hpLabel).width(200).pad(10).left();
+        hudTable.row();
+        hudTable.add(hpBar).width(200).pad(10).left();
+        hudStage.addActor(hudTable);
+
+        var multiplexer = new InputMultiplexer(hudStage);
+        multiplexer.addProcessor(stage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
             multiplexer
                     .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
         }
         Gdx.input.setInputProcessor(multiplexer);
+
+        //this should be last because it calls render() on windows
+        Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     @Override

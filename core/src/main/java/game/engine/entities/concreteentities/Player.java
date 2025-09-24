@@ -37,7 +37,8 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
     private final Consumer<IEntity> onDeath;
 
     // should be from file or config
-    private int health = 100;
+    private final int maxHp = 100;
+    private int currentHp = 100;
     private final float speed = 8f;
     private final Vector2F sightRange = new Vector2F(10, 10);
     private final float interactRange = 2f;
@@ -133,7 +134,10 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
                 geometryRepresentation.getRotation(),
                 entityGroupID,
                 EntityAction.IDLE,
-                sightRange);
+                sightRange,
+                maxHp,
+                currentHp
+        );
 //                inventory.getInventoryInfo());
     }
 
@@ -155,8 +159,8 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     @Override
     public void takeDamage(Damage damage, IEntity source) {
-        health -= damage.value();
-        if (health <= 0) {
+        currentHp -= damage.value();
+        if (currentHp <= 0) {
             geometryRepresentation.dispose();
             onDeath.accept(this);
         }

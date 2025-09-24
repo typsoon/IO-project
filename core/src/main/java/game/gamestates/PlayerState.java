@@ -14,8 +14,9 @@ public record PlayerState(
         float rotation,
         EntityGroupID entityGroupId,
         EntityAction action,
-        Vector2F sightRange
-
+        Vector2F sightRange,
+        int maxHp,
+        int currentHp
         //waiting for messages
 //        InventoryInfo inventory
 // this will hold more information than entity state

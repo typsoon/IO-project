@@ -10,4 +10,6 @@ public interface ITextureManager {
     TextField getTextField(String name);
 
     Label getHeading(String name);
+
+    ProgressBar getProgressBar(float min, float max, float stepSize, boolean vertical);
 }

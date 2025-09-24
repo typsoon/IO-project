@@ -1,9 +1,5 @@
 package frontend.gamestate.processor;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import frontend.gamestate.IDisplayableGameState;
 import game.engine.PlayerConfig;
 import game.engine.modules.IGeometryModule;
@@ -13,6 +9,10 @@ import game.gamestates.PlayerState;
 import viewmodel.game.RenderableObjectFactory;
 import viewmodel.game.RenderablePlayer;
 import viewmodel.game.TimedRenderableObject;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameStateProcessor implements IGameStateProcessor {
 
@@ -28,8 +28,8 @@ public class GameStateProcessor implements IGameStateProcessor {
     Map<Integer, TimedRenderableObject> entities = new HashMap<>();
 
     public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory,
-            IDisplayableGameState displayableGameState, PlayerConfig playerConfig,
-            Collection<IGameState> initialGameStates) {
+                              IDisplayableGameState displayableGameState, PlayerConfig playerConfig,
+                              Collection<IGameState> initialGameStates) {
         this.geometryModule = geometryModule;
         this.renderableObjectFactory = objectFactory;
         this.displayableGameState = displayableGameState;
@@ -64,6 +64,8 @@ public class GameStateProcessor implements IGameStateProcessor {
         player.setRotation(playerState.rotation());
 
         player.setRange(playerState.sightRange());
+        player.setMaxHp(playerState.maxHp());
+        player.setCurrentHp(playerState.currentHp());
     }
 
     private void updateEntityState(EntityState entityState) {
