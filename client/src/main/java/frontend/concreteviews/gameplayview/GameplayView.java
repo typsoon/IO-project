@@ -173,7 +173,7 @@ public class GameplayView extends ScreenAdapter {
         //TODO add gui
         var playerInfo = gameState.getPlayerData().iterator().next();
         hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue()) * 100);
-        hpLabel.setText(String.format("HP: %3d/%3d", playerInfo.getHpValue(), playerInfo.getMaxHpValue()));
+        hpLabel.setText(String.format("HP: %3d out of %3d", playerInfo.getHpValue(), playerInfo.getMaxHpValue()));
         for (int i = 0; i < playerInfo.getInventoryInfo().slotNum(); i++) {
             if (i < playerInfo.getInventoryInfo().slots().getData().length) {
                 hotbarSlots.get(i).setColor(Color.GRAY);
