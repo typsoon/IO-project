@@ -68,6 +68,7 @@ public class GameplayView extends ScreenAdapter {
     private Label hpLabel;
     private ProgressBar hpBar;
     ArrayList<TextButton> hotbarSlots = new ArrayList<>();
+    ArrayList<Label> resourceLabels = new ArrayList<>();
     // private final TextureRegion test;
     // private final SpriteBatch spriteBatch = new SpriteBatch();
 
@@ -187,6 +188,11 @@ public class GameplayView extends ScreenAdapter {
             }
         }
 
+        for (int i = 0; i < playerInfo.getInventoryInfo().resources().getData().length; i++) {
+            resourceLabels.get(i).setText(playerInfo.getInventoryInfo().resources().getData()[i].amount() + " x " +
+                    playerInfo.getInventoryInfo().resources().getData()[i].resource().name());
+        }
+
         hudStage.act(delta);
         hudStage.draw();
     }
@@ -236,7 +242,7 @@ public class GameplayView extends ScreenAdapter {
 
         hudTable.row();
 
-        Table hotbarTable = new Table();
+        Table hotbarTable = textureManager.getTable();
         hotbarTable.top().right();
         hotbarTable.setFillParent(true);
 
@@ -248,8 +254,23 @@ public class GameplayView extends ScreenAdapter {
             slot.setColor(Color.BLACK);
         }
 
+        Table resourcesTable = textureManager.getTable();
+        resourcesTable.bottom().right();
+        resourcesTable.setFillParent(true);
+
+        int resourceCount = 10; // this should be from file or server
+        for (int i = 0; i < 10; i++) {
+            Label resourceLabel = textureManager.getHeading("");
+            resourceLabel.setAlignment(Align.right);
+            resourceLabel.setFontScale(0.3f);
+            resourceLabels.add(resourceLabel);
+            resourcesTable.add(resourceLabel).pad(5).right();
+            resourcesTable.row();
+        }
+
         hudStage.addActor(hudTable);
         hudStage.addActor(hotbarTable);
+        hudStage.addActor(resourcesTable);
 
         var multiplexer = new InputMultiplexer(hudStage);
         multiplexer.addProcessor(stage);
