@@ -2,6 +2,7 @@ package viewmodel.game;
 
 import frontend.gamestate.DrawableInfo;
 import game.engine.PlayerConfig;
+import game.engine.entities.inventory.InventoryInfo;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.utility.Vector2F;
 
@@ -9,9 +10,10 @@ public class RenderablePlayer extends RenderableObject implements IPlayerData {
     private int currentHp;
     private int maxHp;
     private Vector2F range;
+    private InventoryInfo inventoryInfo;
 
     public RenderablePlayer(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation,
-            DrawableInfo drawableInfo) {
+                            DrawableInfo drawableInfo) {
         super(geometryRepresentation, drawableInfo);
         currentHp = 0;
         maxHp = 0;
@@ -34,6 +36,11 @@ public class RenderablePlayer extends RenderableObject implements IPlayerData {
     }
 
     @Override
+    public InventoryInfo getInventoryInfo() {
+        return inventoryInfo;
+    }
+
+    @Override
     public DrawableInfo getDrawableInfo() {
         return drawableInfo;
     }
@@ -48,5 +55,9 @@ public class RenderablePlayer extends RenderableObject implements IPlayerData {
 
     public void setRange(Vector2F range) {
         this.range = range;
+    }
+
+    public void setInventoryInfo(InventoryInfo inventoryInfo) {
+        this.inventoryInfo = inventoryInfo;
     }
 }

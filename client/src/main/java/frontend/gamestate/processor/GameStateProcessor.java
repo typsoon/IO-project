@@ -66,6 +66,8 @@ public class GameStateProcessor implements IGameStateProcessor {
         player.setRange(playerState.sightRange());
         player.setMaxHp(playerState.maxHp());
         player.setCurrentHp(playerState.currentHp());
+
+        player.setInventoryInfo(playerState.inventory());
     }
 
     private void updateEntityState(EntityState entityState) {

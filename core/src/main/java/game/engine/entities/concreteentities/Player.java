@@ -136,9 +136,9 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
                 EntityAction.IDLE,
                 sightRange,
                 maxHp,
-                currentHp
+                currentHp,
+                inventory.getInventoryInfo()
         );
-//                inventory.getInventoryInfo());
     }
 
     public Rectangle2F getSightRange() {

@@ -1,6 +1,7 @@
 package viewmodel.game;
 
 import frontend.gamestate.DrawableInfo;
+import game.engine.entities.inventory.InventoryInfo;
 import game.utility.Vector2F;
 
 public interface IPlayerData {
@@ -12,5 +13,5 @@ public interface IPlayerData {
 
     Vector2F getRange();
 
-//    InventoryInfo getInventoryInfo();
+    InventoryInfo getInventoryInfo();
 }

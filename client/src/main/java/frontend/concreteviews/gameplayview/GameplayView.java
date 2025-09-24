@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -26,6 +27,7 @@ import game.utility.Vector2F;
 import utils.ObserverWithATwist.Subscribable;
 import viewmodel.ITextureManager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -65,6 +67,7 @@ public class GameplayView extends ScreenAdapter {
     private Stage hudStage;
     private Label hpLabel;
     private ProgressBar hpBar;
+    ArrayList<TextButton> hotbarSlots = new ArrayList<>();
     // private final TextureRegion test;
     // private final SpriteBatch spriteBatch = new SpriteBatch();
 
@@ -170,6 +173,20 @@ public class GameplayView extends ScreenAdapter {
         var playerInfo = gameState.getPlayerData().iterator().next();
         hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue()) * 100);
         hpLabel.setText(String.format("HP: %3d/%3d", playerInfo.getHpValue(), playerInfo.getMaxHpValue()));
+        for (int i = 0; i < playerInfo.getInventoryInfo().slotNum(); i++) {
+            if (i < playerInfo.getInventoryInfo().slots().getData().length) {
+                hotbarSlots.get(i).setColor(Color.GRAY);
+                if (playerInfo.getInventoryInfo().slots().getData()[i].amount() > 0) {
+                    hotbarSlots.get(i).setText(playerInfo.getInventoryInfo().slots().getData()[i].item().name());
+                } else {
+                    hotbarSlots.get(i).setText("");
+                }
+            } else {
+                hotbarSlots.get(i).setColor(Color.BLACK);
+                hotbarSlots.get(i).setText("");
+            }
+        }
+
         hudStage.act(delta);
         hudStage.draw();
     }
@@ -216,7 +233,23 @@ public class GameplayView extends ScreenAdapter {
         hudTable.add(hpLabel).width(200).pad(10).left();
         hudTable.row();
         hudTable.add(hpBar).width(200).pad(10).left();
+
+        hudTable.row();
+
+        Table hotbarTable = new Table();
+        hotbarTable.top().right();
+        hotbarTable.setFillParent(true);
+
+        for (int i = 0; i < 5; i++) {
+            TextButton slot = textureManager.getTextButton("");
+            slot.getLabel().setFontScale(0.3f);
+            hotbarSlots.add(slot);
+            hotbarTable.add(slot).size(64, 64).pad(5);
+            slot.setColor(Color.BLACK);
+        }
+
         hudStage.addActor(hudTable);
+        hudStage.addActor(hotbarTable);
 
         var multiplexer = new InputMultiplexer(hudStage);
         multiplexer.addProcessor(stage);
