@@ -207,7 +207,7 @@ public class GameplayView extends ScreenAdapter {
         gameCamera = new OrthographicCamera();
         gameCamera.setToOrtho(false);
         viewport = new FitViewport(0, 0, gameCamera);
-        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition);
+        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition, gameState.getPlayerData().iterator().next()::getInventoryInfo);
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
         stage = new Stage();
 

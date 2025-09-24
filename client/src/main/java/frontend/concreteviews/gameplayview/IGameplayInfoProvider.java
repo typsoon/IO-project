@@ -1,5 +1,6 @@
 package frontend.concreteviews.gameplayview;
 
+import game.engine.entities.inventory.InventoryInfo;
 import game.utility.Point2F;
 
 public interface IGameplayInfoProvider {
@@ -9,4 +10,10 @@ public interface IGameplayInfoProvider {
      * @return when in game it returns the player position
      */
     Point2F getCenterOfInterest();
+
+    int getActiveSlotIndex();
+
+    void setActiveSlotIndex(int newIndex);
+
+    InventoryInfo getInventoryInfo();
 }

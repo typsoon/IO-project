@@ -2,7 +2,6 @@ package frontend.concreteviews.gameplayview.processors;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
-
 import frontend.concreteviews.gameplayview.IGameplayInfoProvider;
 import game.actions.PlayerSlotUse;
 import game.actions.UsageType;
@@ -25,7 +24,7 @@ public class MouseClickProcessor extends InputAdapter {
     }
 
     private final Vector2F getDirectionVector(final Point2F placeOfInterestPosition,
-            final Point2F clickedPointInScreenCords) {
+                                              final Point2F clickedPointInScreenCords) {
         final var clickedPointInGameCords = gameplayInfoProvider.castScreenCordinatesToGameCordinates(
                 clickedPointInScreenCords.x(),
                 clickedPointInScreenCords.y());
@@ -38,14 +37,14 @@ public class MouseClickProcessor extends InputAdapter {
     }
 
     public MouseClickProcessor(final IActionSender actionSender, final IGameplayInfoProvider gameplayInfoProvider,
-            final Subscribable gameCycles) {
+                               final Subscribable gameCycles) {
         this.gameplayInfoProvider = gameplayInfoProvider;
         this.actionSender = actionSender;
         this.gameCycles = gameCycles;
 
         gameCycles.registerSubscriber(deltaTime -> {
             final var direction = getDirectionVector(getPlaceOfInterest(), new Point2F(observedPointX, observedPointY));
-            final var action = new PlayerSlotUse(getUsageType(), direction, 0);
+            final var action = new PlayerSlotUse(getUsageType(), direction, gameplayInfoProvider.getActiveSlotIndex());
 
             if (pressedButton == noButton) {
                 observedPointSet = false;
@@ -56,6 +55,7 @@ public class MouseClickProcessor extends InputAdapter {
     }
 
     private static UsageType[] buttonToUsageTypeMapping = new UsageType[10];
+
     static {
         for (int i = 0; i < buttonToUsageTypeMapping.length; i++) {
             buttonToUsageTypeMapping[i] = UsageType.NONE;
