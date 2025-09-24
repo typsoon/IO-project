@@ -1,6 +1,7 @@
 package game.engine.entities.upgradetree;
 
 import game.engine.entities.inventory.IInventory;
+import game.gamestates.UpgradeTreeState;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -12,6 +13,8 @@ public interface IUpgradeTree {
     boolean isUnlocked(int nodeId);
 
     UpgradeNodeInfo getNodeInfo(int nodeId);
+
+    UpgradeTreeState getState();
 
     int getTreeSize();
 

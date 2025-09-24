@@ -2,7 +2,11 @@ package game.engine.entities.upgradetree;
 
 import game.engine.entities.inventory.IInventory;
 import game.engine.entities.items.UsageModifiers;
+import game.gamestates.UpgradeNodeState;
+import game.gamestates.UpgradeTreeState;
+import utils.FixedSizeArrayWrapper;
 
+import java.util.Collection;
 import java.util.List;
 
 public class UpgradeTree implements IUpgradeTree {
@@ -47,5 +51,13 @@ public class UpgradeTree implements IUpgradeTree {
     @Override
     public int getTreeSize() {
         return nodes.size();
+    }
+
+    @Override
+    public UpgradeTreeState getState() {
+        Collection<UpgradeNodeState> nodeStates = nodes.stream()
+                .map(IUpgradeNode::getState)
+                .toList();
+        return new UpgradeTreeState(new FixedSizeArrayWrapper<>(nodeStates, UpgradeNodeState.class));
     }
 }

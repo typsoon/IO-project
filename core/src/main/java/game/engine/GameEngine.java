@@ -65,6 +65,10 @@ public class GameEngine implements IGameEngine, IWorldView {
             if (player.isInteracting()) {
                 sender.sendGameState(player.getCurrentInteraction().getState());
             }
+
+            if (player.getUpgradeTreeState() != null) {
+                sender.sendGameState(player.getUpgradeTreeState());
+            }
         }
     }
 

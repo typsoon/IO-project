@@ -15,10 +15,12 @@ import game.engine.entities.items.UsageModifiers;
 import game.engine.entities.items.attacks.Damage;
 import game.engine.entities.items.attacks.IDamageable;
 import game.engine.entities.items.items.BasicSword;
+import game.engine.entities.upgradetree.IUpgradeTree;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
 import game.gamestates.PlayerState;
+import game.gamestates.UpgradeTreeState;
 import game.utility.Point2F;
 import game.utility.Rectangle2F;
 import game.utility.Vector2F;
@@ -45,6 +47,8 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     private IInteractable currentInteraction = null;
 
+    private IUpgradeTree upgradeTree;
+
     public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<IEntity> onDeath) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
@@ -70,7 +74,6 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     @Override
     public void think(IWorldView view) {
-//        System.out.println(moveset.slotUse);
         move(moveset.move.direction());
         slotUse(view);
         interact(view);
@@ -139,6 +142,13 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
                 currentHp,
                 inventory.getInventoryInfo()
         );
+    }
+
+    public UpgradeTreeState getUpgradeTreeState() {
+        if (upgradeTree != null) {
+            return upgradeTree.getState();
+        }
+        return null;
     }
 
     public Rectangle2F getSightRange() {

@@ -2,16 +2,17 @@ package game.engine.entities;
 
 import game.engine.PlayerConfig;
 import game.engine.entities.behaviours.Wandering;
-import game.engine.entities.concreteentities.Border;
-import game.engine.entities.concreteentities.Chicken;
-import game.engine.entities.concreteentities.Player;
-import game.engine.entities.concreteentities.ResourceDeposit;
+import game.engine.entities.concreteentities.*;
 import game.engine.entities.geometry.EntityGeometryConfigFactory;
 import game.engine.entities.geometry.GeometryConfigID;
 import game.engine.entities.inventory.Resource;
 import game.engine.entities.inventory.ResourceInfo;
+import game.engine.entities.items.items.BasicArrow;
+import game.engine.entities.items.items.BasicBow;
 import game.engine.modules.IGeometryFactory;
+import game.engine.modules.IManagingGeometryRepresentation;
 import game.utility.Point2F;
+import game.utility.Vector2F;
 
 import java.util.function.Consumer;
 
@@ -40,23 +41,23 @@ public class EntityFactory {
         Player player = new Player(playerConfig, geometryFactory.createGeometryRepresentation(
                 EntityGeometryConfigFactory.createEntityGeometryConfig(GeometryConfigID.HUMAN),
                 startingX, startingY), entityId.next(), onDeath);
-//        player.getInventory().getSlot(0).addItems(1, new BasicBow());
-//        player.getInventory().getSlot(1).addItems(15, new BasicArrow(
-//                (user, modifiers) -> {
-//                    IManagingGeometryRepresentation geometry = geometryFactory.createGeometryRepresentation(
-//                            EntityGeometryConfigFactory.createEntityGeometryConfig(GeometryConfigID.ARROW),
-//                            user.getEntityState().position().x(), user.getEntityState().position().y(), true);
-//                    BasicProjectile projectile = new BasicProjectile(
-//                            geometry,
-//                            entityId.next(), GeometryConfigID.ARROW, EntityGroupID.ARROW, onDeath,
-//                            user, modifiers
-//                    );
-//                    entityCallback.accept(projectile);
-//                    entityAICallback.accept(projectile);
-//                    geometry.setRotation(user.geometryRepresentation().getRotation());
-//                    geometry.setVelocity(new Vector2F(10f, 0f).rotate(user.geometryRepresentation().getRotation()));
-//                }
-//        ));
+        player.getInventory().getSlot(1).addItems(1, new BasicBow());
+        player.getInventory().getSlot(2).addItems(15, new BasicArrow(
+                (user, modifiers) -> {
+                    IManagingGeometryRepresentation geometry = geometryFactory.createGeometryRepresentation(
+                            EntityGeometryConfigFactory.createEntityGeometryConfig(GeometryConfigID.ARROW),
+                            user.getEntityState().position().x(), user.getEntityState().position().y(), true);
+                    BasicProjectile projectile = new BasicProjectile(
+                            geometry,
+                            entityId.next(), GeometryConfigID.ARROW, EntityGroupID.ARROW, onDeath,
+                            user, modifiers
+                    );
+                    entityCallback.accept(projectile);
+                    entityAICallback.accept(projectile);
+                    geometry.setRotation(user.geometryRepresentation().getRotation());
+                    geometry.setVelocity(new Vector2F(10f, 0f).rotate(user.geometryRepresentation().getRotation()));
+                }
+        ));
         entityCallback.accept(player);
         entityAICallback.accept(player);
         return player;
