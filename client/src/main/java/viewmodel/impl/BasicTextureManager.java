@@ -43,7 +43,7 @@ public class BasicTextureManager implements ITextureManager {
         this.labelStyle = new Label.LabelStyle(font, Color.WHITE);
     }
 
-    public Button getTextButton(String name) {
+    public TextButton getTextButton(String name) {
         return new TextButton(name, textButtonStyle);
     }
 
