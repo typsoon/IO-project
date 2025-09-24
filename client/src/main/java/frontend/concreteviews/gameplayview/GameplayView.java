@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -67,6 +68,12 @@ public class GameplayView extends ScreenAdapter {
     // private final TextureRegion test;
     // private final SpriteBatch spriteBatch = new SpriteBatch();
 
+    //this as well as map() should be removed from this class and refactored
+    SpriteBatch spriteBatch = new SpriteBatch();
+    TextureAtlas mapAtlas = new TextureAtlas(Gdx.files.internal("graphics/atlasdata/graphicsAtlas.atlas"));
+    TextureRegion picture = mapAtlas.findRegions("background/map").first();
+
+
     private final Point2F getCameraPosition() {
         var playerDrawableInfo = gameState.getPlayerData().iterator().next().getDrawableInfo();
         return new Point2F(playerDrawableInfo.getX(), playerDrawableInfo.getY());
@@ -127,9 +134,6 @@ public class GameplayView extends ScreenAdapter {
 
     //TODO: make more general, should be received from the server (bc map may vary from game to game)
     private void map() {
-        var spriteBatch = new SpriteBatch();
-        var mapAtlas = new TextureAtlas(Gdx.files.internal("graphics/atlasdata/graphicsAtlas.atlas"));
-        var picture = mapAtlas.findRegions("background/map").first();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
 
