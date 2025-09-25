@@ -28,10 +28,10 @@ public class EntityFactory {
     };
     private Consumer<IAIEntity> entityAICallback = entity -> {
     };
-    private Consumer<IEntity> onDeath = entity -> {
+    private Consumer<DeathData> onDeath = entity -> {
     };
 
-    public void setCallbacks(Consumer<IEntity> entityCallback, Consumer<IAIEntity> entityAICallback, Consumer<IEntity> onDeath) {
+    public void setCallbacks(Consumer<IEntity> entityCallback, Consumer<IAIEntity> entityAICallback, Consumer<DeathData> onDeath) {
         this.entityCallback = entityCallback;
         this.entityAICallback = entityAICallback;
         this.onDeath = onDeath;

@@ -4,13 +4,13 @@ import game.actions.IInteraction;
 import game.actions.PlayerInteraction;
 import game.actions.PlayerMove;
 import game.actions.PlayerSlotUse;
-import game.engine.entities.EntityFactory;
-import game.engine.entities.IAIEntity;
-import game.engine.entities.IEntity;
-import game.engine.entities.MoveSet;
+import game.engine.entities.*;
 import game.engine.entities.concreteentities.Player;
+import game.engine.entities.geometry.ICollisionAware;
+import game.engine.modules.ICollisionSubscriber;
 import game.engine.modules.IGeometryModule;
 import game.engine.modules.IGeometryRepresentation;
+import game.engine.modules.IManagingGeometryRepresentation;
 import game.session.IPlayerGamesStateSender;
 
 import java.io.Closeable;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-public class GameEngine implements IGameEngine, IWorldView {
+public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber {
 
     private final IGeometryModule geometryModule;
     private final EntityFactory entityFactory;
@@ -27,6 +27,8 @@ public class GameEngine implements IGameEngine, IWorldView {
     private final Collection<Closeable> resourcesToClose;
 
     private final Collection<IAIEntity> thinkers = new java.util.ArrayList<>();
+
+    private final Collection<DeathData> toDispose = new java.util.HashSet<>();
 
     @Override
     public void performCycle(Collection<Event> events) {
@@ -48,10 +50,18 @@ public class GameEngine implements IGameEngine, IWorldView {
                 }
             }
         }
-        // this is quick fix
         Collection<IAIEntity> thinkersCopy = new java.util.ArrayList<>(thinkers);
         thinkersCopy.forEach(thinker -> thinker.think(this));
+
         geometryModule.cycle();
+        toDispose.forEach(deathData -> {
+            IEntity entity = deathData.entity();
+            if (entity instanceof IAIEntity iaiEntity) {
+                thinkers.remove(iaiEntity);
+            }
+            entities.remove(entity.geometryRepresentation());
+            deathData.geometryRepresentation().dispose();
+        });
 
         for (Map.Entry<IPlayerGamesStateSender, Player> entry : players.entrySet()) {
             IPlayerGamesStateSender sender = entry.getKey();
@@ -82,6 +92,7 @@ public class GameEngine implements IGameEngine, IWorldView {
                          EntityFactory entityFactory, Collection<Closeable> resourcesToClose) {
 
         this.geometryModule = geometryModule;
+        geometryModule.subscribeToCollisions(this);
         this.entityFactory = entityFactory;
         this.resourcesToClose = resourcesToClose;
 
@@ -90,12 +101,8 @@ public class GameEngine implements IGameEngine, IWorldView {
         entityFactory.setCallbacks(
                 entity -> entities.put(entity.geometryRepresentation(), entity),
                 thinkers::add,
-                entity -> {
-                    entities.remove(entity.geometryRepresentation());
-                    if (entity instanceof IAIEntity aiEntity) {
-                        thinkers.remove(aiEntity);
-                    }
-                });
+                toDispose::add
+        );
 
         for (EnginePlayerData playerData : players) {
             Player player = entityFactory.createPlayer(playerData.playerConfig(), 0, 0);
@@ -132,5 +139,22 @@ public class GameEngine implements IGameEngine, IWorldView {
     // for testing purposes
     public IGeometryModule getGeometryModule() {
         return geometryModule;
+    }
+
+    @Override
+    public void onCollisionBegin(IManagingGeometryRepresentation entityA, IManagingGeometryRepresentation entityB) {
+        IEntity a = entities.get(entityA);
+        IEntity b = entities.get(entityB);
+        if (a instanceof ICollisionAware collisionAware) {
+            collisionAware.onCollisionBegin(b);
+        }
+        if (b instanceof ICollisionAware collisionAware) {
+            collisionAware.onCollisionBegin(a);
+        }
+    }
+
+    @Override
+    public void onCollisionEnd(IManagingGeometryRepresentation entityA, IManagingGeometryRepresentation entityB) {
+
     }
 }

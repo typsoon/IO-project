@@ -1,10 +1,7 @@
 package game.engine.entities.concreteentities;
 
 import game.engine.IWorldView;
-import game.engine.entities.EntityAction;
-import game.engine.entities.EntityGroupID;
-import game.engine.entities.IAIEntity;
-import game.engine.entities.IEntity;
+import game.engine.entities.*;
 import game.engine.entities.behaviours.IBehaviour;
 import game.engine.entities.geometry.GeometryConfigID;
 import game.engine.entities.items.attacks.Damage;
@@ -22,7 +19,7 @@ public class Chicken implements IAIEntity, IDamageable {
     private final EntityGroupID entityGroupID;
     private final IBehaviour behaviour;
 
-    private final Consumer<IEntity> onDeath;
+    private final Consumer<DeathData> onDeath;
 
     private int health = 50;
 
@@ -33,7 +30,7 @@ public class Chicken implements IAIEntity, IDamageable {
     }
 
     public Chicken(IManagingGeometryRepresentation geometryRepresentation, int entityId, GeometryConfigID geometryConfigID,
-                   EntityGroupID entityGroupID, IBehaviour behaviour, Consumer<IEntity> onDeath) {
+                   EntityGroupID entityGroupID, IBehaviour behaviour, Consumer<DeathData> onDeath) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = geometryConfigID;
@@ -69,8 +66,7 @@ public class Chicken implements IAIEntity, IDamageable {
     public void takeDamage(Damage damage, IEntity source) {
         health -= damage.value();
         if (health <= 0) {
-            geometryRepresentation.dispose();
-            onDeath.accept(this);
+            onDeath.accept(new DeathData(this, geometryRepresentation));
         }
     }
 }

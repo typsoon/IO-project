@@ -23,6 +23,41 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
 
     //if map performance is an issue we can use setUserData (using Object)
     private final Map<Body, IManagingGeometryRepresentation> geometryRepresentationMap = new HashMap<>();
+    private final Collection<ICollisionSubscriber> collisionSubscribers = new ArrayList<>();
+
+    {
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                for (ICollisionSubscriber subscriber : collisionSubscribers) {
+                    subscriber.onCollisionBegin(
+                            geometryRepresentationMap.get(contact.getFixtureA().getBody()),
+                            geometryRepresentationMap.get(contact.getFixtureB().getBody())
+                    );
+                }
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+                for (ICollisionSubscriber subscriber : collisionSubscribers) {
+                    subscriber.onCollisionEnd(
+                            geometryRepresentationMap.get(contact.getFixtureA().getBody()),
+                            geometryRepresentationMap.get(contact.getFixtureB().getBody())
+                    );
+                }
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
+    }
 
     public GeometryModule(float timeStep, int velocityIterations, int positionIterations) {
         this.timeStep = timeStep;
@@ -190,6 +225,16 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
     @Override
     public void close() {
         world.dispose();
+    }
+
+    @Override
+    public void subscribeToCollisions(ICollisionSubscriber subscriber) {
+        collisionSubscribers.add(subscriber);
+    }
+
+    @Override
+    public void unsubscribeFromCollisions(ICollisionSubscriber subscriber) {
+        collisionSubscribers.remove(subscriber);
     }
 
     //for debug purposes

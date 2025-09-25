@@ -17,4 +17,8 @@ public interface IGeometryModule {
     }
 
     void cycle();
+
+    void subscribeToCollisions(ICollisionSubscriber subscriber);
+
+    void unsubscribeFromCollisions(ICollisionSubscriber subscriber);
 }

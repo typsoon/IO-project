@@ -36,7 +36,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     private final IInventory inventory;
     private final UsageModifiers modifiers;
-    private final Consumer<IEntity> onDeath;
+    private final Consumer<DeathData> onDeath;
 
     // should be from file or config
     private final int maxHp = 100;
@@ -49,7 +49,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     private IUpgradeTree upgradeTree;
 
-    public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<IEntity> onDeath) {
+    public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<DeathData> onDeath) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
@@ -171,8 +171,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
     public void takeDamage(Damage damage, IEntity source) {
         currentHp -= damage.value();
         if (currentHp <= 0) {
-            geometryRepresentation.dispose();
-            onDeath.accept(this);
+            onDeath.accept(new DeathData(this, geometryRepresentation));
         }
     }
 }

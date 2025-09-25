@@ -1,32 +1,34 @@
 package game.engine.entities.concreteentities;
 
 import game.engine.IWorldView;
-import game.engine.entities.EntityAction;
-import game.engine.entities.EntityGroupID;
-import game.engine.entities.IAIEntity;
-import game.engine.entities.IEntity;
+import game.engine.entities.*;
 import game.engine.entities.geometry.GeometryConfigID;
+import game.engine.entities.geometry.ICollisionAware;
+import game.engine.entities.items.attacks.Damage;
 import game.engine.entities.items.attacks.DamageModifier;
+import game.engine.entities.items.attacks.DamageType;
+import game.engine.entities.items.attacks.IDamageable;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
 
 import java.util.function.Consumer;
 
-public class BasicProjectile implements IAIEntity {
+public class BasicProjectile implements IAIEntity, ICollisionAware {
     private final int entityId;
     private final IManagingGeometryRepresentation geometryRepresentation;
     private final GeometryConfigID geometryConfigID;
     private final EntityGroupID entityGroupID;
-    private final Consumer<IEntity> onDeath;
+    private final Consumer<DeathData> onDeath;
 
     private int flightRange = 100;
 
     private final IEntity shooter;
     private final DamageModifier modifiers;
+    private final Damage dmg = new Damage(DamageType.PIERCE, 20);
 
     public BasicProjectile(IManagingGeometryRepresentation geometryRepresentation, int entityId, GeometryConfigID geometryConfigID,
-                           EntityGroupID entityGroupID, Consumer<IEntity> onDeath, IEntity shooter, DamageModifier modifiers) {
+                           EntityGroupID entityGroupID, Consumer<DeathData> onDeath, IEntity shooter, DamageModifier modifiers) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = geometryConfigID;
@@ -41,8 +43,7 @@ public class BasicProjectile implements IAIEntity {
     public void think(IWorldView view) {
         flightRange--;
         if (flightRange <= 0) {
-            onDeath.accept(this);
-            geometryRepresentation.dispose();
+            onDeath.accept(new DeathData(this, geometryRepresentation));
         }
     }
 
@@ -62,5 +63,20 @@ public class BasicProjectile implements IAIEntity {
     @Override
     public IGeometryRepresentation geometryRepresentation() {
         return geometryRepresentation;
+    }
+
+    @Override
+    public void onCollisionBegin(IEntity other) {
+        if (other instanceof IDamageable damageable) {
+            if (other != shooter) {
+                damageable.takeDamage(modifiers.modify(dmg), shooter);
+                onDeath.accept(new DeathData(this, geometryRepresentation));
+            }
+        }
+    }
+
+    @Override
+    public void onCollisionEnd(IEntity other) {
+
     }
 }

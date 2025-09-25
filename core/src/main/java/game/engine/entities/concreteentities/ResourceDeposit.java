@@ -1,5 +1,6 @@
 package game.engine.entities.concreteentities;
 
+import game.engine.entities.DeathData;
 import game.engine.entities.EntityAction;
 import game.engine.entities.EntityGroupID;
 import game.engine.entities.IEntity;
@@ -20,13 +21,13 @@ public class ResourceDeposit implements IEntity, IDamageable {
     private final int entityId;
     private final GeometryConfigID geometryConfigID;
     private final EntityGroupID entityGroupID;
-    private final Consumer<IEntity> onDeath;
+    private final Consumer<DeathData> onDeath;
 
     private final ResourceInfo resourceInfo;
     private int health;
 
     public ResourceDeposit(IManagingGeometryRepresentation geometryRepresentation, int entityId, GeometryConfigID geometryConfigID,
-                           EntityGroupID entityGroupID, Consumer<IEntity> onDeath, int health, ResourceInfo resourceInfo) {
+                           EntityGroupID entityGroupID, Consumer<DeathData> onDeath, int health, ResourceInfo resourceInfo) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = geometryConfigID;
@@ -62,8 +63,7 @@ public class ResourceDeposit implements IEntity, IDamageable {
             if (source instanceof IHaveInventory inventory) {
                 inventory.getInventory().addResource(resourceInfo);
             }
-            geometryRepresentation.dispose();
-            onDeath.accept(this);
+            onDeath.accept(new DeathData(this, geometryRepresentation));
         }
     }
 }
