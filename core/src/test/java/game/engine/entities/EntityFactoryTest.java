@@ -24,7 +24,7 @@ class EntityFactoryTest {
     @SuppressWarnings("FieldCanBeLocal")
     private Consumer<IAIEntity> entityAICallback;
     @SuppressWarnings("FieldCanBeLocal")
-    private Consumer<IEntity> onDeath;
+    private Consumer<DeathData> onDeath;
 
     private AtomicInteger callbackCounter;
 
