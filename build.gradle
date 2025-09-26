@@ -2,7 +2,7 @@ subprojects {
     apply plugin: "java"
 
     java {
-      sourceCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_21
     }
 
     repositories {
@@ -11,10 +11,10 @@ subprojects {
     }
 
     ext {
-      // gdxVersion = '1.13.1'
-      gdxVersion = '1.12.1'
-      snakeyamlVersion = "2.4"
-      resourcesDirName = "assets"
+        // gdxVersion = '1.13.1'
+        gdxVersion = '1.12.1'
+        snakeyamlVersion = "2.4"
+        resourcesDirName = "assets"
     }
 
     dependencies {
@@ -22,6 +22,8 @@ subprojects {
 
         testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
         testImplementation 'org.mockito:mockito-core:5.17.0'
+        testImplementation "org.mockito:mockito-inline:5.2.0"
+        testImplementation "org.mockito:mockito-junit-jupiter:5.12.0"
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
         // implementation platform('org.apache.logging.log4j:log4j-bom:2.24.3')
     }
@@ -33,3 +35,5 @@ subprojects {
         }
     }
 }
+
+
