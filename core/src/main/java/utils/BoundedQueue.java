@@ -15,6 +15,8 @@ public class BoundedQueue<T> extends AbstractCollection<T> {
 
     @Override
     public boolean add(T element) {
+        if (maxSize <= 0)
+            return false;
         if (deque.size() == maxSize) {
             deque.pollFirst(); // discard oldest
         }
