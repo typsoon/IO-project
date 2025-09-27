@@ -1,7 +1,7 @@
 package game.engine.entities.upgradetree;
 
+import game.engine.entities.IUsageModifiers;
 import game.engine.entities.inventory.IInventory;
-import game.engine.entities.items.UsageModifiers;
 import game.gamestates.UpgradeNodeState;
 import game.gamestates.UpgradeTreeState;
 import utils.FixedSizeArrayWrapper;
@@ -11,11 +11,11 @@ import java.util.List;
 
 public class UpgradeTree implements IUpgradeTree {
 
-    private final UsageModifiers usageModifiers;
+    private final IUsageModifiers IUsageModifiers;
     private final List<IUpgradeNode> nodes;
 
-    UpgradeTree(List<IUpgradeNode> nodes, UsageModifiers modifiers) {
-        this.usageModifiers = modifiers;
+    UpgradeTree(List<IUpgradeNode> nodes, IUsageModifiers modifiers) {
+        this.IUsageModifiers = modifiers;
         this.nodes = nodes;
     }
 
@@ -29,7 +29,7 @@ public class UpgradeTree implements IUpgradeTree {
                 return false;
             }
         }
-        return nodes.get(nodeId).unlock(inventory, usageModifiers);
+        return nodes.get(nodeId).unlock(inventory, IUsageModifiers);
     }
 
     @Override

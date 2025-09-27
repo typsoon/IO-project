@@ -3,7 +3,7 @@ package game.engine.entities.inventory;
 import game.actions.UsageType;
 import game.engine.IWorldView;
 import game.engine.entities.IEntity;
-import game.engine.entities.items.UsageModifiers;
+import game.engine.entities.IUsageModifiers;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public interface IInventory {
 
     void swapSlots(int index1, int index2);
 
-    void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers);
+    void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, IUsageModifiers modifiers);
 
     InventoryInfo getInventoryInfo();
 }

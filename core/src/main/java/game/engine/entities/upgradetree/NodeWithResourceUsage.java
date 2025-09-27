@@ -1,8 +1,8 @@
 package game.engine.entities.upgradetree;
 
+import game.engine.entities.IUsageModifiers;
 import game.engine.entities.inventory.IInventory;
 import game.engine.entities.inventory.ResourceInfo;
-import game.engine.entities.items.UsageModifiers;
 
 import java.util.Collection;
 
@@ -15,7 +15,7 @@ public class NodeWithResourceUsage implements IUpgradeNode {
     }
 
     @Override
-    public boolean unlock(IInventory inventory, UsageModifiers modifiers) {
+    public boolean unlock(IInventory inventory, IUsageModifiers modifiers) {
         Collection<ResourceInfo> costs = upgradeNode.getInfo().costs();
         for (ResourceInfo cost : costs) {
             if (inventory.getResourceCount(cost.resource()) < cost.amount()) {

@@ -3,8 +3,8 @@ package game.engine.entities.inventory;
 import game.actions.UsageType;
 import game.engine.IWorldView;
 import game.engine.entities.IEntity;
+import game.engine.entities.IUsageModifiers;
 import game.engine.entities.items.IItem;
-import game.engine.entities.items.UsageModifiers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class InventoryTest {
     private IItem mockItem;
     private IWorldView mockWorldView;
     private IEntity mockUser;
-    private UsageModifiers mockModifiers;
+    private IUsageModifiers mockModifiers;
 
     @BeforeEach
     void setUp() {
@@ -28,7 +28,7 @@ class InventoryTest {
         when(mockItem.stackSize()).thenReturn(1);
         mockWorldView = mock(IWorldView.class);
         mockUser = mock(IEntity.class);
-        mockModifiers = mock(UsageModifiers.class);
+        mockModifiers = mock(IUsageModifiers.class);
     }
 
     @Test

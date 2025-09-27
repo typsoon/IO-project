@@ -33,7 +33,7 @@ class RectangleSlashTest {
         when(mockGeometry.getPosition()).thenReturn(new game.utility.Point2F(0, 0));
         when(mockGeometry.getRotation()).thenReturn(0f);
 
-        when(mockModifier.modify(any(Damage.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(mockModifier.modify(any(Damage.class), any(IDamageable.class))).thenAnswer(inv -> inv.getArgument(0));
     }
 
     @Test
@@ -81,7 +81,7 @@ class RectangleSlashTest {
 
         Damage modifiedDamage = new Damage(DamageType.SLASH, 999);
 
-        when(mockModifier.modify(any(Damage.class))).thenReturn(modifiedDamage);
+        when(mockModifier.modify(any(Damage.class), any(IDamageable.class))).thenReturn(modifiedDamage);
         when(mockWorldView.getEntitiesInArea((Rectangle2F) any(), any())).thenReturn(List.of(enemyAsEntity));
 
         rectangleSlash.attack(mockWorldView, mockUser, mockModifier);

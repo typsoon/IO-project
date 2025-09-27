@@ -2,9 +2,9 @@ package game.engine.entities.items.items;
 
 import game.engine.IWorldView;
 import game.engine.entities.IEntity;
+import game.engine.entities.IUsageModifiers;
 import game.engine.entities.items.ItemInfo;
 import game.engine.entities.items.ItemSpriteID;
-import game.engine.entities.items.UsageModifiers;
 import game.engine.entities.items.attacks.IAttack;
 import game.engine.entities.items.attacks.RectangleSlash;
 
@@ -31,12 +31,12 @@ public class BasicSword extends BasicItem {
     }
 
     @Override
-    public void itemUnequip(IWorldView view, IEntity user, UsageModifiers modifiers) {
+    public void itemUnequip(IWorldView view, IEntity user, IUsageModifiers modifiers) {
         attackClock = 0;
     }
 
     @Override
-    public void primaryAction(IWorldView view, IEntity user, UsageModifiers modifiers) {
+    public void primaryAction(IWorldView view, IEntity user, IUsageModifiers modifiers) {
         attackClock++;
         if (attackClock >= attackTime) {
             attack.attack(view, user, modifiers.getDamageModifier());

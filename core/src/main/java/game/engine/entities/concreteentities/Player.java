@@ -11,7 +11,6 @@ import game.engine.entities.geometry.GeometryConfigID;
 import game.engine.entities.inventory.IHaveInventory;
 import game.engine.entities.inventory.IInventory;
 import game.engine.entities.inventory.Inventory;
-import game.engine.entities.items.UsageModifiers;
 import game.engine.entities.items.attacks.Damage;
 import game.engine.entities.items.attacks.IDamageable;
 import game.engine.entities.items.items.BasicSword;
@@ -36,7 +35,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
     private final MoveSet moveset = new MoveSet();
 
     private final IInventory inventory;
-    private final UsageModifiers modifiers;
+    private final BasicUsageModifiers modifiers;
     private final Consumer<DeathData> onDeath;
 
     // should be from file or config
@@ -57,7 +56,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
         this.entityGroupID = config.entityGroupID();
         this.inventory = new Inventory(3);
         inventory.getSlot(0).addItems(1, new BasicSword());
-        this.modifiers = () -> Damage -> Damage;
+        this.modifiers = new BasicUsageModifiers(this);
         this.onDeath = onDeath;
     }
 
@@ -75,6 +74,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     @Override
     public void think(IWorldView view) {
+        modifiers.setWorldView(view);
         move(moveset.move.direction());
         slotUse(view);
         interact(view);

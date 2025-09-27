@@ -3,7 +3,7 @@ package game.engine.entities.inventory;
 import game.actions.UsageType;
 import game.engine.IWorldView;
 import game.engine.entities.IEntity;
-import game.engine.entities.items.UsageModifiers;
+import game.engine.entities.IUsageModifiers;
 import utils.FixedSizeArrayWrapper;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class Inventory implements IInventory {
     }
 
     @Override
-    public void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, UsageModifiers modifiers) {
+    public void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, IUsageModifiers modifiers) {
         if (slots.get(index).isEmpty()) {
             return;
         }

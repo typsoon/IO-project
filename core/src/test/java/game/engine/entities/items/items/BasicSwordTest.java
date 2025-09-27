@@ -2,21 +2,22 @@ package game.engine.entities.items.items;
 
 import game.engine.IWorldView;
 import game.engine.entities.IEntity;
-import game.engine.entities.items.UsageModifiers;
-import game.engine.entities.items.attacks.IAttack;
+import game.engine.entities.IUsageModifiers;
 import game.engine.entities.items.attacks.DamageModifier;
+import game.engine.entities.items.attacks.IAttack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BasicSwordTest {
 
     private BasicSword sword;
     private IWorldView mockWorldView;
     private IEntity mockUser;
-    private UsageModifiers mockModifiers;
+    private IUsageModifiers mockModifiers;
     private DamageModifier mockDamageModifier;
     private IAttack mockAttack;
 
@@ -25,7 +26,7 @@ class BasicSwordTest {
         sword = new BasicSword();
         mockWorldView = mock(IWorldView.class);
         mockUser = mock(IEntity.class);
-        mockModifiers = mock(UsageModifiers.class);
+        mockModifiers = mock(IUsageModifiers.class);
         mockDamageModifier = mock(DamageModifier.class);
 
         when(mockModifiers.getDamageModifier()).thenReturn(mockDamageModifier);

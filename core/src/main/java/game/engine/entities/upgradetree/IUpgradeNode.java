@@ -1,13 +1,13 @@
 package game.engine.entities.upgradetree;
 
+import game.engine.entities.IUsageModifiers;
 import game.engine.entities.inventory.IInventory;
 import game.engine.entities.inventory.ResourceInfo;
-import game.engine.entities.items.UsageModifiers;
 import game.gamestates.UpgradeNodeState;
 import utils.FixedSizeArrayWrapper;
 
 public interface IUpgradeNode {
-    boolean unlock(IInventory inventory, UsageModifiers modifiers);
+    boolean unlock(IInventory inventory, IUsageModifiers modifiers);
 
     boolean isUnlocked();
 

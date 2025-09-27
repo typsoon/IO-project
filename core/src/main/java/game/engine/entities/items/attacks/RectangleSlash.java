@@ -27,7 +27,7 @@ public class RectangleSlash implements IAttack {
 
         for (IEntity entity : entities) {
             if (entity != user && entity instanceof IDamageable damageable) {
-                damageable.takeDamage(modifier.modify(damage), user);
+                damageable.takeDamage(modifier.modify(damage, damageable), user);
             }
         }
     }

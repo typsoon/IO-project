@@ -69,7 +69,7 @@ public class BasicProjectile implements IAIEntity, ICollisionAware {
     public void onCollisionBegin(IEntity other) {
         if (other instanceof IDamageable damageable) {
             if (other != shooter) {
-                damageable.takeDamage(modifiers.modify(dmg), shooter);
+                damageable.takeDamage(modifiers.modify(dmg, damageable), shooter);
                 onDeath.accept(new DeathData(this, geometryRepresentation));
             }
         }
