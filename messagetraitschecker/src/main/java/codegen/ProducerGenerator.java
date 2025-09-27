@@ -38,7 +38,7 @@ public class ProducerGenerator {
                 .returns(ClassName.get(messageTypeMirror.asType()));
 
         fieldSpecs.forEach(field -> {
-            var mappedVal = getTypeNameData(field);
+            var mappedVal = getTypeNameData(field.type());
 
             args.add("$L");
             formatArgs.add(mappedVal.producerMethod().apply(field.name()));
@@ -49,6 +49,30 @@ public class ProducerGenerator {
         var codeBlock = CodeBlock.of(format, formatArgs.toArray());
 
         methodBuilder.beginControlFlow("try").addStatement(codeBlock)
+                .nextControlFlow("catch ($T e)", Exception.class)
+                .addStatement("throw new $T($N)", IllegalStateException.class, "e")
+                .endControlFlow();
+
+        return methodBuilder.build();
+    }
+
+    public MethodSpec getProduceMethod(ClassDetailsRec classDetails, String producerQualifiedName,
+            TypeElement messageTypeMirror) {
+        var producerPar = ParameterSpec
+                .builder(ClassName.bestGuess(producerQualifiedName), CodegenConfig.producerParName)
+                .addModifiers(FINAL)
+                .build();
+
+        var methodBuilder = MethodSpec.methodBuilder(CodegenConfig.decodeMethodName)
+                .addModifiers(PUBLIC, FINAL, STATIC)
+                .addParameter(producerPar)
+                .returns(ClassName.get(messageTypeMirror.asType()));
+
+        var generatedClassName = String.format(CodegenConfig.generatedClassNameFormat,
+                messageTypeMirror.getSimpleName());
+
+        methodBuilder.beginControlFlow("try")
+                .addStatement("return new $L($L)", generatedClassName, classDetails.loadTheClass())
                 .nextControlFlow("catch ($T e)", Exception.class)
                 .addStatement("throw new $T($N)", IllegalStateException.class, "e")
                 .endControlFlow();

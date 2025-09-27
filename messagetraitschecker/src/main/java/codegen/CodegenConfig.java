@@ -24,6 +24,7 @@ public class CodegenConfig {
     public static final String staticSizeFieldName = "staticSize";
     public static final String encodeAndWriteMethodName = "encodeAndWrite";
     public static final String getDynamicSizeMethodName = "getDynamicSize";
+    public static final String getArrayFromSupplierMethodName = "getArrayFromSupplier";
     public static final String getSendableMethodName = "getSendable";
     public static final String decodeMethodName = "decode";
 
@@ -36,6 +37,9 @@ public class CodegenConfig {
     public static final String decodersMapName = "decoders";
 
     public static final String generatedClassesLoaderName = "GeneratedClassesData";
+
+    public static final String iSendableClassPath = "utils.ISendable";
+    public static final String fixedSizeArrayClassPath = "utils.FixedSizeArrayWrapper";
 
     public static record TypeNameData(
             Function<String, CodeBlock> consumerMethod, Function<String, CodeBlock> producerMethod,
@@ -101,11 +105,11 @@ public class CodegenConfig {
 
     }
 
-    static final TypeNameData getTypeNameData(FieldSpec field) {
-        if (field.type() instanceof ArrayTypeName) {
+    static final TypeNameData getTypeNameData(TypeName typeName) {
+        if (typeName instanceof ArrayTypeName) {
             throw new UnsupportedOperationException("Not implemented");
         } else {
-            var mappedVal = typeToTypeData.get(field.type());
+            var mappedVal = typeToTypeData.get(typeName);
 
             // TODO: fixme, how to check if that is an enum, It's possible that a separate
             // annotation will be needed to
@@ -115,14 +119,14 @@ public class CodegenConfig {
                 if (mappedVal == null) {
                     mappedVal = new CodegenConfig.TypeNameData(
                             name -> CodeBlock.of("$N.putEnum($L)", consumerParName, name),
-                            name -> CodeBlock.of("$N.getEnum($T.values())", producerParName, field.type()),
+                            name -> CodeBlock.of("$N.getEnum($T.values())", producerParName, typeName),
                             Integer.BYTES,
                             Optional.empty());
                 }
             } else {
                 if (mappedVal == null) {
                     throw new IllegalStateException(
-                            "Unsupported type: %s, not found among keys %s".formatted(field.type(),
+                            "Unsupported type: %s, not found among keys %s".formatted(typeName,
                                     typeToTypeData.keySet()));
                 }
             }

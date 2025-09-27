@@ -5,14 +5,28 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 
 import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
 
 public class GenericTypeUtils {
+    public final static TypeElement typeElementOutOfElement(Element variableElement, Types typeUtils) {
+        TypeMirror typeMirror = variableElement.asType(); // get the type of the variable
+
+        if (typeMirror.getKind() == TypeKind.DECLARED) {
+            DeclaredType declaredType = (DeclaredType) typeMirror;
+            return (TypeElement) declaredType.asElement(); // returns the TypeElement
+        }
+
+        throw new IllegalStateException("Primitive type or array encountered here");
+    }
+
     public final static TypeMirror getTemplateArgTypeMirror(TypeElement element) {
         var superClass = (DeclaredType) element.getSuperclass();
         var typeArgs = superClass.getTypeArguments();
