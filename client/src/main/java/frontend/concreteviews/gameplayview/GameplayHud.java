@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 
 import java.util.ArrayList;
 
@@ -23,8 +23,8 @@ public class GameplayHud implements IGameplayHud {
     ArrayList<TextButton> hotbarSlots = new ArrayList<>();
     ArrayList<Label> resourceLabels = new ArrayList<>();
 
-
-    public GameplayHud(IGameplayInfoProvider gameplayInfoProvider, InputMultiplexer multiplexer, ITextureManager textureManager) {
+    public GameplayHud(IGameplayInfoProvider gameplayInfoProvider, InputMultiplexer multiplexer,
+            ITextureManager textureManager) {
         this.gameplayInfoProvider = gameplayInfoProvider;
         this.textureManager = textureManager;
         createHud();
@@ -34,12 +34,14 @@ public class GameplayHud implements IGameplayHud {
     @Override
     public void render(final float delta) {
         hpBar.setValue((float) gameplayInfoProvider.getHpValue() / (gameplayInfoProvider.getMaxHpValue()) * 100);
-        hpLabel.setText(String.format("HP: %3d out of %3d", gameplayInfoProvider.getHpValue(), gameplayInfoProvider.getMaxHpValue()));
+        hpLabel.setText(String.format("HP: %3d out of %3d", gameplayInfoProvider.getHpValue(),
+                gameplayInfoProvider.getMaxHpValue()));
         for (int i = 0; i < gameplayInfoProvider.getInventoryInfo().slotNum(); i++) {
             if (i < gameplayInfoProvider.getInventoryInfo().slots().getData().length) {
                 hotbarSlots.get(i).setColor(Color.GRAY);
                 if (gameplayInfoProvider.getInventoryInfo().slots().getData()[i].amount() > 0) {
-                    hotbarSlots.get(i).setText(gameplayInfoProvider.getInventoryInfo().slots().getData()[i].item().name());
+                    hotbarSlots.get(i)
+                            .setText(gameplayInfoProvider.getInventoryInfo().slots().getData()[i].item().name());
                 } else {
                     hotbarSlots.get(i).setText("");
                 }
@@ -50,8 +52,9 @@ public class GameplayHud implements IGameplayHud {
         }
 
         for (int i = 0; i < gameplayInfoProvider.getInventoryInfo().resources().getData().length; i++) {
-            resourceLabels.get(i).setText(gameplayInfoProvider.getInventoryInfo().resources().getData()[i].amount() + " x " +
-                    gameplayInfoProvider.getInventoryInfo().resources().getData()[i].resource().name());
+            resourceLabels.get(i)
+                    .setText(gameplayInfoProvider.getInventoryInfo().resources().getData()[i].amount() + " x " +
+                            gameplayInfoProvider.getInventoryInfo().resources().getData()[i].resource().name());
         }
 
         hudStage.act(delta);

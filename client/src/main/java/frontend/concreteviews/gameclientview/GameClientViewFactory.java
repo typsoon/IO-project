@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game;
 import frontend.concreteviews.gameclientview.subscreens.GameClientSubviewsFactory;
 import network.client.ClientSideSocketWrapper;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 import viewmodel.IView;
 import viewmodel.IViewManager;
 

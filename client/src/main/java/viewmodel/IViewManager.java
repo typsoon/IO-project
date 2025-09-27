@@ -5,6 +5,7 @@ import java.util.List;
 
 import game.gamestates.IGameState;
 import network.client.ClientSideSocketWrapper;
+import frontend.assetsloading.*;
 
 //don't use outside package concerning frontend. use AbstractViewManager instead
 public interface IViewManager extends IAbstractGeneralViewManager {

@@ -2,11 +2,13 @@ package viewmodel.impl;
 
 import java.util.Collection;
 
+import frontend.assetsloading.ITextureManager;
+import frontend.assetsloading.impl.BasicTextureManager;
 import game.gamestates.IGameState;
 import network.client.ClientSideSocketWrapper;
-import viewmodel.ITextureManager;
 import viewmodel.IViewFactory;
 import viewmodel.IViewManager;
+import frontend.assetsloading.*;
 
 public class BasicViewManager implements IViewManager {
     private final IViewFactory viewFactory;

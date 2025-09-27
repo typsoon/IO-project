@@ -2,8 +2,11 @@ package viewmodel.impl;
 
 import com.badlogic.gdx.Game;
 
+import frontend.assetsloading.impl.BasicTextureManager;
 import network.client.ClientSideSocketWrapperFactory;
-import viewmodel.IViewManager;
+import frontend.assetsloading.*;
+import frontend.assetsloading.impl.*;
+import viewmodel.*;
 
 public class BasicViewManagerInjector {
     private final Game game;

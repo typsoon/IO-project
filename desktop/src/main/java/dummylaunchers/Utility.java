@@ -14,7 +14,7 @@ import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper;
 import network.messages.Message;
 import utils.ISendable;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 import viewmodel.IViewManager;
 
 public class Utility {

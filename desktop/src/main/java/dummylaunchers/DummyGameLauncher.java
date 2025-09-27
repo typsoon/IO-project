@@ -1,9 +1,20 @@
 package dummylaunchers;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+
+import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.impl.AtlasLoader;
+import frontend.assetsloading.impl.BasicTextureManager;
 import frontend.concreteviews.gameplayview.GameplayViewFactory;
 import game.engine.PlayerConfig;
 import game.engine.entities.EntityGroupID;
@@ -12,16 +23,6 @@ import game.session.GameSessionFactory;
 import game.session.IPlayerConnector;
 import game.session.PlayerData;
 import utils.ISendable;
-import viewmodel.ITextureManager;
-import viewmodel.impl.BasicTextureManager;
-
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class GameLauncher extends Game {
     @Override

@@ -1,4 +1,4 @@
-package viewmodel.impl;
+package frontend.assetsloading.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -12,7 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import viewmodel.ITextureManager;
+
+import frontend.assetsloading.ITextureManager;
 
 public class BasicTextureManager implements ITextureManager {
     private final TextureAtlas atlas;
@@ -24,7 +25,7 @@ public class BasicTextureManager implements ITextureManager {
     private final Label.LabelStyle labelStyle;
     private final ProgressBar.ProgressBarStyle progressBarStyle;
 
-    BasicTextureManager() {
+    public BasicTextureManager() {
         // TODO view: use config instead of hardcoded names
         this.atlas = new TextureAtlas(Gdx.files.internal("BasicView.atlas"));
         this.skin = new Skin(atlas);
@@ -60,7 +61,7 @@ public class BasicTextureManager implements ITextureManager {
         Texture fillTexture = new Texture(fillPixmap);
         fillPixmap.dispose();
         Drawable fillDrawable = new TextureRegionDrawable(new TextureRegion(fillTexture));
-        
+
         this.progressBarStyle = new ProgressBar.ProgressBarStyle();
         progressBarStyle.background = bgDrawable;
         progressBarStyle.knobBefore = null;

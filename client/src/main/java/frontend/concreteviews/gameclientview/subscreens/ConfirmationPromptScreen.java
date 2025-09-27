@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.*;
 
 import frontend.concreteviews.gameclientview.ScreenSwitchingUtils;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 
 import static network.messages.userstate.GameConfirmation.Confirmation.*;
 

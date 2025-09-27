@@ -25,7 +25,7 @@ import frontend.gamestate.IReadOnlyDisplayableGameState;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 import utils.ObserverWithATwist.Subscribable;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,11 +71,10 @@ public class GameplayView extends ScreenAdapter {
     // private final TextureRegion test;
     // private final SpriteBatch spriteBatch = new SpriteBatch();
 
-    //this as well as map() should be removed from this class and refactored
+    // this as well as map() should be removed from this class and refactored
     SpriteBatch spriteBatch = new SpriteBatch();
     TextureAtlas mapAtlas = new TextureAtlas(Gdx.files.internal("graphics/atlasdata/graphicsAtlas.atlas"));
     TextureRegion picture = mapAtlas.findRegions("background/map").first();
-
 
     private final Point2F getCameraPosition() {
         var playerDrawableInfo = gameState.getPlayerData().iterator().next().getDrawableInfo();
@@ -88,9 +87,9 @@ public class GameplayView extends ScreenAdapter {
     }
 
     GameplayView(Game game, Collection<EventListener> gameplayViewEventListeners,
-                 Collection<Function<DataNeededForCreation, InputProcessor>> gameplayViewInputProcessorsFactories,
-                 ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
-                 TexturesProvider texturesProvider, Subscribable gameCycles) {
+            Collection<Function<DataNeededForCreation, InputProcessor>> gameplayViewInputProcessorsFactories,
+            ITextureManager textureManager, IReadOnlyDisplayableGameState gameState,
+            TexturesProvider texturesProvider, Subscribable gameCycles) {
         this.game = game;
         this.gameplayViewEventListeners = gameplayViewEventListeners;
         this.gameplayViewInputProcessorsFactories = gameplayViewInputProcessorsFactories;
@@ -135,18 +134,19 @@ public class GameplayView extends ScreenAdapter {
         shapeRenderer.end();
     }
 
-    //TODO: make more general, should be received from the server (bc map may vary from game to game)
+    // TODO: make more general, should be received from the server (bc map may vary
+    // from game to game)
     private void map() {
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
 
-        float worldSize = 15f;          //should definitely be global
+        float worldSize = 15f; // should definitely be global
         spriteBatch.draw(picture,
                 -worldSize, -worldSize, 1, 1,
                 2 * worldSize, 2 * worldSize, 1, 1, 0);
 
         spriteBatch.end();
-        //keep for debug purposes
+        // keep for debug purposes
         grid();
     }
 
@@ -169,7 +169,7 @@ public class GameplayView extends ScreenAdapter {
         map();
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
-        //TODO add gui
+        // TODO add gui
         var playerInfo = gameState.getPlayerData().iterator().next();
         hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue()) * 100);
         hpLabel.setText(String.format("HP: %3d out of %3d", playerInfo.getHpValue(), playerInfo.getMaxHpValue()));
@@ -206,7 +206,10 @@ public class GameplayView extends ScreenAdapter {
         gameCamera = new OrthographicCamera();
         gameCamera.setToOrtho(false);
         viewport = new FitViewport(0, 0, gameCamera);
-        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition, gameState.getPlayerData().iterator().next()::getInventoryInfo, gameState.getPlayerData().iterator().next()::getHpValue, gameState.getPlayerData().iterator().next()::getMaxHpValue);
+        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition,
+                gameState.getPlayerData().iterator().next()::getInventoryInfo,
+                gameState.getPlayerData().iterator().next()::getHpValue,
+                gameState.getPlayerData().iterator().next()::getMaxHpValue);
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
         stage = new Stage();
 
@@ -278,7 +281,7 @@ public class GameplayView extends ScreenAdapter {
         }
         Gdx.input.setInputProcessor(multiplexer);
 
-        //this should be last because it calls render() on windows
+        // this should be last because it calls render() on windows
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 

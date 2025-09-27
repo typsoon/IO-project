@@ -22,7 +22,7 @@ import network.messages.defaultmessage.ObjectToMessageDecoder;
 import utility.IActionSender;
 import utility.ICycleTimedPerformer;
 import utils.ObserverWithATwist.ObserverImpl;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 import viewmodel.IView;
 import viewmodel.IViewManager;
 

@@ -1,0 +1,49 @@
+{
+  "com.badlogic.gdx.graphics.Color": {
+    "white": { "r": 1, "g": 1, "b": 1, "a": 1 }
+  },
+
+  "com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator$FreeTypeFontParameter": {
+    "default-font": { "size": 50 }
+  },
+
+  "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+    "default-font": { "file": "fonts/Harrington_SHAREWARE.ttf", "fontParameters": "default-font" }
+  },
+
+  "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+    "default": {
+      "font": "default-font",
+      "fontColor": "white"
+    }
+  },
+
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    "default": {
+      "up": "buttonBackground",
+      "font": "default-font",
+      "pressedOffsetX": 1,
+      "pressedOffsetY": -1
+    }
+  },
+
+  "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+    "default": {
+      "background": "buttonBackground",
+      "font": "default-font",
+      "messageFont": "default-font",
+      "fontColor": "white"
+    }
+  },
+
+  "com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle": {
+    "default-horizontal": {
+      "background": "progress-bg",
+      "knobBefore": "progress-fill"
+    },
+    "default-vertical": {
+      "background": "progress-bg",
+      "knobBefore": "progress-fill"
+    }
+  }
+}

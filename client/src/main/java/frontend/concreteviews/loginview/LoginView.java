@@ -16,7 +16,7 @@ import network.utils.Credentials;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import viewmodel.IViewManager;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 import viewmodel.IView;
 
 public class LoginView extends ScreenAdapter implements IView {

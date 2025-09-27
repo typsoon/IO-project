@@ -16,7 +16,7 @@ import frontend.concreteviews.gameclientview.GameClientViewData;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.RequestGameStartEvent;
 import frontend.concreteviews.gameclientview.ScreenSwitchingUtils;
 import gameclient.rooms.RoomInfo;
-import viewmodel.ITextureManager;;
+import frontend.assetsloading.*;
 
 public class WaitingRoomScreen extends ScreenAdapter {
     private final ScreenSwitchingUtils screenSwitchingUtils;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.concreteviews.gameclientview.GameClientViewData;
 import frontend.concreteviews.gameclientview.ScreenSwitchingUtils;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
 
 class RoomsView extends ScreenAdapter {
     public RoomsView(ScreenSwitchingUtils screenSwitchingUtils, GameClientViewData gameClientViewData,

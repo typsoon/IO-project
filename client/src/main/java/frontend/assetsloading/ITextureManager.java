@@ -1,4 +1,4 @@
-package viewmodel;
+package frontend.assetsloading;
 
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 

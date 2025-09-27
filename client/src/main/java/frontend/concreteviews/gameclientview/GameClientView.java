@@ -26,7 +26,8 @@ import gameclient.rooms.RoomRequestResult;
 import gameclient.rooms.RoomRequestType;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utils.ISendable;
-import viewmodel.ITextureManager;
+import frontend.assetsloading.*;
+import frontend.assetsloading.*;
 
 public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
     @SuppressWarnings("unused")
@@ -41,8 +42,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     private Stage stage;
 
     public GameClientView(final Game game, ITextureManager textureManager,
-                          GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
-                          GameClientSubviewsFactory gameClientSubscreensFactory) {
+            GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
+            GameClientSubviewsFactory gameClientSubscreensFactory) {
         this.game = game;
         this.textureManager = textureManager;
         this.gameClientViewEventListener = gameClientViewEventListener;
@@ -98,8 +99,11 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         createRoomButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                                     final int button) {
-                createRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true)); // todo: add proper params
+                    final int button) {
+                createRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true)); // todo:
+                                                                                                                       // add
+                                                                                                                       // proper
+                                                                                                                       // params
                 return true;
             }
         });
@@ -108,8 +112,11 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         joinRoomButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                                     final int button) {
-                joinRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true)); // todo: add proper params
+                    final int button) {
+                joinRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true)); // todo:
+                                                                                                                     // add
+                                                                                                                     // proper
+                                                                                                                     // params
                 return true;
             }
         });
@@ -133,7 +140,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         findGameButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                                     final int button) {
+                    final int button) {
                 // playButton.fire(new
                 // GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
                 return true;
