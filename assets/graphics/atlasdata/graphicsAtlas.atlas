@@ -17,7 +17,7 @@ size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-basic_bow/arrow/state_zero
+entitygroups/arrow/state_zero
   rotate: false
   xy: 2, 2
   size: 52, 46
@@ -30,7 +30,14 @@ size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-basic_bow/basic_arrow/state_zero
+entitygroups/basic_arrow/state_one
+  rotate: false
+  xy: 2, 2
+  size: 52, 46
+  orig: 52, 46
+  offset: 0, 0
+  index: -1
+entitygroups/basic_arrow/state_zero
   rotate: false
   xy: 2, 2
   size: 52, 46
@@ -43,7 +50,14 @@ size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-basic_bow/basic_sword/state_zero
+entitygroups/basic_bow/state_one
+  rotate: false
+  xy: 2, 2
+  size: 52, 46
+  orig: 52, 46
+  offset: 0, 0
+  index: -1
+entitygroups/basic_bow/state_zero
   rotate: false
   xy: 2, 2
   size: 52, 46
@@ -56,117 +70,13 @@ size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-basic_bow/border/state_zero
-  rotate: false
-  xy: 2, 2
-  size: 60, 60
-  orig: 60, 60
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas6.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-basic_bow/chicken/state_zero
+entitygroups/basic_sword/state_one
   rotate: false
   xy: 2, 2
   size: 52, 46
   orig: 52, 46
   offset: 0, 0
   index: -1
-
-graphicsAtlas7.png
-size: 128, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-basic_bow/human_basic/state_one
-  rotate: false
-  xy: 2, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-basic_bow/human_basic/state_zero
-  rotate: false
-  xy: 56, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas8.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-basic_bow/rock/state_zero
-  rotate: false
-  xy: 2, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas9.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-basic_bow/stump/state_zero
-  rotate: false
-  xy: 2, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas10.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-entitygroups/arrow/state_zero
-  rotate: false
-  xy: 2, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas11.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-entitygroups/basic_arrow/state_zero
-  rotate: false
-  xy: 2, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas12.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-entitygroups/basic_bow/state_zero
-  rotate: false
-  xy: 2, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas13.png
-size: 64, 64
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
 entitygroups/basic_sword/state_zero
   rotate: false
   xy: 2, 2
@@ -175,7 +85,7 @@ entitygroups/basic_sword/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas14.png
+graphicsAtlas6.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -188,7 +98,7 @@ entitygroups/border/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas15.png
+graphicsAtlas7.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -201,7 +111,7 @@ entitygroups/chicken/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas16.png
+graphicsAtlas8.png
 size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -221,7 +131,7 @@ entitygroups/human_basic/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas17.png
+graphicsAtlas9.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -234,7 +144,7 @@ entitygroups/rock/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas18.png
+graphicsAtlas10.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest

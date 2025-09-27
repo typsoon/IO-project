@@ -4,6 +4,7 @@ import frontend.gamestate.DrawableInfo;
 import frontend.gamestate.EntityVisibleState;
 import frontend.gamestate.IDisplayableGameState;
 import game.engine.PlayerConfig;
+import game.engine.entities.EntityGroupID;
 import game.engine.modules.IGeometryModule;
 import game.gamestates.EntityState;
 import game.gamestates.IGameState;
@@ -65,9 +66,24 @@ public class GameStateProcessor implements IGameStateProcessor {
     }
 
     private void updatePlayerState(PlayerState playerState) {
+        if (playerState.holdingItemGroupId() != EntityGroupID.HUMAN_BASIC) {
+            if (player.getItemInfo() == null) {
+                DrawableInfo itemInfo = new DrawableInfo(playerState.holdingItemGroupId(), EntityVisibleState.values()[playerState.itemAction().ordinal()]);
+                itemInfo.setStateTime(playerState.itemActionProgress());
+                player.setItemInfo(itemInfo);
+                displayableGameState.addDrawable(itemInfo);
+            } else {
+                player.getItemInfo().setStateTime(playerState.itemActionProgress());
+                player.getItemInfo().setEntityGroupID(playerState.holdingItemGroupId());
+                player.getItemInfo().setState(EntityVisibleState.values()[playerState.itemAction().ordinal()]);
+            }
+        } else if (player.getItemInfo() != null) {
+            displayableGameState.removeDrawable(player.getItemInfo());
+            player.setItemInfo(null);
+        }
         player.getDrawable().setState(EntityVisibleState.values()[playerState.action().ordinal()]);
         player.getDrawable().setStateTime(playerState.actionProgress());
-
+        System.out.println(player.getItemInfo());
         player.setPosition(playerState.position());
         player.setVelocity(playerState.velocity());
         player.setRotation(playerState.rotation());

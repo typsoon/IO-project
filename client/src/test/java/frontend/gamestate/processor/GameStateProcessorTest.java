@@ -5,6 +5,7 @@ import frontend.gamestate.EntityVisibleState;
 import frontend.gamestate.IDisplayableGameState;
 import game.engine.PlayerConfig;
 import game.engine.entities.EntityAction;
+import game.engine.entities.EntityGroupID;
 import game.engine.entities.inventory.InventoryInfo;
 import game.engine.modules.IGeometryModule;
 import game.gamestates.EntityState;
@@ -66,6 +67,11 @@ class GameStateProcessorTest {
         when(ps.sightRange()).thenReturn(new Vector2F(10f, 10f));
         when(ps.maxHp()).thenReturn(100);
         when(ps.currentHp()).thenReturn(75);
+
+        // 👉 nowe stuby dla obsługi itemów
+        when(ps.holdingItemGroupId()).thenReturn(EntityGroupID.HUMAN_BASIC); // czyli brak itemu
+        when(ps.itemAction()).thenReturn(EntityAction.NONE);
+        when(ps.itemActionProgress()).thenReturn(0f);
 
         processor.processGameStates(List.of(ps), 0f);
 

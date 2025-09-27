@@ -3,6 +3,7 @@ package viewmodel.game;
 import frontend.gamestate.DrawableInfo;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.utility.Point2F;
+import game.utility.Vector2F;
 
 public class RenderableObjectWithItem extends RenderableObject {
 
@@ -26,8 +27,10 @@ public class RenderableObjectWithItem extends RenderableObject {
     public void setPosition(Point2F position) {
         super.setPosition(position);
         if (itemInfo != null) {
-            itemInfo.setX(position.x() + drawableInfo.getWidth() / 2);
-            itemInfo.setY(position.y() + drawableInfo.getHeight() / 2);
+            Vector2F vec = new Vector2F(drawableInfo.getWidth() / 2, 0);
+            vec = vec.rotate(drawableInfo.getRotation());
+            itemInfo.setX(vec.x() + position.x());
+            itemInfo.setY(vec.y() + position.y());
         }
     }
 

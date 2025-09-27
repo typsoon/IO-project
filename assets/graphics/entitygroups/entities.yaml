@@ -21,9 +21,12 @@ border:
 
 basic_sword:
   - state_zero: 0.0
-
+  - state_one: 0.0
+    
 basic_bow:
   - state_zero: 0.0
+  - state_one: 0.0
 
 basic_arrow:
   - state_zero: 0.0
+  - state_one: 0.0
