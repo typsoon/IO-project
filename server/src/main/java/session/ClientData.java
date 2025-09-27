@@ -33,10 +33,10 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final UserId userId;
 
     public ClientData(final MessageDispatcher messageDispatcher,
-                      final IConfigurationStateConsumerFactory sendableReceiverFactory,
-                      final ObjectToMessageDecoder objectToMessageDecoder, final IUsersHandlesFactory usersHandlesFactory,
-                      final UserId userId,
-                      final IDatabaseManager databaseManager) {
+            final IConfigurationStateConsumerFactory sendableReceiverFactory,
+            final ObjectToMessageDecoder objectToMessageDecoder, final IUsersHandlesFactory usersHandlesFactory,
+            final UserId userId,
+            final IDatabaseManager databaseManager) {
         this.messageDispatcher = messageDispatcher;
         this.objectToMessageDecoder = objectToMessageDecoder;
         this.databaseManager = databaseManager;
@@ -45,11 +45,15 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
 
         final var userName = databaseManager.getPlayerUsername(userId);
 
-        final var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this, new ObserverWithATwist.ObserverImpl()); // TODO: add subscriber
+        var observer = new ObserverWithATwist.ObserverImpl();
+        final var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName),
+                this, observer); // TODO:
+                                 // add
+                                 // subscriber
 
         this.userId = userId;
         this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
-                usersHandles.matchmakingHandle(), userId);
+                usersHandles.matchmakingHandle(), userId, observer);
         this.sendableReceiver = defaultSendableReceiver;
 
         this.playerConnector = (gameStates) -> {
@@ -58,11 +62,9 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
                     final var msg = objectToMessageDecoder.decodeFromRecord(gameState);
                     messageDispatcher.dispatchMessage(msg);
                 }
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 Logger.getGlobal().severe("An IOException caught");
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 Logger.getGlobal().severe("An unpredictable error occured %s".formatted(e));
                 e.printStackTrace();
             }
@@ -84,8 +86,7 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
             messageDispatcher
                     .dispatchMessage(
                             objectToMessageDecoder.decodeFromRecord(new GameStartedNotification.Payload()));
-        }
-        catch (final IOException ioException) {
+        } catch (final IOException ioException) {
             Logger.getGlobal().severe("IOException should not have occured there!!!");
             return;
         }
@@ -99,8 +100,7 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
             messageDispatcher
                     .dispatchMessage(
                             objectToMessageDecoder.decodeFromRecord(new GameConfirmationRequestMessage.Payload()));
-        }
-        catch (final IOException ioException) {
+        } catch (final IOException ioException) {
             Logger.getGlobal().severe("IOException should not have occured there!!!");
             return;
         }

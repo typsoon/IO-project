@@ -11,12 +11,12 @@ import database.IDatabaseManager.UserId;
 import game.session.ISendableConsumer;
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomRequestResult;
-import gameclient.rooms.UserMembershipInfo;
 import network.messages.configurationstate.GameStartMessages.StartGameRequest;
 import network.messages.configurationstate.RoomMessages.JoinRoomRequest;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
 import utils.ISendable;
+import utils.ObserverWithATwist.Subscribable;
 
 public class ConfigurationStateConsumer implements ISendableConsumer {
     private final IUsersRoomHandle userRoomHandle;
@@ -25,11 +25,15 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
     private final UserId id;
 
     public ConfigurationStateConsumer(IUsersRoomHandle userRoomHandle, IUsersMatchmakingHandle matchmakingHandle,
-                                      ISendableConsumer sendableDispatcher, UserId id) {
+            ISendableConsumer sendableDispatcher, UserId id, Subscribable subscribable) {
         this.userRoomHandle = userRoomHandle;
         this.matchmakingHandle = matchmakingHandle;
         this.sendableDispatcher = sendableDispatcher;
         this.id = id;
+
+        subscribable.registerSubscriber(_delta -> {
+            // TODO: request for info
+        });
     }
 
     @Override

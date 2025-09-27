@@ -10,6 +10,7 @@ import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
+import utils.ObserverWithATwist.Subscribable;
 
 public class ConfigurationStateConsumerFactory implements IConfigurationStateConsumerFactory {
     private final ObjectToMessageDecoder objectToMessageDecoder;
@@ -27,7 +28,7 @@ public class ConfigurationStateConsumerFactory implements IConfigurationStateCon
 
     @Override
     public ConfigurationStateConsumer getConfigurationStateConsumer(final IUsersRoomHandle userRoomHandle,
-            final IUsersMatchmakingHandle matchmakingHandle, final UserId userId) {
+            final IUsersMatchmakingHandle matchmakingHandle, final UserId userId, Subscribable subscribable) {
         final ISendableConsumer sendableDispatcher = sendable -> {
             try {
                 final var msg = objectToMessageDecoder.decodeFromRecord(sendable);
@@ -39,6 +40,7 @@ public class ConfigurationStateConsumerFactory implements IConfigurationStateCon
             }
         };
 
-        return new ConfigurationStateConsumer(userRoomHandle, matchmakingHandle, sendableDispatcher, userId);
+        return new ConfigurationStateConsumer(userRoomHandle, matchmakingHandle, sendableDispatcher, userId,
+                subscribable);
     }
 }
