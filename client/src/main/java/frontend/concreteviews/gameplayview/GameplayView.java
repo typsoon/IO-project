@@ -173,35 +173,6 @@ public class GameplayView extends ScreenAdapter {
         entitiesDrawer.drawEntities(drawableInfos);
 
         gameplayHud.render(delta);
-        // TODO add gui
-        // var playerInfo = gameState.getPlayerData().iterator().next();
-        // hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue())
-        // * 100);
-        // hpLabel.setText(String.format("HP: %3d out of %3d", playerInfo.getHpValue(),
-        // playerInfo.getMaxHpValue()));
-        // for (int i = 0; i < playerInfo.getInventoryInfo().slotNum(); i++) {
-        // if (i < playerInfo.getInventoryInfo().slots().getData().length) {
-        // hotbarSlots.get(i).setColor(Color.GRAY);
-        // if (playerInfo.getInventoryInfo().slots().getData()[i].amount() > 0) {
-        // hotbarSlots.get(i).setText(playerInfo.getInventoryInfo().slots().getData()[i].item().name());
-        // } else {
-        // hotbarSlots.get(i).setText("");
-        // }
-        // } else {
-        // hotbarSlots.get(i).setColor(Color.BLACK);
-        // hotbarSlots.get(i).setText("");
-        // }
-        // }
-        //
-        // for (int i = 0; i <
-        // playerInfo.getInventoryInfo().resources().getData().length; i++) {
-        // resourceLabels.get(i).setText(playerInfo.getInventoryInfo().resources().getData()[i].amount()
-        // + " x " +
-        // playerInfo.getInventoryInfo().resources().getData()[i].resource().name());
-        // }
-        //
-        // hudStage.act(delta);
-        // hudStage.draw();
     }
 
     @Override

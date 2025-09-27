@@ -4,6 +4,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ObserverWithATwist {
+    private ObserverWithATwist() {
+    }
+
     public static interface Subscribable {
         void registerSubscriber(Subscriber subscriber);
         // void unregisterSubscriber(Subscriber subscriber);

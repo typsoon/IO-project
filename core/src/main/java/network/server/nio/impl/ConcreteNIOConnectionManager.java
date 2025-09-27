@@ -39,6 +39,9 @@ import network.server.nio.NIOConnectionManager;
 import network.server.nio.NIOConnectionManager.SessionContract;
 import network.server.nio.NIOSSLSocketServer;
 import network.server.nio.NIOSocketServer;
+import network.server.nio.impl.channelattchments.AttachmentFactory;
+import network.server.nio.impl.channelattchments.ChannelAttachment;
+import network.server.nio.impl.channelattchments.SSLChannelAttachment;
 import network.utils.AccumulatorAdapters;
 import network.utils.BytesAccumulator.WhatWasRead;
 import network.utils.impl.OnlyMessagesBytesAccumulator;
@@ -87,6 +90,8 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
         }
     }
 
+    private final AttachmentFactory<T> attachmentFactory = new AttachmentFactory<>();
+
     private final Selector selector;
     private final SessionCreator<T> sessionCreator;
     private final Logger logger = Logger.getGlobal();
@@ -128,8 +133,10 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
         final var udpDatagramChannel = (DatagramChannel) udpMessageSender.getServerSocketChannel();
         final var clientKey = udpDatagramChannel.register(selector, 0);
-        final var udpAttachment = new UDPChannelAttachment<T>(clientKey, udpDatagramChannel, authenticationService,
-                sessionCreator);
+
+        final var udpAttachment = attachmentFactory.getUDPChannelAttachment(clientKey, udpDatagramChannel,
+                authenticationService, sessionCreator);
+
         clientKey.attach(udpAttachment);
 
         clientKey.interestOpsOr(initialInterestSet);
@@ -233,7 +240,7 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
 
             final var session = sessionCreator.getSession(id);
 
-            final var wrappedAttachment = new SSLChannelAttachment<T>(key, session);
+            final var wrappedAttachment = attachmentFactory.getSSLChannelAttachment(key, session);
             final var sslSender = wrappedAttachment.getSender();
 
             final var attachment = new SSLChannelAttachmentWrapper(wrappedAttachment);
@@ -282,8 +289,12 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                 } else if (Objects.equals(serverSocketChannel, tcpMessageSender.getServerSocketChannel())) {
 
                     final var clientKey = clientSocketChannel.register(selector, 0);
-                    final var attachment = new TCPChannelAttachment<T>(clientKey, authenticationService, sessionCreator,
-                            messageDecoder);
+                    // final var attachment = new TCPChannelAttachment<T>(clientKey,
+                    // authenticationService, sessionCreator,
+                    // messageDecoder);
+
+                    final var attachment = attachmentFactory.getTCPChannelAttachment(clientKey, authenticationService,
+                            sessionCreator, messageDecoder);
                     clientKey.attach(attachment);
                     clientKey.interestOpsOr(initialInterestSet);
 
