@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import frontend.assetsloading.ITextureManager;
 import frontend.concreteviews.gameclientview.GameClientViewData;
+import frontend.concreteviews.gameclientview.GameClientViewEvents;
 import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
 import frontend.concreteviews.gameclientview.ScreenSwitchingUtils;
 
@@ -130,7 +131,6 @@ public class RoomsView extends ScreenAdapter {
                 maxPlayers = Integer.parseInt(maxField.getText().trim());
             }
             catch (NumberFormatException ignored) { }
-            // TODO: gdy backend będzie gotowy, wyślij zdarzenie lub wiadomość do serwera
             createBtn.fire(new CreateRoomEvent(nameField.getText(), passwordField.getText(), maxPlayers, isPublic[0]));
         }));
 
@@ -156,8 +156,7 @@ public class RoomsView extends ScreenAdapter {
 
         var joinBtn = textureManager.getTextButton("Join");
         joinBtn.addListener(simpleClick(() -> {
-            // TODO: odkomentować i wysłać JOIN po dodaniu backendu
-            // joinBtn.fire(new JoinRoomEvent(nameField.getText(), passwordField.getText()));
+            joinBtn.fire(new GameClientViewEvents.JoinRoomEvent(nameField.getText(), passwordField.getText()));
         }));
 
         var backBtn = textureManager.getTextButton("Back");
@@ -186,8 +185,7 @@ public class RoomsView extends ScreenAdapter {
 
         var refreshBtn = textureManager.getTextButton("Refresh");
         refreshBtn.addListener(simpleClick(() -> {
-            // TODO: odkomentować, gdy backend będzie gotowy
-            // refreshBtn.fire(new BrowseRoomsEvent());
+            refreshBtn.fire(new GameClientViewEvents.BrowseRoomsEvent());
         }));
 
         var backBtn = textureManager.getTextButton("Back");

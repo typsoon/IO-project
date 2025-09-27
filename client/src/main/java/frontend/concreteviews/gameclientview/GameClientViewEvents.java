@@ -36,6 +36,27 @@ public class GameClientViewEvents {
         }
     }
 
+    public static final class JoinRoomEvent extends Event {
+        private final String roomName;
+        private final String password;
+
+        public JoinRoomEvent(final String roomId, final String password) {
+            this.roomName = roomId;
+            this.password = password;
+        }
+
+        public String getRoomName() {
+            return roomName;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+
+    public static final class BrowseRoomsEvent extends Event {
+    }
+
     public static final class RequestGameStartEvent extends Event {
     }
 

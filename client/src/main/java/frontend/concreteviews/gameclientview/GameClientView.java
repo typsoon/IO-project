@@ -1,3 +1,4 @@
+// java
 package frontend.concreteviews.gameclientview;
 
 import java.util.Stack;
@@ -29,6 +30,9 @@ import network.messages.userstate.GameConfirmationRequestMessage;
 import utils.ISendable;
 
 public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
+    private static final float ACTION_BUTTON_WIDTH = 320f;
+    private static final float ACTION_BUTTON_HEIGHT = 56f;
+
     @SuppressWarnings("unused")
     private final Game game;
     private final ITextureManager textureManager;
@@ -36,7 +40,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     private final GameClientViewData gameClientViewData;
     private final GameClientSubviewsFactory gameClientSubscreensFactory;
 
-    private Stack<Screen> activeSubscreens = new Stack<>();
+    private final Stack<Screen> activeSubscreens = new Stack<>();
 
     private Stage stage;
 
@@ -82,28 +86,30 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         var roomActionsTable = getRoomActionsTable();
         var matchmakingActionsTable = getMatchmakingActionsTable();
 
+        // Główny layout: górna przestrzeń na grafikę + panele niżej
         var mainTable = textureManager.getTable();
-        mainTable.add(matchmakingActionsTable).expandX();
-        mainTable.add(roomActionsTable).spaceBottom(40).expandX();
+        mainTable.setFillParent(true);
+        mainTable.defaults().pad(10).uniformX().fillX().center();
+
+        // Górny obszar na grafikę (placeholder) — zajmuje wolną wysokość
+        var graphicArea = textureManager.getTable();
+        var placeholder = textureManager.getHeading("nice photo here");
+        graphicArea.add(placeholder).expand().center();
+        mainTable.add(graphicArea).colspan(2).expandY().fillX();
         mainTable.row();
-        mainTable.add(exitButton).colspan(2);
+
+        // Dwie kolumny z przyciskami — symetryczne i niżej na ekranie
+        mainTable.add(matchmakingActionsTable).expandX().fillX().left().padBottom(20);
+        mainTable.add(roomActionsTable).expandX().fillX().right().padBottom(20);
+        mainTable.row();
+
+        mainTable.add(exitButton).colspan(2).padTop(10);
 
         stage.addActor(mainTable);
     }
 
-    private final Actor getRoomActionsTable() {
-        final var roomNameField = textureManager.getTextField("Room name");
 
-        final Button createRoomButton = textureManager.getTextButton("Create room");
-        createRoomButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                                     final int button) {
-                createRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true));
-                return true;
-            }
-        });
-        
+    private final Actor getRoomActionsTable() {
         final Button roomsScreenButton = textureManager.getTextButton("Rooms...");
         roomsScreenButton.addListener(new InputListener() {
             @Override
@@ -115,18 +121,13 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
             }
         });
 
-        final Table answer = new Table();
-//        answer.add(roomNameField);
-//        answer.getCell(roomNameField).spaceBottom(40).width(300);
-//        answer.row();
-//        answer.add(createRoomButton);
-//        answer.getCell(createRoomButton).spaceBottom(40);
-//        answer.row();
-
-        answer.add(roomsScreenButton);
-        answer.getCell(roomsScreenButton).spaceBottom(40);
-
-        return answer;
+        final Table panel = textureManager.getTable();
+        panel.add(roomsScreenButton)
+                .width(ACTION_BUTTON_WIDTH)
+                .height(ACTION_BUTTON_HEIGHT)
+                .padBottom(40)
+                .center();
+        return panel;
     }
 
     private final Actor getMatchmakingActionsTable() {
@@ -135,18 +136,17 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
                                      final int button) {
-                // playButton.fire(new
-                // GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
                 return true;
             }
         });
 
-        // final Table roomActionsTable = textureManager.getTable();
-        final Table answer = new Table();
-        answer.add(findGameButton).expandY();
-        answer.getCell(findGameButton).spaceBottom(40);
-
-        return answer;
+        final Table panel = textureManager.getTable();
+        panel.add(findGameButton)
+                .width(ACTION_BUTTON_WIDTH)
+                .height(ACTION_BUTTON_HEIGHT)
+                .padBottom(40)
+                .center();
+        return panel;
     }
 
     @Override
@@ -177,16 +177,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         switch (sendable) {
             case RoomRequestResult requestResponse -> {
                 switch (requestResponse.roomRequestType()) {
-                    case RoomRequestType.CREATE -> {
-                        if (requestResponse.result() == RequestResult.SUCCESSFUL) {
-                            var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData,
-                                    requestResponse.roomName(),
-                                    textureManager, gameClientViewEventListener);
-                            changeSubscreen(waitingRoomScreen);
-                        }
-                    }
-
-                    case RoomRequestType.JOIN -> {
+                    case RoomRequestType.CREATE, RoomRequestType.JOIN -> {
                         if (requestResponse.result() == RequestResult.SUCCESSFUL) {
                             var waitingRoomScreen = new WaitingRoomScreen(this, gameClientViewData,
                                     requestResponse.roomName(),
@@ -196,14 +187,11 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
                     }
                 }
             }
-
             case GameConfirmationRequestMessage.Payload gameConfirmationRequest -> {
                 Logger.getGlobal().info("Moving to confirmation screen");
-
                 final var screen = new ConfirmationPromptScreen(this, gameClientViewEventListener, textureManager);
                 changeSubscreen(screen);
             }
-
             default -> {
                 throw new IllegalStateException("Unexpected sendable");
             }
