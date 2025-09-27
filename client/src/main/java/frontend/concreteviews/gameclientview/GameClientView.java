@@ -41,8 +41,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     private Stage stage;
 
     public GameClientView(final Game game, ITextureManager textureManager,
-            GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
-            GameClientSubviewsFactory gameClientSubscreensFactory) {
+                          GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
+                          GameClientSubviewsFactory gameClientSubscreensFactory) {
         this.game = game;
         this.textureManager = textureManager;
         this.gameClientViewEventListener = gameClientViewEventListener;
@@ -98,38 +98,34 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         createRoomButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                    final int button) {
-                createRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true)); // todo:
-                                                                                                                       // add
-                                                                                                                       // proper
-                                                                                                                       // params
+                                     final int button) {
+                createRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true));
                 return true;
             }
         });
 
-        final Button joinRoomButton = textureManager.getTextButton("Browse rooms");
-        joinRoomButton.addListener(new InputListener() {
+        // NOWE: przycisk do wejścia w RoomsView
+        final Button roomsScreenButton = textureManager.getTextButton("Rooms...");
+        roomsScreenButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                    final int button) {
-                joinRoomButton.fire(new GameClientViewEvents.CreateRoomEvent(roomNameField.getText(), "", 0, true)); // todo:
-                                                                                                                     // add
-                                                                                                                     // proper
-                                                                                                                     // params
+                                     final int button) {
+                changeSubscreen(new frontend.concreteviews.gameclientview.subscreens.RoomsView(
+                        GameClientView.this, gameClientViewData, textureManager, gameClientViewEventListener));
                 return true;
             }
         });
 
-        // final Table roomActionsTable = textureManager.getTable();
         final Table answer = new Table();
-        answer.add(roomNameField);
-        answer.getCell(roomNameField).spaceBottom(40).width(300);
-        answer.row();
-        answer.add(createRoomButton);
-        answer.getCell(createRoomButton).spaceBottom(40);
-        answer.row();
-        answer.add(joinRoomButton);
-        answer.getCell(joinRoomButton).spaceBottom(40);
+//        answer.add(roomNameField);
+//        answer.getCell(roomNameField).spaceBottom(40).width(300);
+//        answer.row();
+//        answer.add(createRoomButton);
+//        answer.getCell(createRoomButton).spaceBottom(40);
+//        answer.row();
+
+        answer.add(roomsScreenButton);
+        answer.getCell(roomsScreenButton).spaceBottom(40);
 
         return answer;
     }
@@ -139,7 +135,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         findGameButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                    final int button) {
+                                     final int button) {
                 // playButton.fire(new
                 // GameClientViewEvents.CreateRoomEvent(roomNameField.getText()));
                 return true;
