@@ -72,6 +72,9 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
                     continue; // Skip sending the player's own state
                 sender.sendGameState(entities.get(geometryRepresentation).getEntityState());
             }
+
+            sender.sendGameState(player.getPlayerInventoryState());
+            
             if (player.isInteracting()) {
                 sender.sendGameState(player.getCurrentInteraction().getState());
             }

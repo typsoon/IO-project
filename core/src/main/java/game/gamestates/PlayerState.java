@@ -3,7 +3,6 @@ package game.gamestates;
 import game.engine.entities.EntityAction;
 import game.engine.entities.EntityGroupID;
 import game.engine.entities.geometry.GeometryConfigID;
-import game.engine.entities.inventory.InventoryInfo;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 
@@ -19,9 +18,7 @@ public record PlayerState(
         //float actionProgress,
         Vector2F sightRange,
         int maxHp,
-        int currentHp,
-        //waiting for messages
-        InventoryInfo inventory
+        int currentHp
 // this will hold more informatsion than entity state
 ) implements IGameState {
 }

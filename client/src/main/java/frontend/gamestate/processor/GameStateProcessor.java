@@ -5,6 +5,7 @@ import game.engine.PlayerConfig;
 import game.engine.modules.IGeometryModule;
 import game.gamestates.EntityState;
 import game.gamestates.IGameState;
+import game.gamestates.PlayerInventoryState;
 import game.gamestates.PlayerState;
 import viewmodel.game.RenderableObjectFactory;
 import viewmodel.game.RenderablePlayer;
@@ -51,6 +52,7 @@ public class GameStateProcessor implements IGameStateProcessor {
             switch (gameState) {
                 case EntityState entityState -> updateEntityState(entityState);
                 case PlayerState playerState -> updatePlayerState(playerState);
+                case PlayerInventoryState playerInventoryState -> updatePlayerInventoryState(playerInventoryState);
                 default -> {
                 }
             }
@@ -66,9 +68,12 @@ public class GameStateProcessor implements IGameStateProcessor {
         player.setRange(playerState.sightRange());
         player.setMaxHp(playerState.maxHp());
         player.setCurrentHp(playerState.currentHp());
-
-        player.setInventoryInfo(playerState.inventory());
     }
+
+    private void updatePlayerInventoryState(PlayerInventoryState playerInventoryState) {
+        player.setInventoryInfo(playerInventoryState.inventory());
+    }
+
 
     private void updateEntityState(EntityState entityState) {
         TimedRenderableObject renderableObject;

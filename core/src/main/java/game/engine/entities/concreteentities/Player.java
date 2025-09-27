@@ -19,6 +19,7 @@ import game.engine.entities.upgradetree.IUpgradeTree;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.gamestates.EntityState;
+import game.gamestates.PlayerInventoryState;
 import game.gamestates.PlayerState;
 import game.gamestates.UpgradeTreeState;
 import game.utility.Point2F;
@@ -139,7 +140,12 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
                 EntityAction.IDLE,
                 sightRange,
                 maxHp,
-                currentHp,
+                currentHp
+        );
+    }
+
+    public PlayerInventoryState getPlayerInventoryState() {
+        return new PlayerInventoryState(
                 inventory.getInventoryInfo()
         );
     }
