@@ -14,6 +14,7 @@ import gameclient.rooms.RoomConfig;
 import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.configurationstate.GameStartMessages.*;
+import network.messages.configurationstate.RoomMessages;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import network.messages.userstate.GameConfirmation;
 import viewmodel.IViewManager;
@@ -41,6 +42,24 @@ public class GameClientViewEventListener implements EventListener {
                     var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
 
                     logger.info("Sent create room request");
+                    clientSideSocketWrapper.dispatchMessage(msg);
+                    return true;
+                }
+
+                case GameClientViewEvents.JoinRoomEvent joinRoomEvent -> {
+                    var msgPayload = new RoomMessages.JoinRoomRequest.Payload(joinRoomEvent.getRoomName(), joinRoomEvent.getPassword());
+                    var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
+
+                    logger.info("Sent join room request");
+                    clientSideSocketWrapper.dispatchMessage(msg);
+                    return true;
+                }
+
+                case GameClientViewEvents.BrowseRoomsEvent browseRoomsEvent -> {
+                    var msgPayload = new RoomMessages.BrowseRoomsRequest.Payload();
+                    var msg = objectToMessageDecoder.decodeFromRecord(msgPayload);
+
+                    logger.info("Sent browse rooms request");
                     clientSideSocketWrapper.dispatchMessage(msg);
                     return true;
                 }
