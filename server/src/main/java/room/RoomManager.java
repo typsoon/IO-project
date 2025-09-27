@@ -12,8 +12,8 @@ import gameclient.rooms.RequestResult;
 
 public class RoomManager implements IRoomManager {
     private final IMatchmakingEngine matchmakingEngine;
-    private final Map<Integer, Room> rooms = new ConcurrentHashMap<>();
-    private int currentRoomID = 0; // for now
+    private final Map<String, Room> rooms = new ConcurrentHashMap<>();
+    private int currentRoomID = 1;
 
     public RoomManager(IMatchmakingEngine matchmakingEngine) {
         this.matchmakingEngine = matchmakingEngine;
@@ -21,15 +21,14 @@ public class RoomManager implements IRoomManager {
 
     @Override
     public RequestResult createRoom(RoomMember user, RoomConfig roomConfig) {
-        if (rooms.values().stream()
-                .anyMatch(room -> Objects.equals(room.getRoomInfo().roomName(), roomConfig.name()))) {
+        if (rooms.containsKey(roomConfig.name())) {
             return RequestResult.FAILED;
         }
 
         if (user.roomsUserHandle().getRoom().isPresent())
             return RequestResult.FAILED;
         var newRoom = new Room(user, roomConfig, currentRoomID++);
-        rooms.put(newRoom.roomID(), newRoom);
+        rooms.put(roomConfig.name(), newRoom);
         user.roomsUserHandle().joinRoomCommand(newRoom);
         return RequestResult.SUCCESSFUL;
     }
@@ -42,7 +41,7 @@ public class RoomManager implements IRoomManager {
         if (!room.isAdmin(user))
             return RequestResult.NOT_AUTHORIZED;
         room.removeAllMembers();
-        rooms.remove(room.roomID());
+        rooms.remove(room.roomConfig().name());
         return RequestResult.SUCCESSFUL;
     }
 
@@ -71,8 +70,9 @@ public class RoomManager implements IRoomManager {
         if (user.roomsUserHandle().getRoom().isEmpty())
             return RequestResult.FAILED;
         var room = user.roomsUserHandle().getRoom().get();
+        room.removeMember(user);
         if (room.isEmpty())
-            rooms.remove(room.roomID());
+            rooms.remove(room.roomConfig().name());
         return RequestResult.SUCCESSFUL;
     }
 

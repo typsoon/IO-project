@@ -1,5 +1,6 @@
 package user.impl;
 
+import gameclient.rooms.UserMembershipInfo;
 import room.IRoomManager;
 import room.Room;
 import room.RoomMember;
@@ -14,14 +15,17 @@ import java.util.stream.Collectors;
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RequestResult;
 import gameclient.user.IUserView;
+import utils.ObserverWithATwist;
 
 public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     private final IRoomManager roomManager;
     private final RoomMember member;
     private Room room = null;
+    private final ObserverWithATwist.Notifiable notifier;
 
     RoomHandle(IRoomManager roomManager, IUserView userView,
-            IMatchmakingUserHandle matchmakingUserHandle, UserState userState) {
+               IMatchmakingUserHandle matchmakingUserHandle, UserState userState, ObserverWithATwist.Notifiable notifier) {
+        this.notifier = notifier;
         this.roomManager = roomManager;
         this.member = new RoomMember(userView, matchmakingUserHandle, this, userState);
     }
@@ -41,6 +45,11 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     @Override
     public Optional<Room> getRoom() {
         return Optional.ofNullable(room);
+    }
+
+    @Override
+    public void notifyRoomChange() {
+        notifier.notifySubscribers(0);
     }
 
     @Override
@@ -95,9 +104,12 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     }
 
     @Override
-    public Collection<RoomMember> getRoomMembers() {
+    public List<UserMembershipInfo> getRoomMembers() {
         if (room == null)
             return List.of();
-        return room.members();
+        return room.members().stream()
+                .map(member -> new UserMembershipInfo(room.roomConfig().name(), member.userView().id().id(),
+                        member.userView().username(), member.userView().id().equals(room.admin().admin().id())))
+                .collect(Collectors.toList());
     }
 }

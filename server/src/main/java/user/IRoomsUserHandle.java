@@ -11,4 +11,6 @@ public interface IRoomsUserHandle {
     void joinRoomCommand(Room room);
 
     Optional<Room> getRoom();
+
+    void notifyRoomChange();
 }

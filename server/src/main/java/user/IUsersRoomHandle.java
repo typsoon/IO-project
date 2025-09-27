@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RequestResult;
+import gameclient.rooms.UserMembershipInfo;
 import room.Room;
 import room.RoomMember;
 
@@ -29,9 +30,7 @@ public interface IUsersRoomHandle {
 
     List<Room> getPublicRooms();
 
-    // Optional<Room> getMyRoom();
-
     Optional<Room> getRoom(String roomName);
 
-    Collection<RoomMember> getRoomMembers();
+    List<UserMembershipInfo> getRoomMembers();
 }

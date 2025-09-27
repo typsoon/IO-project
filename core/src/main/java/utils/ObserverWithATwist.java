@@ -9,7 +9,7 @@ public final class ObserverWithATwist {
         // void unregisterSubscriber(Subscriber subscriber);
     }
 
-    public static interface Notifyable {
+    public static interface Notifiable {
         void notifySubscribers(float deltaTime);
     }
 
@@ -18,7 +18,7 @@ public final class ObserverWithATwist {
         void notifySubscriber(float deltaTime);
     }
 
-    public static final class ObserverImpl implements Subscribable, Notifyable {
+    public static final class ObserverImpl implements Subscribable, Notifiable {
         private final Set<Subscriber> registeredSubscribers = ConcurrentHashMap.newKeySet();
 
         @Override

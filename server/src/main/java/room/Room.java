@@ -32,6 +32,7 @@ public record Room(int roomID, Collection<RoomMember> members, Admin admin, Room
         if (members.contains(newAdmin)) {
             admin.changeAdmin(newAdmin.userView());
         }
+        notifyMembers();
     }
 
     public boolean isAdmin(RoomMember user) {
@@ -43,6 +44,7 @@ public record Room(int roomID, Collection<RoomMember> members, Admin admin, Room
             members.add(member);
             member.roomsUserHandle().joinRoomCommand(this);
         }
+        notifyMembers();
     }
 
     public synchronized void removeMember(RoomMember member) {
@@ -54,12 +56,14 @@ public record Room(int roomID, Collection<RoomMember> members, Admin admin, Room
                 admin.changeAdmin(members.iterator().next().userView());
             }
         }
+        notifyMembers();
     }
 
     public synchronized void removeAllMembers() {
         for (RoomMember member : members) {
             member.roomsUserHandle().leaveRoomCommand();
         }
+        notifyMembers();
         members.clear();
     }
 
@@ -84,6 +88,12 @@ public record Room(int roomID, Collection<RoomMember> members, Admin admin, Room
 
         public void changeAdmin(IUserView admin) {
             this.admin = admin;
+        }
+    }
+
+    private void notifyMembers() {
+        for (RoomMember member : members) {
+            member.roomsUserHandle().notifyRoomChange();
         }
     }
 }

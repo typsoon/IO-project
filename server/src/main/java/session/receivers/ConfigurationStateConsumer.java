@@ -25,7 +25,7 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
     private final UserId id;
 
     public ConfigurationStateConsumer(IUsersRoomHandle userRoomHandle, IUsersMatchmakingHandle matchmakingHandle,
-            ISendableConsumer sendableDispatcher, UserId id) {
+                                      ISendableConsumer sendableDispatcher, UserId id) {
         this.userRoomHandle = userRoomHandle;
         this.matchmakingHandle = matchmakingHandle;
         this.sendableDispatcher = sendableDispatcher;
@@ -84,7 +84,6 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
         }
     }
 
-    // TODO: replace with getRoom() calls
     private void sendOneRoomData(String roomName) {
         var roomOptional = userRoomHandle.getRoom(roomName);
 
@@ -97,11 +96,7 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
         sendableDispatcher.processSendable(room.getRoomInfo());
 
         for (final var member : userRoomHandle.getRoomMembers()) {
-            final var roomMembershipInfo = new UserMembershipInfo(roomName, id.id(),
-                    member.userView().username(),
-                    id.equals(room.admin().admin().id()));
-
-            sendableDispatcher.processSendable(roomMembershipInfo);
+            sendableDispatcher.processSendable(member);
         }
     }
 
