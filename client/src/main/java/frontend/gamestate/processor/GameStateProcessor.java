@@ -1,5 +1,7 @@
 package frontend.gamestate.processor;
 
+import frontend.gamestate.DrawableInfo;
+import frontend.gamestate.EntityVisibleState;
 import frontend.gamestate.IDisplayableGameState;
 import game.engine.PlayerConfig;
 import game.engine.modules.IGeometryModule;
@@ -27,6 +29,8 @@ public class GameStateProcessor implements IGameStateProcessor {
     RenderableObjectFactory renderableObjectFactory;
     IDisplayableGameState displayableGameState;
     Map<Integer, TimedRenderableObject> entities = new HashMap<>();
+    Map<Integer, DrawableInfo> entityItems = new HashMap<>();
+
 
     public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory,
                               IDisplayableGameState displayableGameState, PlayerConfig playerConfig,
@@ -61,6 +65,9 @@ public class GameStateProcessor implements IGameStateProcessor {
     }
 
     private void updatePlayerState(PlayerState playerState) {
+        player.getDrawable().setState(EntityVisibleState.values()[playerState.action().ordinal()]);
+        player.getDrawable().setStateTime(playerState.actionProgress());
+
         player.setPosition(playerState.position());
         player.setVelocity(playerState.velocity());
         player.setRotation(playerState.rotation());
@@ -79,14 +86,18 @@ public class GameStateProcessor implements IGameStateProcessor {
         TimedRenderableObject renderableObject;
         if (entities.containsKey(entityState.entityId())) {
             renderableObject = entities.get(entityState.entityId());
-            renderableObject.setPosition(entityState.position());
-            renderableObject.setVelocity(entityState.velocity());
-            renderableObject.setRotation(entityState.rotation());
         } else {
             renderableObject = renderableObjectFactory.createRenderableObject(entityState);
             entities.put(entityState.entityId(), renderableObject);
             displayableGameState.addDrawable(renderableObject.getDrawable());
         }
+
+        renderableObject.getDrawable().setState(EntityVisibleState.values()[entityState.action().ordinal()]);
+        renderableObject.getDrawable().setStateTime(entityState.actionProgress());
+        renderableObject.setPosition(entityState.position());
+        renderableObject.setVelocity(entityState.velocity());
+        renderableObject.setRotation(entityState.rotation());
+
         renderableObject.timeSinceUpdate = 0f;
     }
 

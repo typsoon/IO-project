@@ -119,29 +119,75 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     @Override
     public EntityState getEntityState() {
-        return new EntityState(
-                entityId,
-                geometryConfigID,
-                geometryRepresentation.getPosition(),
-                geometryRepresentation.getVelocity(),
-                geometryRepresentation.getRotation(),
-                entityGroupID,
-                EntityAction.IDLE);
+        int activeSlot = inventory.getActiveSlotIndex();
+        if (activeSlot == -1) {
+            return new EntityState(
+                    entityId,
+                    geometryConfigID,
+                    geometryRepresentation.getPosition(),
+                    geometryRepresentation.getVelocity(),
+                    geometryRepresentation.getRotation(),
+                    entityGroupID,
+                    EntityAction.NONE,
+                    0,
+                    EntityGroupID.HUMAN_BASIC,
+                    EntityAction.NONE,
+                    0
+            );
+        } else {
+            return new EntityState(
+                    entityId,
+                    geometryConfigID,
+                    geometryRepresentation.getPosition(),
+                    geometryRepresentation.getVelocity(),
+                    geometryRepresentation.getRotation(),
+                    entityGroupID,
+                    EntityAction.NONE,
+                    0,
+                    inventory.getSlot(activeSlot).getItem().getItemInfo().spriteID(),
+                    inventory.getSlot(activeSlot).getItem().getItemInfo().action(),
+                    inventory.getSlot(activeSlot).getItem().getItemInfo().timer()
+            );
+        }
     }
 
     public PlayerState getPlayerState() {
-        return new PlayerState(
-                entityId,
-                geometryConfigID,
-                geometryRepresentation.getPosition(),
-                geometryRepresentation.getVelocity(),
-                geometryRepresentation.getRotation(),
-                entityGroupID,
-                EntityAction.IDLE,
-                sightRange,
-                maxHp,
-                currentHp
-        );
+        int activeSlot = inventory.getActiveSlotIndex();
+        if (activeSlot == -1) {
+            return new PlayerState(
+                    entityId,
+                    geometryConfigID,
+                    geometryRepresentation.getPosition(),
+                    geometryRepresentation.getVelocity(),
+                    geometryRepresentation.getRotation(),
+                    entityGroupID,
+                    EntityAction.NONE,
+                    0,
+                    EntityGroupID.HUMAN_BASIC,
+                    EntityAction.NONE,
+                    0,
+                    sightRange,
+                    maxHp,
+                    currentHp
+            );
+        } else {
+            return new PlayerState(
+                    entityId,
+                    geometryConfigID,
+                    geometryRepresentation.getPosition(),
+                    geometryRepresentation.getVelocity(),
+                    geometryRepresentation.getRotation(),
+                    entityGroupID,
+                    EntityAction.NONE,
+                    0,
+                    inventory.getSlot(activeSlot).getItem().getItemInfo().spriteID(),
+                    inventory.getSlot(activeSlot).getItem().getItemInfo().action(),
+                    inventory.getSlot(activeSlot).getItem().getItemInfo().timer(),
+                    sightRange,
+                    maxHp,
+                    currentHp
+            );
+        }
     }
 
     public PlayerInventoryState getPlayerInventoryState() {

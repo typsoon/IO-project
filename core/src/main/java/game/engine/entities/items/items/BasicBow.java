@@ -1,20 +1,15 @@
 package game.engine.entities.items.items;
 
 import game.engine.IWorldView;
+import game.engine.entities.EntityAction;
+import game.engine.entities.EntityGroupID;
 import game.engine.entities.IEntity;
 import game.engine.entities.IUsageModifiers;
 import game.engine.entities.inventory.IHaveInventory;
 import game.engine.entities.inventory.ISlot;
 import game.engine.entities.items.ItemInfo;
-import game.engine.entities.items.ItemSpriteID;
 
 public class BasicBow extends BasicItem {
-    ItemInfo itemInfo = new ItemInfo(
-            "Basic Bow",
-            "A simple bow. Reliable and sturdy.",
-            ItemSpriteID.BASIC_SWORD
-    );
-
     private final int attackTime = 7; // in ticks
     private int attackClock = 0;
 
@@ -25,7 +20,19 @@ public class BasicBow extends BasicItem {
 
     @Override
     public ItemInfo getItemInfo() {
-        return itemInfo;
+        EntityAction action;
+        if (attackClock > 0) {
+            action = EntityAction.ACTION_ONE;
+        } else {
+            action = EntityAction.NONE;
+        }
+        return new ItemInfo(
+                "Basic Bow",
+                "A simple bow. Reliable and sturdy.",
+                EntityGroupID.BASIC_BOW,
+                action,
+                attackClock
+        );
     }
 
     @Override

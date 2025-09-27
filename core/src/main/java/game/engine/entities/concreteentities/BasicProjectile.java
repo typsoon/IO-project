@@ -56,7 +56,11 @@ public class BasicProjectile implements IAIEntity, ICollisionAware {
                 geometryRepresentation.getVelocity(),
                 geometryRepresentation.getRotation(),
                 entityGroupID,
-                EntityAction.IDLE
+                EntityAction.NONE,
+                0,
+                EntityGroupID.HUMAN_BASIC,
+                EntityAction.NONE,
+                0
         );
     }
 

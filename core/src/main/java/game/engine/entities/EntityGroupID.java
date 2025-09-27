@@ -6,5 +6,10 @@ public enum EntityGroupID {
     ARROW,
     ROCK,
     STUMP,
-    BORDER
+    BORDER,
+
+    // Items
+    BASIC_SWORD,
+    BASIC_ARROW,
+    BASIC_BOW
 }

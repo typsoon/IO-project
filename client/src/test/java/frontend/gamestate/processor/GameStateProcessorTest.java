@@ -1,16 +1,22 @@
 package frontend.gamestate.processor;
 
+import frontend.gamestate.DrawableInfo;
+import frontend.gamestate.EntityVisibleState;
+import frontend.gamestate.IDisplayableGameState;
 import game.engine.PlayerConfig;
+import game.engine.entities.EntityAction;
+import game.engine.entities.inventory.InventoryInfo;
 import game.engine.modules.IGeometryModule;
 import game.gamestates.EntityState;
+import game.gamestates.PlayerInventoryState;
 import game.gamestates.PlayerState;
+import game.utility.Point2F;
 import game.utility.Vector2F;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import viewmodel.game.RenderableObjectFactory;
 import viewmodel.game.RenderablePlayer;
 import viewmodel.game.TimedRenderableObject;
-import frontend.gamestate.IDisplayableGameState;
 
 import java.util.List;
 
@@ -23,6 +29,7 @@ class GameStateProcessorTest {
     IDisplayableGameState displayableGameState;
     PlayerConfig playerConfig;
     RenderablePlayer player;
+    DrawableInfo playerDrawable;
 
     @BeforeEach
     void setup() {
@@ -31,6 +38,9 @@ class GameStateProcessorTest {
         displayableGameState = mock(IDisplayableGameState.class);
         playerConfig = mock(PlayerConfig.class);
         player = mock(RenderablePlayer.class);
+        playerDrawable = mock(DrawableInfo.class);
+        when(player.getDrawableInfo()).thenReturn(playerDrawable);
+        when(player.getDrawable()).thenReturn(playerDrawable);
 
         when(objectFactory.createRenderablePlayer(playerConfig)).thenReturn(player);
     }
@@ -40,7 +50,7 @@ class GameStateProcessorTest {
         new GameStateProcessor(geometryModule, objectFactory, displayableGameState, playerConfig, List.of());
 
         verify(displayableGameState).addPlayer(player);
-        verify(displayableGameState).addDrawable(player.getDrawableInfo());
+        verify(displayableGameState).addDrawable(playerDrawable);
     }
 
     @Test
@@ -48,17 +58,39 @@ class GameStateProcessorTest {
         GameStateProcessor processor = new GameStateProcessor(geometryModule, objectFactory, displayableGameState, playerConfig, List.of());
 
         PlayerState ps = mock(PlayerState.class);
-        when(ps.position()).thenReturn(null);
-        when(ps.velocity()).thenReturn(null);
+        when(ps.position()).thenReturn(new Point2F(1, 2));
+        when(ps.velocity()).thenReturn(new Vector2F(3, 4));
         when(ps.rotation()).thenReturn(1f);
-        when(ps.sightRange()).thenReturn(new Vector2F(10f,10f));
+        when(ps.action()).thenReturn(EntityAction.NONE);
+        when(ps.actionProgress()).thenReturn(0.25f);
+        when(ps.sightRange()).thenReturn(new Vector2F(10f, 10f));
+        when(ps.maxHp()).thenReturn(100);
+        when(ps.currentHp()).thenReturn(75);
 
         processor.processGameStates(List.of(ps), 0f);
 
-        verify(player).setPosition(null);
-        verify(player).setVelocity(null);
+        verify(playerDrawable).setState(EntityVisibleState.values()[EntityAction.NONE.ordinal()]);
+        verify(playerDrawable).setStateTime(0.25f);
+
+        verify(player).setPosition(new Point2F(1, 2));
+        verify(player).setVelocity(new Vector2F(3, 4));
         verify(player).setRotation(1f);
-        verify(player).setRange(new Vector2F(10f,10f));
+        verify(player).setRange(new Vector2F(10f, 10f));
+        verify(player).setMaxHp(100);
+        verify(player).setCurrentHp(75);
+    }
+
+    @Test
+    void testProcessPlayerInventoryStateUpdatesInventory() {
+        GameStateProcessor processor = new GameStateProcessor(geometryModule, objectFactory, displayableGameState, playerConfig, List.of());
+
+        PlayerInventoryState invState = mock(PlayerInventoryState.class);
+        InventoryInfo inventory = mock(InventoryInfo.class);
+        when(invState.inventory()).thenReturn(inventory);
+
+        processor.processGameStates(List.of(invState), 0f);
+
+        verify(player).setInventoryInfo(inventory);
     }
 
     @Test
@@ -67,13 +99,19 @@ class GameStateProcessorTest {
 
         EntityState es = mock(EntityState.class);
         when(es.entityId()).thenReturn(1);
+        when(es.action()).thenReturn(EntityAction.NONE);
+        when(es.actionProgress()).thenReturn(0.1f);
+
         TimedRenderableObject tro = mock(TimedRenderableObject.class);
+        DrawableInfo drawable = mock(DrawableInfo.class);
+        when(tro.getDrawable()).thenReturn(drawable);
         when(objectFactory.createRenderableObject(es)).thenReturn(tro);
 
-        clearInvocations(displayableGameState);
         processor.processGameStates(List.of(es), 0f);
 
-        verify(displayableGameState).addDrawable(tro.getDrawable());
+        verify(displayableGameState).addDrawable(drawable);
+        verify(drawable).setState(EntityVisibleState.values()[EntityAction.NONE.ordinal()]);
+        verify(drawable).setStateTime(0.1f);
     }
 
     @Test
@@ -82,13 +120,22 @@ class GameStateProcessorTest {
 
         EntityState es = mock(EntityState.class);
         when(es.entityId()).thenReturn(1);
+        when(es.action()).thenReturn(EntityAction.NONE);
+        when(es.actionProgress()).thenReturn(0f);
+
         TimedRenderableObject tro = mock(TimedRenderableObject.class);
+        DrawableInfo drawable = mock(DrawableInfo.class);
+        when(tro.getDrawable()).thenReturn(drawable);
         when(objectFactory.createRenderableObject(es)).thenReturn(tro);
 
-        processor.processGameStates(List.of(es), 1f); // deltaTime > 0.5f threshold
+        // Najpierw dodanie encji
+        processor.processGameStates(List.of(es), 0f);
 
+        // Potem upływ czasu większego niż threshold (0.5f)
+        processor.processGameStates(List.of(), 1f);
+
+        verify(displayableGameState).removeDrawable(drawable);
         verify(tro).dispose();
-        verify(displayableGameState).removeDrawable(tro.getDrawable());
     }
 
     @Test
@@ -97,6 +144,6 @@ class GameStateProcessorTest {
 
         processor.processGameStates(List.of(), 1f);
 
-        verify(geometryModule, atLeast(1)).cycle();
+        verify(geometryModule, atLeastOnce()).cycle();
     }
 }

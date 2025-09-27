@@ -13,10 +13,11 @@ public record EntityState(
         Vector2F velocity,
         float rotation,
         EntityGroupID entityGroupId,
-
-        //ItemInfo holdingItem,
-        EntityAction action
-
+        EntityAction action,
+        float actionProgress,
+        EntityGroupID holdingItemGroupId,
+        EntityAction itemAction,
+        float itemActionProgress
         // there should be what entity is holding, for example
 ) implements IGameState {
 }

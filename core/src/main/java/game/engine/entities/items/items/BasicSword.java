@@ -1,20 +1,15 @@
 package game.engine.entities.items.items;
 
 import game.engine.IWorldView;
+import game.engine.entities.EntityAction;
+import game.engine.entities.EntityGroupID;
 import game.engine.entities.IEntity;
 import game.engine.entities.IUsageModifiers;
 import game.engine.entities.items.ItemInfo;
-import game.engine.entities.items.ItemSpriteID;
 import game.engine.entities.items.attacks.IAttack;
 import game.engine.entities.items.attacks.RectangleSlash;
 
 public class BasicSword extends BasicItem {
-    ItemInfo itemInfo = new ItemInfo(
-            "Basic Sword",
-            "A simple sword. Reliable and sturdy.",
-            ItemSpriteID.BASIC_SWORD
-    );
-
     IAttack attack = new RectangleSlash();
     private final int attackTime = 3; // in ticks
     private int attackClock = 0;
@@ -27,7 +22,20 @@ public class BasicSword extends BasicItem {
 
     @Override
     public ItemInfo getItemInfo() {
-        return itemInfo;
+        EntityAction action;
+        if (attackClock > 0) {
+            action = EntityAction.ACTION_ONE;
+        } else {
+            action = EntityAction.NONE;
+        }
+
+        return new ItemInfo(
+                "Basic Sword",
+                "A simple sword. Reliable and sturdy.",
+                EntityGroupID.BASIC_SWORD,
+                action,
+                attackClock
+        );
     }
 
     @Override

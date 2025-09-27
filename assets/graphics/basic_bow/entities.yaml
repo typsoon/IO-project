@@ -18,12 +18,3 @@ stump:
 
 border:
   - state_zero: 0.0
-
-basic_sword:
-  - state_zero: 0.0
-
-basic_bow:
-  - state_zero: 0.0
-
-basic_arrow:
-  - state_zero: 0.0

@@ -13,9 +13,11 @@ public record PlayerState(
         Vector2F velocity,
         float rotation,
         EntityGroupID entityGroupId,
-        //ItemInfo holdingItem,
         EntityAction action,
-        //float actionProgress,
+        float actionProgress,
+        EntityGroupID holdingItemGroupId,
+        EntityAction itemAction,
+        float itemActionProgress,
         Vector2F sightRange,
         int maxHp,
         int currentHp

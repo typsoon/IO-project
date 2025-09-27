@@ -95,4 +95,9 @@ public class Inventory implements IInventory {
                 new FixedSizeArrayWrapper<>(resources.entrySet().stream().map(e -> new ResourceInfo(e.getValue(), e.getKey())).toList(), ResourceInfo.class)
         );
     }
+
+    @Override
+    public int getActiveSlotIndex() {
+        return activeSlotIndex;
+    }
 }

@@ -28,4 +28,6 @@ public interface IInventory {
     void useSlot(int index, UsageType usageType, IWorldView view, IEntity user, IUsageModifiers modifiers);
 
     InventoryInfo getInventoryInfo();
+
+    int getActiveSlotIndex();
 }
