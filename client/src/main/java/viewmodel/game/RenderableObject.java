@@ -1,12 +1,12 @@
 package viewmodel.game;
 
-import com.badlogic.gdx.utils.Disposable;
 import frontend.gamestate.DrawableInfo;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.utility.Point2F;
 import game.utility.Vector2F;
+import utils.IDisposable;
 
-public class RenderableObject implements Disposable {
+public class RenderableObject implements IDisposable {
     IManagingGeometryRepresentation geometryRepresentation;
     DrawableInfo drawableInfo;
 

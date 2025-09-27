@@ -12,9 +12,8 @@ import game.engine.modules.IGeometryModule;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.session.IPlayerGamesStateSender;
+import utils.IDisposable;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
     private final EntityFactory entityFactory;
     private final Map<IPlayerGamesStateSender, Player> players = new java.util.HashMap<>();
     private final Map<IGeometryRepresentation, IEntity> entities = new java.util.HashMap<>();
-    private final Collection<Closeable> resourcesToClose;
+    private final Collection<IDisposable> resourcesToClose;
 
     private final Collection<IAIEntity> thinkers = new java.util.ArrayList<>();
 
@@ -74,7 +73,7 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
             }
 
             sender.sendGameState(player.getPlayerInventoryState());
-            
+
             if (player.isInteracting()) {
                 sender.sendGameState(player.getCurrentInteraction().getState());
             }
@@ -92,7 +91,7 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
     }
 
     protected GameEngine(Collection<EnginePlayerData> players, IGeometryModule geometryModule,
-                         EntityFactory entityFactory, Collection<Closeable> resourcesToClose) {
+                         EntityFactory entityFactory, Collection<IDisposable> resourcesToClose) {
 
         this.geometryModule = geometryModule;
         geometryModule.subscribeToCollisions(this);
@@ -133,9 +132,9 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
     }
 
     @Override
-    public void close() throws IOException {
-        for (Closeable closeable : resourcesToClose) {
-            closeable.close();
+    public void dispose() {
+        for (IDisposable disposable : resourcesToClose) {
+            disposable.dispose();
         }
     }
 

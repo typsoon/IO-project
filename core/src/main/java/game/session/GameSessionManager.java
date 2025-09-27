@@ -4,15 +4,15 @@ import game.actions.IAction;
 import game.engine.Event;
 import game.engine.IGameEngine;
 import game.gamestates.IGameState;
+import utils.IDisposable;
 
-import java.io.Closeable;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GameSessionManager implements IActionReceiver, Closeable {
+public class GameSessionManager implements IActionReceiver, IDisposable {
     private IGameEngine gameEngine;
     private final HashMap<ISubscribablePlayerConnector, IPlayerGamesStateSender> playerGameStateSenders = new HashMap<>();
     private final HashMap<ISubscribablePlayerConnector, Queue<IGameState>> playerGameStateQueues = new HashMap<>();
@@ -78,12 +78,12 @@ public class GameSessionManager implements IActionReceiver, Closeable {
     }
 
     @Override
-    public void close() throws java.io.IOException {
+    public void dispose() {
         stopGameLoop();
         for (ISubscribablePlayerConnector playerConnector : playerGameStateSenders.keySet()) {
             playerConnector.unsubscribe(this);
         }
-        gameEngine.close();
+        gameEngine.dispose();
     }
 
     // for testing purposes

@@ -17,7 +17,6 @@ import game.gamestates.IGameState;
 import game.session.*;
 import game.utility.Vector2F;
 
-import java.io.IOException;
 import java.util.List;
 
 public class DebugScreen implements Screen {
@@ -130,11 +129,7 @@ public class DebugScreen implements Screen {
     @Override
     public void dispose() {
         debugRenderer.dispose();
-        try {
-            sessionManager.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        sessionManager.dispose();
     }
 
     // Local connector for debug input

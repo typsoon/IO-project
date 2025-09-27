@@ -5,15 +5,15 @@ import com.badlogic.gdx.physics.box2d.*;
 import game.engine.entities.geometry.EntityGeometryConfig;
 import game.utility.Point2F;
 import game.utility.Vector2F;
+import utils.IDisposable;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class GeometryModule implements IGeometryModule, IGeometryFactory, Closeable {
+public class GeometryModule implements IGeometryModule, IGeometryFactory, IDisposable {
 
     private static final Logger LOGGER = Logger.getLogger(GeometryModule.class.getName());
     private final World world = new World(new Vector2(0, 0), true);
@@ -223,7 +223,7 @@ public class GeometryModule implements IGeometryModule, IGeometryFactory, Closea
     }
 
     @Override
-    public void close() {
+    public void dispose() {
         world.dispose();
     }
 
