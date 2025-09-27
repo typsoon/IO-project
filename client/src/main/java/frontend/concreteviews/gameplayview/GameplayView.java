@@ -63,6 +63,8 @@ public class GameplayView extends ScreenAdapter {
     private FitViewport viewport;
     private IGameplayInfoProvider gameplayInfoProvider;
 
+    private IGameplayHud gameplayHud;
+
     private Stage hudStage;
     private Label hpLabel;
     private ProgressBar hpBar;
@@ -169,31 +171,37 @@ public class GameplayView extends ScreenAdapter {
         map();
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
+
+        gameplayHud.render(delta);
         // TODO add gui
-        var playerInfo = gameState.getPlayerData().iterator().next();
-        hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue()) * 100);
-        hpLabel.setText(String.format("HP: %3d out of %3d", playerInfo.getHpValue(), playerInfo.getMaxHpValue()));
-        for (int i = 0; i < playerInfo.getInventoryInfo().slotNum(); i++) {
-            if (i < playerInfo.getInventoryInfo().slots().getData().length) {
-                hotbarSlots.get(i).setColor(Color.GRAY);
-                if (playerInfo.getInventoryInfo().slots().getData()[i].amount() > 0) {
-                    hotbarSlots.get(i).setText(playerInfo.getInventoryInfo().slots().getData()[i].item().name());
-                } else {
-                    hotbarSlots.get(i).setText("");
-                }
-            } else {
-                hotbarSlots.get(i).setColor(Color.BLACK);
-                hotbarSlots.get(i).setText("");
-            }
-        }
-
-        for (int i = 0; i < playerInfo.getInventoryInfo().resources().getData().length; i++) {
-            resourceLabels.get(i).setText(playerInfo.getInventoryInfo().resources().getData()[i].amount() + " x " +
-                    playerInfo.getInventoryInfo().resources().getData()[i].resource().name());
-        }
-
-        hudStage.act(delta);
-        hudStage.draw();
+        // var playerInfo = gameState.getPlayerData().iterator().next();
+        // hpBar.setValue((float) playerInfo.getHpValue() / (playerInfo.getMaxHpValue())
+        // * 100);
+        // hpLabel.setText(String.format("HP: %3d out of %3d", playerInfo.getHpValue(),
+        // playerInfo.getMaxHpValue()));
+        // for (int i = 0; i < playerInfo.getInventoryInfo().slotNum(); i++) {
+        // if (i < playerInfo.getInventoryInfo().slots().getData().length) {
+        // hotbarSlots.get(i).setColor(Color.GRAY);
+        // if (playerInfo.getInventoryInfo().slots().getData()[i].amount() > 0) {
+        // hotbarSlots.get(i).setText(playerInfo.getInventoryInfo().slots().getData()[i].item().name());
+        // } else {
+        // hotbarSlots.get(i).setText("");
+        // }
+        // } else {
+        // hotbarSlots.get(i).setColor(Color.BLACK);
+        // hotbarSlots.get(i).setText("");
+        // }
+        // }
+        //
+        // for (int i = 0; i <
+        // playerInfo.getInventoryInfo().resources().getData().length; i++) {
+        // resourceLabels.get(i).setText(playerInfo.getInventoryInfo().resources().getData()[i].amount()
+        // + " x " +
+        // playerInfo.getInventoryInfo().resources().getData()[i].resource().name());
+        // }
+        //
+        // hudStage.act(delta);
+        // hudStage.draw();
     }
 
     @Override
@@ -225,54 +233,6 @@ public class GameplayView extends ScreenAdapter {
 
         hudStage = new Stage();
 
-        hpBar = textureManager.getProgressBar(0, 100, 1, false);
-        hpBar.setColor(Color.RED);
-        hpBar.setValue(100);
-        hpBar.setWidth(200);
-        hpLabel = textureManager.getHeading("HP: 100/100");
-        hpLabel.setAlignment(Align.center);
-        float maxWidth = 200;
-        float scale = Math.min(1f, maxWidth / hpLabel.getPrefWidth());
-        hpLabel.setFontScale(scale);
-        Table hudTable = textureManager.getTable();
-        hudTable.setFillParent(true);
-        hudTable.top().left();
-        hudTable.add(hpLabel).width(200).pad(10).left();
-        hudTable.row();
-        hudTable.add(hpBar).width(200).pad(10).left();
-
-        hudTable.row();
-
-        Table hotbarTable = textureManager.getTable();
-        hotbarTable.top().right();
-        hotbarTable.setFillParent(true);
-
-        for (int i = 0; i < 5; i++) {
-            TextButton slot = textureManager.getTextButton("");
-            slot.getLabel().setFontScale(0.3f);
-            hotbarSlots.add(slot);
-            hotbarTable.add(slot).size(64, 64).pad(5);
-            slot.setColor(Color.BLACK);
-        }
-
-        Table resourcesTable = textureManager.getTable();
-        resourcesTable.bottom().right();
-        resourcesTable.setFillParent(true);
-
-        int resourceCount = 10; // this should be from file or server
-        for (int i = 0; i < 10; i++) {
-            Label resourceLabel = textureManager.getHeading("");
-            resourceLabel.setAlignment(Align.right);
-            resourceLabel.setFontScale(0.3f);
-            resourceLabels.add(resourceLabel);
-            resourcesTable.add(resourceLabel).pad(5).right();
-            resourcesTable.row();
-        }
-
-        hudStage.addActor(hudTable);
-        hudStage.addActor(hotbarTable);
-        hudStage.addActor(resourcesTable);
-
         var multiplexer = new InputMultiplexer(hudStage);
         multiplexer.addProcessor(stage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
@@ -280,6 +240,9 @@ public class GameplayView extends ScreenAdapter {
                     .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
         }
         Gdx.input.setInputProcessor(multiplexer);
+
+        gameplayHud = new GameplayHud(gameplayInfoProvider, multiplexer,
+                textureManager);
 
         // this should be last because it calls render() on windows
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);

@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import frontend.assetsloading.ITextureManager;
 import frontend.concreteviews.gameclientview.subscreens.ConfirmationPromptScreen;
 import frontend.concreteviews.gameclientview.subscreens.GameClientSubviewsFactory;
 import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
@@ -26,8 +27,6 @@ import gameclient.rooms.RoomRequestResult;
 import gameclient.rooms.RoomRequestType;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utils.ISendable;
-import frontend.assetsloading.*;
-import frontend.assetsloading.*;
 
 public class GameClientView extends ScreenAdapter implements ISendableConsumer, ScreenSwitchingUtils {
     @SuppressWarnings("unused")
