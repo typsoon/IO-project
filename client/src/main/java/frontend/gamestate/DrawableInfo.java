@@ -24,10 +24,10 @@ public class DrawableInfo {
         stateTime = 0;
         x = 0;
         y = 0;
-        width = 0;
-        height = 0;
-        originX = 0;
-        originY = 0;// TODO check what should be here
+        width = 0.5f;
+        height = 0.5f;
+        originX = 0.25f;
+        originY = 0.25f;// TODO check what should be here
         scaleX = 1;
         scaleY = 1;
         rotation = 0;
