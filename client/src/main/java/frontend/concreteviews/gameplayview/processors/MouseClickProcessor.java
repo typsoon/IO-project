@@ -25,7 +25,7 @@ public class MouseClickProcessor extends InputAdapter {
 
     private final Vector2F getDirectionVector(final Point2F placeOfInterestPosition,
                                               final Point2F clickedPointInScreenCords) {
-        final var clickedPointInGameCords = gameplayInfoProvider.castScreenCordinatesToGameCordinates(
+        final var clickedPointInGameCords = gameplayInfoProvider.castScreenCoordinatesToGameCoordinates(
                 clickedPointInScreenCords.x(),
                 clickedPointInScreenCords.y());
 

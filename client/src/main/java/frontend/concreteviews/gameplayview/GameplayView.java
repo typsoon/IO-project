@@ -63,7 +63,6 @@ public class GameplayView extends ScreenAdapter {
     private FitViewport viewport;
     private IGameplayInfoProvider gameplayInfoProvider;
 
-    private FitViewport hudViewport;
     private Stage hudStage;
     private Label hpLabel;
     private ProgressBar hpBar;
@@ -207,7 +206,7 @@ public class GameplayView extends ScreenAdapter {
         gameCamera = new OrthographicCamera();
         gameCamera.setToOrtho(false);
         viewport = new FitViewport(0, 0, gameCamera);
-        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition, gameState.getPlayerData().iterator().next()::getInventoryInfo);
+        gameplayInfoProvider = new GameplayInfoProviderImpl(viewport, this::getCameraPosition, gameState.getPlayerData().iterator().next()::getInventoryInfo, gameState.getPlayerData().iterator().next()::getHpValue, gameState.getPlayerData().iterator().next()::getMaxHpValue);
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
         stage = new Stage();
 
@@ -222,7 +221,6 @@ public class GameplayView extends ScreenAdapter {
         stage.addActor(table);
 
         hudStage = new Stage();
-        hudViewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT, gameCamera);
 
         hpBar = textureManager.getProgressBar(0, 100, 1, false);
         hpBar.setColor(Color.RED);

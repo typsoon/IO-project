@@ -4,7 +4,7 @@ import game.engine.entities.inventory.InventoryInfo;
 import game.utility.Point2F;
 
 public interface IGameplayInfoProvider {
-    Point2F castScreenCordinatesToGameCordinates(float worldX, float worldY);
+    Point2F castScreenCoordinatesToGameCoordinates(float worldX, float worldY);
 
     /**
      * @return when in game it returns the player position
@@ -16,4 +16,8 @@ public interface IGameplayInfoProvider {
     void setActiveSlotIndex(int newIndex);
 
     InventoryInfo getInventoryInfo();
+
+    int getHpValue();
+
+    int getMaxHpValue();
 }
