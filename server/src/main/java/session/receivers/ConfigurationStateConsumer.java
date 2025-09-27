@@ -12,6 +12,7 @@ import game.session.ISendableConsumer;
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomRequestResult;
 import network.messages.configurationstate.GameStartMessages.StartGameRequest;
+import network.messages.configurationstate.RoomMessages;
 import network.messages.configurationstate.RoomMessages.JoinRoomRequest;
 import user.IUsersMatchmakingHandle;
 import user.IUsersRoomHandle;
@@ -25,7 +26,7 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
     private final UserId id;
 
     public ConfigurationStateConsumer(IUsersRoomHandle userRoomHandle, IUsersMatchmakingHandle matchmakingHandle,
-            ISendableConsumer sendableDispatcher, UserId id, Subscribable subscribable) {
+                                      ISendableConsumer sendableDispatcher, UserId id, Subscribable subscribable) {
         this.userRoomHandle = userRoomHandle;
         this.matchmakingHandle = matchmakingHandle;
         this.sendableDispatcher = sendableDispatcher;
@@ -74,6 +75,13 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
                 }
 
                 sendableDispatcher.processSendable(response);
+            }
+
+            case RoomMessages.BrowseRoomsRequest.Payload browseRoomsRequest -> { // TODO: add functionality
+                var rooms = userRoomHandle.getPublicRooms();
+                for (var room : rooms) {
+                    sendableDispatcher.processSendable(room.getRoomInfo());
+                }
             }
 
             case StartGameRequest.Payload startGameReqPayload -> {
