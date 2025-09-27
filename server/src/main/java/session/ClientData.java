@@ -19,6 +19,7 @@ import network.server.nio.NIOConnectionManager.SessionContract;
 import session.receivers.IConfigurationStateConsumerFactory;
 import user.IMatchmakingUserHandle;
 import user.IUsersHandlesFactory;
+import utils.ObserverWithATwist;
 
 public class ClientData implements SessionContract, IMatchmakingUserHandle {
     private final MessageDispatcher messageDispatcher;
@@ -44,7 +45,7 @@ public class ClientData implements SessionContract, IMatchmakingUserHandle {
 
         final var userName = databaseManager.getPlayerUsername(userId);
 
-        final var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this, null); // TODO: add subscriber
+        final var usersHandles = usersHandlesFactory.getUsersHandles(new UserInfo(userId, userName), this, new ObserverWithATwist.ObserverImpl()); // TODO: add subscriber
 
         this.userId = userId;
         this.defaultSendableReceiver = sendableReceiverFactory.getConfigurationStateConsumer(usersHandles.roomHandle(),
