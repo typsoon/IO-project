@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FixedSizeArrayWrapperTest {
     private FixedSizeArrayWrapper<Integer> arrayWrapper;
 
-    private static Collection<Integer> createAListOfAGivenSize(int size) {
-        var list = new LinkedList<Integer>();
+    private static Collection<Integer> createAListOfAGivenSize(final int size) {
+        final var list = new LinkedList<Integer>();
 
         for (int i = 0; i < size; i++) {
             list.add(i);
@@ -22,7 +22,7 @@ public class FixedSizeArrayWrapperTest {
 
     @Test
     void arrayThatIsTooBigShouldntBeAllowed() {
-        var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize + 1);
+        final var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize + 1);
 
         assertThrows(AssertionError.class, () -> {
             arrayWrapper = new FixedSizeArrayWrapper<>(list, Integer.class);
@@ -31,7 +31,7 @@ public class FixedSizeArrayWrapperTest {
 
     @Test
     void arrayThatHasSizeEqualToMaxsizeShouldBeAllowed() {
-        var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize);
+        final var list = createAListOfAGivenSize(FixedSizeArrayWrapper.maxSize);
 
         assertDoesNotThrow(() -> {
             arrayWrapper = new FixedSizeArrayWrapper<>(list, Integer.class);

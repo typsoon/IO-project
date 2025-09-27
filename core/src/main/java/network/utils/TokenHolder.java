@@ -26,7 +26,7 @@ public class TokenHolder implements TokenView {
         try {
             token = Optional.of(tokenVal);
         } finally {
-            lock.readLock().unlock();
+            lock.writeLock().unlock();
         }
     }
 

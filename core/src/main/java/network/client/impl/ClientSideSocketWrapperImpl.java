@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import network.MessageDispatcher;
 import network.client.ClientSideSocketWrapper;
-import network.impl.SingleWriteSocketContainer;
 import network.messages.Message;
 import network.messages.Message.EncryptedMessage;
 import network.messages.Message.TCPMessage;
@@ -31,12 +30,13 @@ import network.socketwrappers.concretesocketwrappers.ClientSessionUDPSocket;
 import network.utils.ConnectionData;
 import network.utils.TokenHolder;
 import utils.ISendable;
+import utils.SingleWriteContainer;
 
 public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
     private final MessageDispatcher messageDispatcher;
-    private final SingleWriteSocketContainer<EncryptedMessage, DuplexSocket<EncryptedMessage>> sslSocketContainer = new SingleWriteSocketContainer<>();
-    private final SingleWriteSocketContainer<TCPMessage, DuplexSocket<TCPMessage>> tcpSocketContainer = new SingleWriteSocketContainer<>();
-    private final SingleWriteSocketContainer<UDPMessage, DuplexSocket<UDPMessage>> udpSocketContainer = new SingleWriteSocketContainer<>();
+    private final SingleWriteContainer<DuplexSocket<EncryptedMessage>> sslSocketContainer = new SingleWriteContainer<>();
+    private final SingleWriteContainer<DuplexSocket<TCPMessage>> tcpSocketContainer = new SingleWriteContainer<>();
+    private final SingleWriteContainer<DuplexSocket<UDPMessage>> udpSocketContainer = new SingleWriteContainer<>();
 
     // FIXME: consider new ConcurrentLinkedQueue(new BoundedList(1000));
     // and new ArrayBlockingQueue(1000)
@@ -140,7 +140,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
                         var tcpSocketWrapper = new ClientSessionSocket<Message.TCPMessage>(producer, consumer,
                                 tokenHolder);
                         messageDispatcher.connectTCPSender(tcpSocketWrapper);
-                        tcpSocketContainer.setSocketWrapper(tcpSocketWrapper);
+                        tcpSocketContainer.setContents(tcpSocketWrapper);
 
                         executorService.submit(new SendableReceiver(tcpSocketWrapper));
 
@@ -150,7 +150,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
 
                         var udpSocketWrapper = new ClientSessionUDPSocket(udpSocket, tokenHolder);
                         messageDispatcher.connectUDPSender(udpSocketWrapper);
-                        udpSocketContainer.setSocketWrapper(udpSocketWrapper);
+                        udpSocketContainer.setContents(udpSocketWrapper);
 
                         executorService.submit(new SendableReceiver(udpSocketWrapper));
 
@@ -197,7 +197,7 @@ public class ClientSideSocketWrapperImpl implements ClientSideSocketWrapper {
 
             var sslSocketWrapper = new ClientSessionSSLSocket(producer, consumer);
             messageDispatcher.connectSSLSender(sslSocketWrapper);
-            sslSocketContainer.setSocketWrapper(sslSocketWrapper);
+            sslSocketContainer.setContents(sslSocketWrapper);
             executorService
                     .submit(new SSLSendableReceiver(sslSocketWrapper));
         } catch (IOException e) {

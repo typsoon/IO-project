@@ -8,35 +8,36 @@ import network.messages.Message.EncryptedMessage;
 import network.messages.Message.TCPMessage;
 import network.messages.Message.UDPMessage;
 import network.socketwrappers.SocketTypes.SocketSender;
+import utils.SingleWriteContainer;
 
 public class ConcreteMessageDispatcher implements MessageDispatcher {
-    private final SingleWriteSocketContainer<UDPMessage, SocketSender<UDPMessage>> udpMessageSender = new SingleWriteSocketContainer<>();
-    private final SingleWriteSocketContainer<TCPMessage, SocketSender<TCPMessage>> tcpMessageSender = new SingleWriteSocketContainer<>();
-    private final SingleWriteSocketContainer<EncryptedMessage, SocketSender<EncryptedMessage>> sslMessageSender = new SingleWriteSocketContainer<>();
+    private final SingleWriteContainer<SocketSender<UDPMessage>> udpMessageSender = new SingleWriteContainer<>();
+    private final SingleWriteContainer<SocketSender<TCPMessage>> tcpMessageSender = new SingleWriteContainer<>();
+    private final SingleWriteContainer<SocketSender<EncryptedMessage>> sslMessageSender = new SingleWriteContainer<>();
 
     @Override
     public void dispatchMessage(Message message) throws IOException {
         switch (message) {
-            case UDPMessage u -> udpMessageSender.getSocketWrapper().sendMessage(u);
-            case TCPMessage t -> tcpMessageSender.getSocketWrapper().sendMessage(t);
-            case EncryptedMessage e -> sslMessageSender.getSocketWrapper().sendMessage(e);
+            case UDPMessage u -> udpMessageSender.getContents().sendMessage(u);
+            case TCPMessage t -> tcpMessageSender.getContents().sendMessage(t);
+            case EncryptedMessage e -> sslMessageSender.getContents().sendMessage(e);
         }
 
     }
 
     @Override
     public void connectUDPSender(SocketSender<UDPMessage> socketSender) {
-        udpMessageSender.setSocketWrapper(socketSender);
+        udpMessageSender.setContents(socketSender);
     }
 
     @Override
     public void connectTCPSender(SocketSender<TCPMessage> socketSender) {
-        tcpMessageSender.setSocketWrapper(socketSender);
+        tcpMessageSender.setContents(socketSender);
     }
 
     @Override
     public void connectSSLSender(SocketSender<EncryptedMessage> socketSender) {
-        sslMessageSender.setSocketWrapper(socketSender);
+        sslMessageSender.setContents(socketSender);
     }
 
 }
