@@ -103,8 +103,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
                 return true;
             }
         });
-
-        // NOWE: przycisk do wejścia w RoomsView
+        
         final Button roomsScreenButton = textureManager.getTextButton("Rooms...");
         roomsScreenButton.addListener(new InputListener() {
             @Override

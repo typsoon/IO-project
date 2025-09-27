@@ -6,7 +6,7 @@ import network.messages.userstate.GameConfirmation;
 import network.messages.userstate.GameConfirmation.Confirmation;
 
 public class GameClientViewEvents {
-    static final class CreateRoomEvent extends Event {
+    public static final class CreateRoomEvent extends Event {
         private final String name;
         private final String password;
         private final int maxPlayers;

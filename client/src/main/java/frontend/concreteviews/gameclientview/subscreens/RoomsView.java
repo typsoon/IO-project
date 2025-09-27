@@ -13,12 +13,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import frontend.assetsloading.ITextureManager;
 import frontend.concreteviews.gameclientview.GameClientViewData;
-//import frontend.concreteviews.gameclientview.GameClientViewEvents.BrowseRoomsEvent;
-//import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
-//import frontend.concreteviews.gameclientview.GameClientViewEvents.JoinRoomEvent;
+import frontend.concreteviews.gameclientview.GameClientViewEvents.CreateRoomEvent;
 import frontend.concreteviews.gameclientview.ScreenSwitchingUtils;
 
 public class RoomsView extends ScreenAdapter {
+    private enum Mode {MAIN, JOIN, CREATE, BROWSE}
+
     private final ScreenSwitchingUtils screenSwitchingUtils;
     private final GameClientViewData gameClientViewData;
     private final ITextureManager textureManager;
@@ -27,8 +27,12 @@ public class RoomsView extends ScreenAdapter {
     private final Stage stage;
     private final Table rootTable;
 
-    public RoomsView(ScreenSwitchingUtils screenSwitchingUtils, GameClientViewData gameClientViewData,
-                     ITextureManager textureManager, EventListener eventListener) {
+    private Mode mode = Mode.MAIN;
+
+    public RoomsView(ScreenSwitchingUtils screenSwitchingUtils,
+                     GameClientViewData gameClientViewData,
+                     ITextureManager textureManager,
+                     EventListener eventListener) {
         this.screenSwitchingUtils = screenSwitchingUtils;
         this.gameClientViewData = gameClientViewData;
         this.textureManager = textureManager;
@@ -37,81 +41,164 @@ public class RoomsView extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
         this.rootTable = textureManager.getTable();
         rootTable.setFillParent(true);
+        rootTable.defaults().pad(6);
 
         stage.addActor(rootTable);
-        buildUI();
+        rebuild();
     }
 
-    private void buildUI() {
+    private void rebuild() {
         rootTable.clear();
+        switch (mode) {
+            case MAIN -> buildMainMenu();
+            case JOIN -> buildJoinView();
+            case CREATE -> buildCreateView();
+            case BROWSE -> buildBrowseView();
+        }
+    }
 
-        rootTable.add(textureManager.getHeading("Rooms")).colspan(2).pad(15);
+    private void buildMainMenu() {
+        rootTable.add(textureManager.getHeading("Rooms")).pad(15);
         rootTable.row();
 
-        final var roomNameField = textureManager.getTextField("Room name");
+        var browseBtn = textureManager.getTextButton("Browse rooms");
+        var joinBtn = textureManager.getTextButton("Join room");
+        var createBtn = textureManager.getTextButton("Create room");
+        var backBtn = textureManager.getTextButton("Back");
+
+        browseBtn.addListener(simpleClick(() -> {
+            mode = Mode.BROWSE;
+            rebuild();
+        }));
+        joinBtn.addListener(simpleClick(() -> {
+            mode = Mode.JOIN;
+            rebuild();
+        }));
+        createBtn.addListener(simpleClick(() -> {
+            mode = Mode.CREATE;
+            rebuild();
+        }));
+        backBtn.addListener(simpleClick(screenSwitchingUtils::moveToPreviousSubscreen));
+
+        rootTable.add(joinBtn).width(360);
+        rootTable.row();
+        rootTable.add(createBtn).width(360);
+        rootTable.row();
+        rootTable.add(browseBtn).width(360);
+        rootTable.row();
+        rootTable.add(backBtn).width(360).padTop(10);
+    }
+
+    private InputListener simpleClick(Runnable action) {
+        return new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y,
+                                     final int pointer, final int button) {
+                action.run();
+                return true;
+            }
+        };
+    }
+
+    private void buildCreateView() {
+        rootTable.add(textureManager.getHeading("Create room")).pad(10);
+        rootTable.row();
+
+        final var nameField = textureManager.getTextField("Room name");
         final var passwordField = textureManager.getTextField("Password");
-        final var maxPlayersField = textureManager.getTextField("Max players (e.g. 4)");
+        passwordField.setPasswordCharacter('*');
+        final var maxField = textureManager.getTextField("Max players");
 
-        rootTable.add(roomNameField).width(300).pad(5).colspan(2);
+        rootTable.add(nameField).width(320);
         rootTable.row();
-        rootTable.add(passwordField).width(300).pad(5).colspan(2);
+        rootTable.add(passwordField).width(320);
         rootTable.row();
-        rootTable.add(maxPlayersField).width(300).pad(5).colspan(2);
+        rootTable.add(maxField).width(320);
         rootTable.row();
 
-        final var createBtn = textureManager.getTextButton("Create room");
-        final var joinBtn = textureManager.getTextButton("Join room");
-        final var browseBtn = textureManager.getTextButton("Browse rooms");
-        final var backBtn = textureManager.getTextButton("Back");
+        final boolean[] isPublic = new boolean[]{true};
+        final var publicToggle = textureManager.getTextButton("Public: ON");
+        publicToggle.addListener(simpleClick(() -> {
+            isPublic[0] = !isPublic[0];
+            publicToggle.setText(isPublic[0] ? "Public: ON" : "Public: OFF");
+        }));
 
-        createBtn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(final InputEvent event, final float x, final float y,
-                                     final int pointer, final int button) {
-                int maxPlayers = 4;
-                try {
-                    maxPlayers = Integer.parseInt(maxPlayersField.getText().trim());
-                }
-                catch (NumberFormatException ignored) { }
-                // Public room domyślnie; rozszerz UI jeśli chcesz przełącznik public/private
-//                createBtn.fire(new CreateRoomEvent(roomNameField.getText(), passwordField.getText(), maxPlayers, true));
-                return true;
+        var createBtn = textureManager.getTextButton("Create");
+        createBtn.addListener(simpleClick(() -> {
+            int maxPlayers = 4;
+            try {
+                maxPlayers = Integer.parseInt(maxField.getText().trim());
             }
-        });
+            catch (NumberFormatException ignored) { }
+            // TODO: gdy backend będzie gotowy, wyślij zdarzenie lub wiadomość do serwera
+            createBtn.fire(new CreateRoomEvent(nameField.getText(), passwordField.getText(), maxPlayers, isPublic[0]));
+        }));
 
-        joinBtn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(final InputEvent event, final float x, final float y,
-                                     final int pointer, final int button) {
-//                joinBtn.fire(new JoinRoomEvent(roomNameField.getText(), passwordField.getText()));
-                return true;
-            }
-        });
+        var backBtn = textureManager.getTextButton("Back");
+        backBtn.addListener(simpleClick(() -> {
+            mode = Mode.MAIN;
+            rebuild();
+        }));
 
-        browseBtn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(final InputEvent event, final float x, final float y,
-                                     final int pointer, final int button) {
-//                browseBtn.fire(new BrowseRoomsEvent());
-                return true;
-            }
-        });
-
-        backBtn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(final InputEvent event, final float x, final float y,
-                                     final int pointer, final int button) {
-                screenSwitchingUtils.moveToPreviousSubscreen();
-                return true;
-            }
-        });
-
-        rootTable.add(createBtn).pad(10);
-        rootTable.add(joinBtn).pad(10);
+        rootTable.add(publicToggle).padTop(8);
         rootTable.row();
-        rootTable.add(browseBtn).colspan(2).padTop(20);
+        rootTable.add(createBtn).padTop(16);
         rootTable.row();
-        rootTable.add(backBtn).colspan(2).padTop(10);
+        rootTable.add(backBtn).padTop(8);
+    }
+
+    private void buildJoinView() {
+        rootTable.add(textureManager.getHeading("Join room")).pad(10);
+        rootTable.row();
+
+        final var nameField = textureManager.getTextField("Room name");
+        final var passwordField = textureManager.getTextField("Password");
+
+        var joinBtn = textureManager.getTextButton("Join");
+        joinBtn.addListener(simpleClick(() -> {
+            // TODO: odkomentować i wysłać JOIN po dodaniu backendu
+            // joinBtn.fire(new JoinRoomEvent(nameField.getText(), passwordField.getText()));
+        }));
+
+        var backBtn = textureManager.getTextButton("Back");
+        backBtn.addListener(simpleClick(() -> {
+            mode = Mode.MAIN;
+            rebuild();
+        }));
+
+        rootTable.add(nameField).width(320);
+        rootTable.row();
+        rootTable.add(passwordField).width(320);
+        rootTable.row();
+        rootTable.add(joinBtn).padTop(16);
+        rootTable.row();
+        rootTable.add(backBtn).padTop(8);
+    }
+
+    private void buildBrowseView() {
+        rootTable.add(textureManager.getHeading("Browse rooms")).pad(10);
+        rootTable.row();
+
+        // Placeholder: w przyszłości wstaw listę z gameClientViewData
+        var info = textureManager.getHeading("Feature Coming Soon");
+        rootTable.add(info);
+        rootTable.row();
+
+        var refreshBtn = textureManager.getTextButton("Refresh");
+        refreshBtn.addListener(simpleClick(() -> {
+            // TODO: odkomentować, gdy backend będzie gotowy
+            // refreshBtn.fire(new BrowseRoomsEvent());
+        }));
+
+        var backBtn = textureManager.getTextButton("Back");
+        backBtn.addListener(simpleClick(() -> {
+            mode = Mode.MAIN;
+            rebuild();
+        }));
+
+        rootTable.add(refreshBtn).padTop(12);
+        rootTable.row();
+        rootTable.add(backBtn).padTop(8);
     }
 
     @Override
