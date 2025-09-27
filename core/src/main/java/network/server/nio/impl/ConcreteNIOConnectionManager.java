@@ -175,7 +175,6 @@ public class ConcreteNIOConnectionManager<T extends SessionContract> implements 
                     attachment.dispatchMessages();
                 }
 
-                // TODO: think about refactoring these continues out
                 if (key.isReadable()) {
                     final var clientSocketChannel = (ReadableByteChannel) key.channel();
 

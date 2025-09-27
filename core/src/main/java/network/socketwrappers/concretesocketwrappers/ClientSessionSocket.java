@@ -37,9 +37,6 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
         try {
             out.putInt(tokenHolder.getToken());
 
-            // TODO: remove this
-            logger.finer("Put token bytes in %d".formatted(tokenHolder.getToken()));
-
             message.encodeAndWrite(out);
 
             logger.finer("Written %s".formatted(message.getSendable()));

@@ -28,7 +28,6 @@ public class ClientSessionSSLSocket implements DuplexSocket<Message.EncryptedMes
         this(in, out, new ConcreteMessageDecoder());
     }
 
-    // TODO: think about making this public <T> Optional<T> sendMessage
     @Override
     public void sendMessage(Message.EncryptedMessage message) {
         try {

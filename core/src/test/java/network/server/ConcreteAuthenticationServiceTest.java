@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import database.IDatabaseManager;
 import database.IDatabaseManager.UserId;
 import network.server.AuthenticationService.Token;
-import network.server.ConcreteAuthenticationService;
 
 class ConcreteAuthenticationServiceTest {
 
