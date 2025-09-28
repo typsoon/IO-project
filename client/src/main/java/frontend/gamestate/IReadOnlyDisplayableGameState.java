@@ -6,5 +6,8 @@ import java.util.Collection;
 
 public interface IReadOnlyDisplayableGameState {
     Collection<DrawableInfo> getSpritesReadonly();
+
     Collection<IPlayerData> getPlayerData();
+
+    OverlaysData getOverlaysData();
 }

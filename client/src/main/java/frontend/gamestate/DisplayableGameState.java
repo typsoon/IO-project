@@ -7,6 +7,7 @@ import java.util.Collection;
 public class DisplayableGameState implements IDisplayableGameState {
     Collection<DrawableInfo> drawableInfos;
     Collection<IPlayerData> playerData;
+    private final OverlaysData overlaysData = new OverlaysData();
 
     public DisplayableGameState() {
         drawableInfos = new java.util.ArrayList<>(); // ToDo: use a more specific collection type if needed
@@ -49,5 +50,10 @@ public class DisplayableGameState implements IDisplayableGameState {
         if (player != null) {
             playerData.remove(player);
         }
+    }
+
+    @Override
+    public OverlaysData getOverlaysData() {
+        return overlaysData;
     }
 }
