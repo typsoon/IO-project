@@ -107,10 +107,13 @@ public class AutoMessagesGenerator {
         // }
         // }
         //
-        methodBuilder.addStatement("$T $N = $L", retType, answerVarName, initialDynamicSizeVal)
-                .addCode("$L;\n", classDetails.calculateDynamicSizeCodeBlock())
-                // .addStatement("return $N", classDetails.calculateDynamicSizeCodeBlock());
-                .addStatement("return $N", answerVarName);
+        methodBuilder.addStatement("$T $N = $L", retType, answerVarName, initialDynamicSizeVal);
+
+        if (filterOutEmpty.test(classDetails.calculateDynamicSizeCodeBlock())) {
+            methodBuilder.addCode("$N += $L;\n", answerVarName, classDetails.calculateDynamicSizeCodeBlock());
+        }
+        // .addStatement("return $N", classDetails.calculateDynamicSizeCodeBlock());
+        methodBuilder.addStatement("return $N", answerVarName);
 
         return methodBuilder.build();
     }
@@ -127,14 +130,23 @@ public class AutoMessagesGenerator {
     private ClassDetailsRec getClassDetailsRec(Element element, String elAsFieldName,
             ProcessingEnvironment processingEnvironment, TypeMirror isendableTypeMirror,
             TypeMirror fixedSizeArrayWrapperMirror, int depth) {
+        if (depth > CodegenConfig.maxDepth) {
+            processingEnvironment.getMessager().printError("Maximum recursion depth exceeded");
+        }
+
         var typeUtils = processingEnvironment.getTypeUtils();
         // processingEnvironment.getMessager().printNote("Entering %s
         // %s".formatted(element, elAsFieldName));
 
         if (typeUtils.isAssignable(element.asType(), isendableTypeMirror)) {
-            var fields = ElementFilter.recordComponentsIn(element.getEnclosedElements());
+            assert typeUtils.asElement(element.asType()) instanceof TypeElement;
+            var asTypeEl = (TypeElement) typeUtils.asElement(element.asType());
 
-            processingEnvironment.getMessager().printNote("Fields in %s: %s".formatted(element.asType(), fields));
+            var fields = asTypeEl.getRecordComponents();
+            // var fields = ElementFilter.recordComponentsIn(element.getEnclosedElements());
+
+            // processingEnvironment.getMessager().printNote("Fields in %s:
+            // %s".formatted(element.asType(), fields));
 
             var reduced = fields.stream().map(
                     el -> getClassDetailsRec(el,
@@ -150,7 +162,7 @@ public class AutoMessagesGenerator {
                                     Stream.of(prev.calculateDynamicSizeCodeBlock(), act.calculateDynamicSizeCodeBlock())
                                             .filter(filterOutEmpty)
                                             .toList(),
-                                    ";\n"),
+                                    " + "),
                             CodeBlock.join(
                                     Stream.of(prev.loadTheClass(), act.loadTheClass())
                                             .filter(filterOutEmpty)
@@ -186,7 +198,8 @@ public class AutoMessagesGenerator {
             var classData = getClassDetailsRec(el, "arg", processingEnvironment,
                     isendableTypeMirror, fixedSizeArrayWrapperMirror, depth + 1);
 
-            processingEnvironment.getMessager().printNote("Recursed into this class data %s".formatted(classData));
+            // processingEnvironment.getMessager().printNote("Recursed into this class data
+            // %s".formatted(classData));
 
             CodeBlock supplierLambda = CodeBlock.builder()
                     .add("() -> ")
@@ -199,21 +212,44 @@ public class AutoMessagesGenerator {
                     .endControlFlow() // end lambda block
                     .build();
 
-            var accumulatorBuilder = CodeBlock.builder().add("return size + $L", classData.fieldsStaticSize());
+            var accumulatorBuilder = CodeBlock.builder();
+            accumulatorBuilder.add("return size + $L", classData.fieldsStaticSize());
             if (filterOutEmpty.test(classData.calculateDynamicSizeCodeBlock())) {
-                accumulatorBuilder.add("+ $L", classData.calculateDynamicSizeCodeBlock());
+                accumulatorBuilder.add(" + $L\n", classData.calculateDynamicSizeCodeBlock());
             }
 
             CodeBlock accumulateCodeBlock = CodeBlock.builder()
                     .add("$N.accumulate(0, (size, arg) -> ", elAsFieldName)
                     .beginControlFlow("")
                     .addStatement(accumulatorBuilder.build())
-                    .endControlFlow(")")
+                    // .endControlFlow("")
+                    .add("})")
                     .build();
+
+            var forEachInsides = CodeBlock.builder()
+                    // .addStatement()
+                    .beginControlFlow("try")
+                    .add("$L;\n", classData.writeTheClass())
+                    .nextControlFlow("catch ($T e)", IOException.class)
+                    .add("throw new $T(e);\n", IllegalStateException.class)
+                    .endControlFlow()
+                    .build();
+
+            var forEachCodeBlock = CodeBlock.builder()
+                    .add("$N.$N($L)", elAsFieldName, "forEach",
+                            CodeBlock.builder()
+                                    .add("arg -> ")
+                                    .beginControlFlow("")
+                                    .add(forEachInsides)
+                                    .endControlFlow().build())
+                    .build();
+
+            // var forEachCodeBlock = CodeBlock.of("$N.forEach(arg -> {\n$L;\n})",
+            // elAsFieldName, forEachInsides);
 
             return new ClassDetailsRec(
                     0,
-                    CodeBlock.of("$N.forEach(arg -> {\n$L;\n})", elAsFieldName, classData.writeTheClass()),
+                    forEachCodeBlock,
                     Byte.BYTES,
                     accumulateCodeBlock,
                     CodeBlock.of("$T.$N($L, $L, $T.class)", typeUtils.erasure(fixedSizeArrayWrapperMirror),

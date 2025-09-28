@@ -14,6 +14,7 @@ import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
 
 public class CodegenConfig {
+    public static final int maxDepth = 20;
     public static final boolean UNKNOWN_TYPE_MEANS_ENUM = true;
     public static final String generatedClassNameFormat = "%sGenerated";
 
@@ -88,7 +89,7 @@ public class CodegenConfig {
                 name -> CodeBlock.of("$N.putString($L)", consumerParName, name),
                 name -> CodeBlock.of("$N.getString()", producerParName),
                 DYNAMIC_SIZE,
-                Optional.of(name -> CodeBlock.of("$N += $N.length()", answerVarName, name))));
+                Optional.of(name -> CodeBlock.of("$N.length()", name))));
 
         // FIXME: this is ugly - it depends on file structure
         typeToTypeData.put(ClassName.bestGuess("game.utility.Point2F"), new TypeNameData(
