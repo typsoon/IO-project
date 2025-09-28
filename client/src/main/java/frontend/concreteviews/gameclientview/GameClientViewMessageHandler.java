@@ -64,6 +64,7 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
             for (ISendable sendable : sendables) {
                 switch (sendable) {
                     case RoomInfo roomInfo -> {
+                        gameClientViewData.clearRoomContents(roomInfo.roomName());
                         gameClientViewData.addRoom(roomInfo);
                     }
 
@@ -89,6 +90,8 @@ public class GameClientViewMessageHandler implements ICyclePerformer {
                     case GameStartedNotification.Payload gameStartedNotificationPayload -> {
                         viewManager.moveToGameplay(clientSideSocketWrapper, userId, initialGameStates);
                     }
+
+                    // case Room
 
                     case IGameState gameState -> {
                         Logger.getGlobal().info("Adding gamestate");

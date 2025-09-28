@@ -1,6 +1,15 @@
 package frontend.concreteviews.gameplayview;
 
-import com.badlogic.gdx.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Function;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,9 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameclientview.GameClientView;
 import frontend.concreteviews.gameplayview.impl.GameplayInfoProviderImpl;
@@ -25,11 +35,6 @@ import frontend.gamestate.IReadOnlyDisplayableGameState;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 import utils.ObserverWithATwist.Subscribable;
-import frontend.assetsloading.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Function;
 
 //NOTE: this class doesn't implement View, nor does it contain GameplayManager. We use ViewWithEventLoop class to wrap
 //GameplayView and provide required functionalities
@@ -149,7 +154,7 @@ public class GameplayView extends ScreenAdapter {
 
         spriteBatch.end();
         // keep for debug purposes
-        grid();
+        // grid();
     }
 
     private static final float eps = 1e-9f;

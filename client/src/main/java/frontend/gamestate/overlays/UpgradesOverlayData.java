@@ -1,11 +1,10 @@
 package frontend.gamestate.overlays;
 
-import java.util.Collection;
-
-import frontend.gamestate.EntityVisibleState;
 import game.engine.entities.EntityGroupID;
+import frontend.gamestate.EntityVisibleState;
 
-public record ChestOverlayData(Collection<ItemData> items) {
+public record UpgradesOverlayData() {
+
     public static record ItemData(EntityGroupID entityGroup, EntityVisibleState visibleState, float stateTime) {
     }
 }

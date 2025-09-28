@@ -33,4 +33,6 @@ public interface IUsersRoomHandle {
     Optional<Room> getRoom(String roomName);
 
     List<UserMembershipInfo> getRoomMembers();
+
+    Optional<Room> getMyRoom();
 }

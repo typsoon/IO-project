@@ -24,7 +24,7 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
     private final ObserverWithATwist.Notifiable notifier;
 
     RoomHandle(IRoomManager roomManager, IUserView userView,
-               IMatchmakingUserHandle matchmakingUserHandle, UserState userState, ObserverWithATwist.Notifiable notifier) {
+            IMatchmakingUserHandle matchmakingUserHandle, UserState userState, ObserverWithATwist.Notifiable notifier) {
         this.notifier = notifier;
         this.roomManager = roomManager;
         this.member = new RoomMember(userView, matchmakingUserHandle, this, userState);
@@ -111,5 +111,10 @@ public class RoomHandle implements IUsersRoomHandle, IRoomsUserHandle {
                 .map(member -> new UserMembershipInfo(room.roomConfig().name(), member.userView().id().id(),
                         member.userView().username(), member.userView().id().equals(room.admin().admin().id())))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Room> getMyRoom() {
+        return Optional.ofNullable(room);
     }
 }

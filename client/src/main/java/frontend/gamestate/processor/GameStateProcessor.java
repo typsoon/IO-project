@@ -32,10 +32,9 @@ public class GameStateProcessor implements IGameStateProcessor {
     Map<Integer, TimedRenderableObject> entities = new HashMap<>();
     Map<Integer, DrawableInfo> entityItems = new HashMap<>();
 
-
     public GameStateProcessor(IGeometryModule geometryModule, RenderableObjectFactory objectFactory,
-                              IDisplayableGameState displayableGameState, PlayerConfig playerConfig,
-                              Collection<IGameState> initialGameStates) {
+            IDisplayableGameState displayableGameState, PlayerConfig playerConfig,
+            Collection<IGameState> initialGameStates) {
         this.geometryModule = geometryModule;
         this.renderableObjectFactory = objectFactory;
         this.displayableGameState = displayableGameState;
@@ -68,7 +67,8 @@ public class GameStateProcessor implements IGameStateProcessor {
     private void updatePlayerState(PlayerState playerState) {
         if (playerState.holdingItemGroupId() != EntityGroupID.HUMAN_BASIC) {
             if (player.getItemInfo() == null) {
-                DrawableInfo itemInfo = new DrawableInfo(playerState.holdingItemGroupId(), EntityVisibleState.values()[playerState.itemAction().ordinal()]);
+                DrawableInfo itemInfo = new DrawableInfo(playerState.holdingItemGroupId(),
+                        EntityVisibleState.values()[playerState.itemAction().ordinal()]);
                 itemInfo.setStateTime(playerState.itemActionProgress());
                 player.setItemInfo(itemInfo);
                 displayableGameState.addDrawable(itemInfo);
@@ -83,7 +83,6 @@ public class GameStateProcessor implements IGameStateProcessor {
         }
         player.getDrawable().setState(EntityVisibleState.values()[playerState.action().ordinal()]);
         player.getDrawable().setStateTime(playerState.actionProgress());
-        System.out.println(player.getItemInfo());
         player.setPosition(playerState.position());
         player.setVelocity(playerState.velocity());
         player.setRotation(playerState.rotation());
@@ -96,7 +95,6 @@ public class GameStateProcessor implements IGameStateProcessor {
     private void updatePlayerInventoryState(PlayerInventoryState playerInventoryState) {
         player.setInventoryInfo(playerInventoryState.inventory());
     }
-
 
     private void updateEntityState(EntityState entityState) {
         TimedRenderableObject renderableObject;

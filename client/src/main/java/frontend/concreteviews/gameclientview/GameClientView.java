@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import frontend.assetsloading.ITextureManager;
+import frontend.concreteviews.gameclientview.GameClientViewEvents.FindGameEvent;
 import frontend.concreteviews.gameclientview.subscreens.ConfirmationPromptScreen;
 import frontend.concreteviews.gameclientview.subscreens.GameClientSubviewsFactory;
 import frontend.concreteviews.gameclientview.subscreens.WaitingRoomScreen;
@@ -26,6 +27,7 @@ import game.session.ISendableConsumer;
 import gameclient.rooms.RequestResult;
 import gameclient.rooms.RoomRequestResult;
 import gameclient.rooms.RoomRequestType;
+import matchmaking.MatchmakingParameters;
 import network.messages.userstate.GameConfirmationRequestMessage;
 import utils.ISendable;
 
@@ -45,8 +47,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
     private Stage stage;
 
     public GameClientView(final Game game, ITextureManager textureManager,
-                          GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
-                          GameClientSubviewsFactory gameClientSubscreensFactory) {
+            GameClientViewEventListener gameClientViewEventListener, GameClientViewData gameClientViewData,
+            GameClientSubviewsFactory gameClientSubscreensFactory) {
         this.game = game;
         this.textureManager = textureManager;
         this.gameClientViewEventListener = gameClientViewEventListener;
@@ -108,13 +110,12 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         stage.addActor(mainTable);
     }
 
-
     private final Actor getRoomActionsTable() {
         final Button roomsScreenButton = textureManager.getTextButton("Rooms...");
         roomsScreenButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                                     final int button) {
+                    final int button) {
                 changeSubscreen(new frontend.concreteviews.gameclientview.subscreens.RoomsView(
                         GameClientView.this, gameClientViewData, textureManager, gameClientViewEventListener));
                 return true;
@@ -135,7 +136,8 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
         findGameButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
-                                     final int button) {
+                    final int button) {
+                findGameButton.fire(new FindGameEvent(new MatchmakingParameters(3)));
                 return true;
             }
         });

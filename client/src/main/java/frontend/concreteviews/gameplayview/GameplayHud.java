@@ -1,5 +1,7 @@
 package frontend.concreteviews.gameplayview;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -8,9 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import frontend.assetsloading.*;
 
-import java.util.ArrayList;
+import frontend.assetsloading.ITextureManager;
 
 public class GameplayHud implements IGameplayHud {
 

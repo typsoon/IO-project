@@ -11,6 +11,7 @@ import database.IDatabaseManager.UserId;
 import game.session.ISendableConsumer;
 import gameclient.rooms.RoomConfig;
 import gameclient.rooms.RoomRequestResult;
+import matchmaking.MatchmakingParameters;
 import network.messages.configurationstate.GameStartMessages.StartGameRequest;
 import network.messages.configurationstate.RoomMessages;
 import network.messages.configurationstate.RoomMessages.JoinRoomRequest;
@@ -26,14 +27,21 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
     private final UserId id;
 
     public ConfigurationStateConsumer(IUsersRoomHandle userRoomHandle, IUsersMatchmakingHandle matchmakingHandle,
-                                      ISendableConsumer sendableDispatcher, UserId id, Subscribable subscribable) {
+            ISendableConsumer sendableDispatcher, UserId id, Subscribable subscribable) {
         this.userRoomHandle = userRoomHandle;
         this.matchmakingHandle = matchmakingHandle;
         this.sendableDispatcher = sendableDispatcher;
         this.id = id;
 
         subscribable.registerSubscriber(_delta -> {
-            // TODO: request for info
+            // sendableDispatcher.processSendable(new PingRoomMember.Payload());
+            var myRoom = userRoomHandle.getMyRoom();
+            if (myRoom.isEmpty()) {
+                return;
+            }
+
+            Logger.getGlobal().info("ASDASASD");
+            sendOneRoomData(myRoom.get().getRoomInfo().roomName());
         });
     }
 
@@ -89,6 +97,10 @@ public class ConfigurationStateConsumer implements ISendableConsumer {
                 var res = userRoomHandle.createGameRequest();
                 // if (res == RoomRequest.SUCCESSFUL) {
                 // }
+            }
+
+            case MatchmakingParameters findGameMessagePars -> {
+                var res = matchmakingHandle.findGame(findGameMessagePars);
             }
 
             default -> {

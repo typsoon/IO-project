@@ -21,4 +21,7 @@
 | 16  | JoinRoomRequest    |  |
 | 17  | BrowseRoomsRequest    |  |
 | 18  | InventoryStateMessage    |  |
+| 19  | PingRoomMember    |  |
+| 20  | FindGameMessage    |  |
+<!-- | 19  | RoomMembersListRequest    |  | -->
 <!-- | 16  | ReadyForDataMessage    |  | -->
