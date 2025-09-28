@@ -81,6 +81,7 @@ public class Inventory implements IInventory {
 
 
         switch (usageType) {
+            case NONE -> slots.get(index).getItem().stopAction(view, user, modifiers);
             case PRIMARY -> slots.get(index).getItem().primaryAction(view, user, modifiers);
             case SECONDARY -> slots.get(index).getItem().secondaryAction(view, user, modifiers);
             case SPECIAL -> slots.get(index).getItem().specialAction(view, user, modifiers);

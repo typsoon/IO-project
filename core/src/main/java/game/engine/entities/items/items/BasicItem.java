@@ -18,6 +18,11 @@ public abstract class BasicItem implements IItem {
     }
 
     @Override
+    public void stopAction(IWorldView view, IEntity user, IUsageModifiers modifiers) {
+        
+    }
+
+    @Override
     public void primaryAction(IWorldView view, IEntity user, IUsageModifiers modifiers) {
 
     }

@@ -18,4 +18,6 @@ public interface IItem {
     void secondaryAction(IWorldView view, IEntity user, IUsageModifiers modifiers);
 
     void specialAction(IWorldView view, IEntity user, IUsageModifiers modifiers);
+
+    void stopAction(IWorldView view, IEntity user, IUsageModifiers modifiers);
 }

@@ -11,7 +11,7 @@ import game.engine.entities.items.attacks.RectangleSlash;
 
 public class BasicSword extends BasicItem {
     IAttack attack = new RectangleSlash();
-    private final int attackTime = 3; // in ticks
+    private final int attackTime = 30; // in ticks
     private int attackClock = 0;
 
 
@@ -19,6 +19,12 @@ public class BasicSword extends BasicItem {
     public int stackSize() {
         return 1;
     }
+
+    @Override
+    public void stopAction(IWorldView view, IEntity user, IUsageModifiers modifiers) {
+        attackClock = 0;
+    }
+
 
     @Override
     public ItemInfo getItemInfo() {

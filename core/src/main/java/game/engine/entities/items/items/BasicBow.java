@@ -41,6 +41,11 @@ public class BasicBow extends BasicItem {
     }
 
     @Override
+    public void stopAction(IWorldView view, IEntity user, IUsageModifiers modifiers) {
+        attackClock = 0;
+    }
+
+    @Override
     public void primaryAction(IWorldView view, IEntity user, IUsageModifiers modifiers) {
         attackClock++;
         if (attackClock >= attackTime) {

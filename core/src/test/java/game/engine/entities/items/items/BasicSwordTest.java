@@ -55,9 +55,10 @@ class BasicSwordTest {
 
         sword.itemUnequip(mockWorldView, mockUser, mockModifiers);
 
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        for (int i = 0; i < 30; i++) {
+            sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        }
+
         verify(mockAttack, times(1)).attack(mockWorldView, mockUser, mockDamageModifier);
     }
 
@@ -71,19 +72,18 @@ class BasicSwordTest {
 
     @Test
     void testPrimaryActionAttacksAfterAttackTime() {
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        for (int i = 0; i < 30; i++) {
+            sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        }
 
         verify(mockAttack, times(1)).attack(mockWorldView, mockUser, mockDamageModifier);
     }
 
     @Test
     void testAttackClockResetsAfterAttack() {
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-
+        for (int i = 0; i < 30; i++) {
+            sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        }
         verify(mockAttack, times(1)).attack(mockWorldView, mockUser, mockDamageModifier);
 
         sword.primaryAction(mockWorldView, mockUser, mockModifiers);
@@ -94,13 +94,13 @@ class BasicSwordTest {
 
     @Test
     void testMultipleAttackCycles() {
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        for (int i = 0; i < 30; i++) {
+            sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        }
 
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
-        sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        for (int i = 0; i < 30; i++) {
+            sword.primaryAction(mockWorldView, mockUser, mockModifiers);
+        }
 
         verify(mockAttack, times(2)).attack(mockWorldView, mockUser, mockDamageModifier);
     }
