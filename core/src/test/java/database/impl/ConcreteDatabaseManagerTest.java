@@ -1,6 +1,5 @@
 package database.impl;
 
-import database.IDatabaseManager;
 import database.IDatabaseManager.UserId;
 import game.engine.PlayerConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConcreteDatabaseManagerTest {
-
+public class ConcreteDatabaseManagerTest {
     private ConcreteDatabaseManager db;
 
     @BeforeEach
@@ -60,16 +58,11 @@ class ConcreteDatabaseManagerTest {
         assertNotNull(id, "Po dodaniu użytkownika `UserId` nie powinien być `null`");
 
         assertEquals(login, db.getPlayerUsername(id), "Nazwa użytkownika powinna się zgadzać");
-        assertEquals(pass, db.getPassword(id), "Hasło powinno się zgadzać");
+        assertTrue(db.checkPassword(id, pass), "Hasło powinno się zgadzać");
 
         PlayerConfig cfg = db.getPlayerConfig(id);
         assertNotNull(cfg, "Konfiguracja gracza nie powinna być `null`");
         assertEquals(new PlayerConfig(), cfg, "Domyślna konfiguracja powinna być zwracana");
-    }
-
-    @Test
-    void getPasswordWithNullIdReturnsNull() {
-        assertNull(db.getPassword(null), "Dla `null` jako `UserId` powinno zwrócić `null`");
     }
 
     @Test
@@ -97,7 +90,7 @@ class ConcreteDatabaseManagerTest {
         db.addUser("u1", "new-pass");
 
         // `getUserId` zwraca pierwsze trafienie, więc hasło powinno nadal być `p1`
-        assertEquals("p1", db.getPassword(firstId),
+        assertTrue(db.checkPassword(firstId, "p1"),
                 "Pierwszy wpis nie powinien zostać nadpisany przez duplikat loginu");
     }
 
@@ -129,5 +122,127 @@ class ConcreteDatabaseManagerTest {
         assertNotNull(id);
         assertEquals(new PlayerConfig(), db.getPlayerConfig(id),
                 "Domyślna konfiguracja gracza powinna być zwracana dla użytkowników startowych");
+    }
+
+    @Test
+    public void getUserIdKnownTest() {
+        String login = "u1";
+
+        assertNotNull(db.getUserId(login));
+    }
+
+    @Test
+    public void getUserIdUnknownTest() {
+        String unknownLogin = "lkjhgfdsa";
+
+        assertNull(db.getUserId(unknownLogin));
+    }
+
+    @Test
+    public void getUserIdNullTest() {
+        assertNull(db.getUserId(null));
+    }
+
+    @Test
+    public void getPlayerConfigTest() {
+        String login = "u1";
+        var id = db.getUserId(login);
+        assertNotNull(db.getPlayerConfig(id));
+    }
+
+    @Test
+    public void getPlayerConfigNullTest() {
+        assertNull(db.getPlayerConfig(null));
+    }
+
+    @Test
+    public void getPlayerUsernameTest() {
+        String login = "u1";
+        var id = db.getUserId(login);
+
+        assertEquals(login, db.getPlayerUsername(id));
+    }
+
+    @Test
+    public void getPlayerUsernameNullTest() {
+        assertNull(db.getPlayerUsername(null));
+    }
+
+    @Test
+    public void addUserTest() {
+        String newLogin = "newUserLogin";
+        String newPassword = "newUserPassword";
+
+        assertTrue(db.addUser(newLogin, newPassword));
+    }
+
+    @Test
+    public void addUserNullUserTest() {
+        String password = "newPassword";
+
+        assertFalse(db.addUser(null, password));
+    }
+
+    @Test
+    public void addUserNullPasswordTest() {
+        String login = "newLogin";
+
+        assertFalse(db.addUser(login, null));
+    }
+
+    @Test
+    public void addUserBothNullTest() {
+        assertFalse(db.addUser(null, null));
+    }
+
+    @Test
+    public void addUserConflictTest() {
+        String existingLogin = "u1";
+
+        String truePassword = "p1";
+        assertFalse(db.addUser(existingLogin, truePassword));
+
+        String wrongPassword = "lkjhgfdsa";
+        assertFalse(db.addUser(existingLogin, wrongPassword));
+
+        assertFalse(db.addUser(existingLogin, null));
+    }
+
+    @Test
+    public void checkPasswordSuccessTest() {
+        String login = "u1";
+        var id = db.getUserId(login);
+        String password = "p1";
+
+        assertTrue(db.checkPassword(id, password));
+    }
+
+    @Test
+    public void checkPasswordFailureTest() {
+        String login = "u1";
+        var id = db.getUserId(login);
+        String wrongPassword = "lkjhgfdsa";
+
+        assertFalse(db.checkPassword(id, wrongPassword));
+    }
+
+    @Test
+    public void checkPasswordNullIdTest() {
+        String password = "lkjhgfdsa";
+
+        assertFalse(db.checkPassword(null, password));
+    }
+
+    @Test
+    public void checkPasswordNullPasswordTest() {
+        String login = "u1";
+        var id = db.getUserId(login);
+
+        assertFalse(db.checkPassword(id, null));
+    }
+
+    @Test
+    public void checkPasswordBothNullTest() {
+        assertFalse(db.checkPassword(null, null));
     }
 }

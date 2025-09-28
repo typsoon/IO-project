@@ -1,17 +1,14 @@
 package network.server;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
-
+import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
+import network.server.AuthenticationService.Token;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import database.IDatabaseManager;
-import database.IDatabaseManager.UserId;
-import network.server.AuthenticationService.Token;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 class ConcreteAuthenticationServiceTest {
 
@@ -36,7 +33,7 @@ class ConcreteAuthenticationServiceTest {
 
     @Test
     void tryAuth_ReturnsNull_OnWrongPassword() {
-        when(databaseManager.getPassword(userId)).thenReturn("correct");
+        when(databaseManager.checkPassword(userId, "correct")).thenReturn(true);
 
         Token token = authService.tryAuth(userId, "wrong");
 
@@ -45,7 +42,7 @@ class ConcreteAuthenticationServiceTest {
 
     @Test
     void tryAuth_ReturnsToken_OnCorrectPassword() {
-        when(databaseManager.getPassword(userId)).thenReturn("secret");
+        when(databaseManager.checkPassword(userId, "secret")).thenReturn(true);
 
         Token token = authService.tryAuth(userId, "secret");
 
@@ -56,7 +53,7 @@ class ConcreteAuthenticationServiceTest {
 
     @Test
     void tryAuth_ReusesExistingToken_OnRepeatedCalls() {
-        when(databaseManager.getPassword(userId)).thenReturn("pw");
+        when(databaseManager.checkPassword(userId, "pw")).thenReturn(true);
 
         Token first = authService.tryAuth(userId, "pw");
         Token second = authService.tryAuth(userId, "pw");

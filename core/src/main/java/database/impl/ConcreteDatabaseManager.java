@@ -1,15 +1,11 @@
 package database.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import database.IDatabaseManager;
 import game.engine.PlayerConfig;
 import network.utils.Credentials;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 public class ConcreteDatabaseManager implements IDatabaseManager {
     private final Set<Integer> possibleIdVals;
@@ -44,27 +40,6 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
     }
 
     @Override
-    public void addUser(String login, String password) {
-        if (!possibleIdVals.iterator().hasNext()) {
-            Logger.getGlobal().info("There are no available ids");
-            return;
-        }
-
-        var id = possibleIdVals.iterator().next();
-        possibleIdVals.remove(id);
-
-        users.add(new FullUserData(new UserId(id), new Credentials(login, password), new PlayerConfig()));
-    }
-
-    @Override
-    public String getPassword(UserId uId) {
-        return users.stream().filter(uData -> uData.userId.equals(uId))
-                .map(uData -> uData.credentials.password())
-                .findFirst()
-                .orElse(null);
-    }
-
-    @Override
     public PlayerConfig getPlayerConfig(UserId uId) {
         return users.stream().filter(uData -> uData.userId.equals(uId))
                 .map(FullUserData::playerConfig)
@@ -78,5 +53,41 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
                 .map(uData -> uData.credentials.login())
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public boolean addUser(String login, String password) {
+        if (login == null || password == null) {
+            Logger.getGlobal().info("Null credentials");
+            return false;
+        }
+
+        if (!possibleIdVals.iterator().hasNext()) {
+            Logger.getGlobal().info("There are no available ids");
+            return false;
+        }
+
+        if (getUserId(login) != null) {
+            Logger.getGlobal().info("Login unavailable");
+            return false;
+        }
+
+        var id = possibleIdVals.iterator().next();
+        possibleIdVals.remove(id);
+
+        users.add(new FullUserData(new UserId(id), new Credentials(login, password), new PlayerConfig()));
+        return true;
+    }
+
+    @Override
+    public boolean checkPassword(UserId uId, String password) {
+        var optional = users.stream().filter(uData -> uData.userId.equals(uId))
+                .map(uData -> uData.credentials.password())
+                .findFirst();
+        if (optional.isEmpty()) {
+            return false;
+        }
+        String actualPassword = optional.get();
+        return actualPassword.equals(password);
     }
 }

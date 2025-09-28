@@ -1,14 +1,13 @@
 package network.server;
 
+import database.IDatabaseManager;
+import database.IDatabaseManager.UserId;
+
 import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import database.IDatabaseManager;
-import database.IDatabaseManager.UserId;
 
 public class ConcreteAuthenticationService implements AuthenticationService {
     private final IDatabaseManager databaseManager;
@@ -48,9 +47,7 @@ public class ConcreteAuthenticationService implements AuthenticationService {
 
     @Override
     public synchronized Token tryAuth(UserId userId, String password) {
-        var actualPassword = databaseManager.getPassword(userId);
-
-        if (!Objects.equals(password, actualPassword)) {
+        if (!databaseManager.checkPassword(userId, password)) {
             return null;
         }
 

@@ -12,8 +12,7 @@ public interface IDatabaseManager {
 
     String getPlayerUsername(UserId id);
 
-    void addUser(String login, String password);
+    boolean addUser(String login, String password);
 
-    // TODO: change this to get passwordHash
-    String getPassword(UserId uId);
+    boolean checkPassword(UserId uId, String password);
 }
