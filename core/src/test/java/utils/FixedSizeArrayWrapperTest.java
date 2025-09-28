@@ -75,7 +75,8 @@ public class FixedSizeArrayWrapperTest {
     @Test
     void testGetArrayFromSupplierGeneratesCorrectArray() {
         Supplier<Integer> supplier = () -> 7;
-        FixedSizeArrayWrapper<Integer> wrapper = FixedSizeArrayWrapper.getArrayFromSupplier(5, supplier, Integer.class);
+        FixedSizeArrayWrapper<Integer> wrapper = FixedSizeArrayWrapper.getArrayFromSupplier((byte) 5, supplier,
+                Integer.class);
 
         assertNotNull(wrapper);
         assertEquals(5, wrapper.getData().length, "Array should have length 5");
@@ -87,7 +88,8 @@ public class FixedSizeArrayWrapperTest {
     @Test
     void testGetArrayFromSupplierWithZeroLength() {
         Supplier<String> supplier = () -> "hello";
-        FixedSizeArrayWrapper<String> wrapper = FixedSizeArrayWrapper.getArrayFromSupplier(0, supplier, String.class);
+        FixedSizeArrayWrapper<String> wrapper = FixedSizeArrayWrapper.getArrayFromSupplier((byte) 0, supplier,
+                String.class);
         assertNotNull(wrapper);
         assertEquals(0, wrapper.getData().length, "Array length should be zero");
     }

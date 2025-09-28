@@ -19,4 +19,6 @@
 | 14  | PlayerStateMessage     |  |
 | 15  | EntityStateMessage    |  |
 | 16  | JoinRoomRequest    |  |
+| 17  | BrowseRoomsRequest    |  |
+| 18  | InventoryStateMessage    |  |
 <!-- | 16  | ReadyForDataMessage    |  | -->

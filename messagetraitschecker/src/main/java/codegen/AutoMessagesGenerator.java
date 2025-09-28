@@ -1,10 +1,8 @@
 package codegen;
 
-import static codegen.CodegenConfig.DYNAMIC_SIZE;
 import static codegen.CodegenConfig.MESSAGE_SIZE_TYPE;
 import static codegen.CodegenConfig.answerVarName;
 import static codegen.CodegenConfig.getDynamicSizeMethodName;
-import static codegen.CodegenConfig.getTypeNameData;
 import static codegen.CodegenConfig.idFieldName;
 import static codegen.CodegenConfig.tempSizeFieldName;
 import static codegen.CodegenConfig.typeToTypeData;
@@ -18,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -116,51 +115,68 @@ public class AutoMessagesGenerator {
         return methodBuilder.build();
     }
 
+    private static final Predicate<CodeBlock> filterOutEmpty = block -> !block.equals(CodeBlock.of(""));
+
     private ClassDetailsRec getClassDetailsRec(Element element, String elAsFieldName,
             ProcessingEnvironment processingEnvironment, TypeMirror isendableTypeMirror,
             TypeMirror fixedSizeArrayWrapperMirror) {
+        return getClassDetailsRec(element, elAsFieldName, processingEnvironment, isendableTypeMirror,
+                fixedSizeArrayWrapperMirror, 0);
+    }
+
+    private ClassDetailsRec getClassDetailsRec(Element element, String elAsFieldName,
+            ProcessingEnvironment processingEnvironment, TypeMirror isendableTypeMirror,
+            TypeMirror fixedSizeArrayWrapperMirror, int depth) {
         var typeUtils = processingEnvironment.getTypeUtils();
-        processingEnvironment.getMessager().printNote("Entering %s %s".formatted(element, elAsFieldName));
+        // processingEnvironment.getMessager().printNote("Entering %s
+        // %s".formatted(element, elAsFieldName));
 
         if (typeUtils.isAssignable(element.asType(), isendableTypeMirror)) {
             var fields = ElementFilter.recordComponentsIn(element.getEnclosedElements());
 
-            processingEnvironment.getMessager().printNote("FieldsIn %s".formatted(fields));
+            processingEnvironment.getMessager().printNote("Fields in %s: %s".formatted(element.asType(), fields));
 
             var reduced = fields.stream().map(
                     el -> getClassDetailsRec(el,
-                            "%s.%s".formatted(elAsFieldName, el.getSimpleName().toString()), processingEnvironment,
+                            "%s.%s".formatted(elAsFieldName, el.getSimpleName().toString() + ((depth > 0) ? "()" : "")),
+                            processingEnvironment,
                             isendableTypeMirror,
-                            fixedSizeArrayWrapperMirror))
+                            fixedSizeArrayWrapperMirror, depth + 1))
                     .reduce((prev, act) -> new ClassDetailsRec(
                             prev.fieldsStaticSize() + act.fieldsStaticSize(),
                             CodeBlock.join(List.of(prev.writeTheClass(), act.writeTheClass()), ";\n"),
                             prev.dynamicFieldsBaseSize() + act.dynamicFieldsBaseSize(),
                             CodeBlock.join(
                                     Stream.of(prev.calculateDynamicSizeCodeBlock(), act.calculateDynamicSizeCodeBlock())
-                                            .filter(block -> !block.equals(CodeBlock.of("")))
+                                            .filter(filterOutEmpty)
                                             .toList(),
                                     ";\n"),
                             CodeBlock.join(
                                     Stream.of(prev.loadTheClass(), act.loadTheClass())
-                                            .filter(block -> !block.equals(CodeBlock.of("")))
+                                            .filter(filterOutEmpty)
                                             .toList(),
-                                    ", ")));
-            if (reduced.isEmpty()) {
-                return new ClassDetailsRec();
-            }
+                                    ", ")))
+                    .orElse(new ClassDetailsRec());
 
-            var rec = reduced.get();
-            return new ClassDetailsRec(rec.fieldsStaticSize(), rec.writeTheClass(), rec.dynamicFieldsBaseSize(),
-                    rec.calculateDynamicSizeCodeBlock(),
-                    CodeBlock.of("new $T($L)", element.asType(), rec.loadTheClass()));
+            return new ClassDetailsRec(reduced.fieldsStaticSize(), reduced.writeTheClass(),
+                    reduced.dynamicFieldsBaseSize(),
+                    reduced.calculateDynamicSizeCodeBlock(),
+                    CodeBlock.of("new $T($L)", element.asType(), reduced.loadTheClass()));
         }
 
-        if (element.asType().equals(fixedSizeArrayWrapperMirror)) {
-            var typeEl = GenericTypeUtils.typeElementOutOfElement(element,
-                    processingEnvironment.getTypeUtils());
-            var templateArgTypeMirror = GenericTypeUtils.getTemplateArgTypeMirror(typeEl);
+        if (typeUtils.isSameType(typeUtils.erasure(element.asType()), typeUtils.erasure(fixedSizeArrayWrapperMirror))) {
+            // var typeEl = GenericTypeUtils.typeElementOutOfTypeMirror(element.asType(),
+            // processingEnvironment.getTypeUtils());
 
+            var templateArgTypeMirror = GenericTypeUtils.getTemplateArgTypeMirror(element.asType(), typeUtils);
+
+            // processingEnvironment.getMessager()
+            // .printNote("TypeEl %s %s".formatted(templateArgTypeMirror,
+            // element.asType()));
+
+            // var templateArgTypeMirror =
+            // GenericTypeUtils.getTemplateArgTypeMirror(typeEl);
+            //
             assert (templateArgTypeMirror.getKind() == TypeKind.DECLARED);
 
             DeclaredType firstDeclared = (DeclaredType) templateArgTypeMirror;
@@ -168,32 +184,43 @@ public class AutoMessagesGenerator {
 
             // TODO: add "arg" to CodegenConfig
             var classData = getClassDetailsRec(el, "arg", processingEnvironment,
-                    isendableTypeMirror, fixedSizeArrayWrapperMirror);
+                    isendableTypeMirror, fixedSizeArrayWrapperMirror, depth + 1);
+
+            processingEnvironment.getMessager().printNote("Recursed into this class data %s".formatted(classData));
 
             CodeBlock supplierLambda = CodeBlock.builder()
                     .add("() -> ")
-                    .beginControlFlow("{")
+                    .beginControlFlow("")
                     .beginControlFlow("try")
-                    .addStatement(classData.loadTheClass())
+                    .addStatement("return $L", classData.loadTheClass())
                     .nextControlFlow("catch ($T e)", IOException.class)
                     .addStatement("throw new $T(e)", IllegalStateException.class)
                     .endControlFlow() // end try/catch
                     .endControlFlow() // end lambda block
                     .build();
 
+            var accumulatorBuilder = CodeBlock.builder().add("return size + $L", classData.fieldsStaticSize());
+            if (filterOutEmpty.test(classData.calculateDynamicSizeCodeBlock())) {
+                accumulatorBuilder.add("+ $L", classData.calculateDynamicSizeCodeBlock());
+            }
+
+            CodeBlock accumulateCodeBlock = CodeBlock.builder()
+                    .add("$N.accumulate(0, (size, arg) -> ", elAsFieldName)
+                    .beginControlFlow("")
+                    .addStatement(accumulatorBuilder.build())
+                    .endControlFlow(")")
+                    .build();
+
             return new ClassDetailsRec(
                     0,
-                    CodeBlock.of("$N.forEach(arg -> {\n$L\n})", elAsFieldName, classData.writeTheClass()),
-                    0,
-                    CodeBlock.of(
-                            "$N.accumulate(0, (size, arg) -> {\n" +
-                                    "    return size + $L + $L;\n" +
-                                    "} )",
-                            classData.fieldsStaticSize(),
-                            classData.calculateDynamicSizeCodeBlock()),
-                    CodeBlock.of("$T.$N($L)", fixedSizeArrayWrapperMirror,
+                    CodeBlock.of("$N.forEach(arg -> {\n$L;\n})", elAsFieldName, classData.writeTheClass()),
+                    Byte.BYTES,
+                    accumulateCodeBlock,
+                    CodeBlock.of("$T.$N($L, $L, $T.class)", typeUtils.erasure(fixedSizeArrayWrapperMirror),
                             CodegenConfig.getArrayFromSupplierMethodName,
-                            supplierLambda));
+                            CodegenConfig.getTypeNameData(TypeName.BYTE).producerMethod().apply(elAsFieldName),
+                            supplierLambda,
+                            templateArgTypeMirror));
         }
 
         var mappedVal = CodegenConfig.getTypeNameData(TypeName.get(element.asType()));
@@ -204,7 +231,7 @@ public class AutoMessagesGenerator {
         return new ClassDetailsRec(
                 Math.max(mappedVal.size(), 0),
                 mappedVal.consumerMethod().apply(elAsFieldName),
-                mappedVal.size() == CodegenConfig.DYNAMIC_SIZE ? 1 : 0,
+                mappedVal.size() == CodegenConfig.DYNAMIC_SIZE ? Byte.BYTES : 0,
                 // mappedVal.size() < 0 ? mappedVal.size() * -1 : 0,
                 calcDynamicSize,
                 mappedVal.producerMethod().apply(elAsFieldName));
@@ -281,15 +308,17 @@ public class AutoMessagesGenerator {
         var staticSizeField = FieldSpec.builder(BYTE, CodegenConfig.staticSizeFieldName, PRIVATE, STATIC, FINAL)
                 .initializer(CodeBlock.of("$L", staticSize)).build();
 
+        // processingEnv.getMessager().printNote(classDetails.toString());
+
         var getSendable = getGetSendable(fieldSpecs, templateArgTypeMirror);
 
-        var produceMethod = producerGenerator.getProduceMethod(fieldSpecs,
-                consumerProducer.producerQualifiedName(),
-                element);
-        //
-        // var produceMethod = producerGenerator.getProduceMethod(classDetails,
+        // var produceMethod = producerGenerator.getProduceMethod(fieldSpecs,
         // consumerProducer.producerQualifiedName(),
         // element);
+
+        var produceMethod = producerGenerator.getProduceMethod(classDetails,
+                consumerProducer.producerQualifiedName(),
+                element, processingEnv);
 
         var produceFromRecordMethod = producerGenerator.getProduceFromRecordMethod(fieldSpecs,
                 templateArgTypeMirror,

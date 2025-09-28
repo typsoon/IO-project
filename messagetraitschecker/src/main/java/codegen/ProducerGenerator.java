@@ -10,7 +10,10 @@ import static javax.lang.model.element.Modifier.STATIC;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -57,7 +60,7 @@ public class ProducerGenerator {
     }
 
     public MethodSpec getProduceMethod(ClassDetailsRec classDetails, String producerQualifiedName,
-            TypeElement messageTypeMirror) {
+            TypeElement messageTypeMirror, ProcessingEnvironment processingEnv) {
         var producerPar = ParameterSpec
                 .builder(ClassName.bestGuess(producerQualifiedName), CodegenConfig.producerParName)
                 .addModifiers(FINAL)
@@ -71,8 +74,26 @@ public class ProducerGenerator {
         var generatedClassName = String.format(CodegenConfig.generatedClassNameFormat,
                 messageTypeMirror.getSimpleName());
 
+        Pattern pattern = Pattern.compile("(.*?)\\((.*)\\)", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(classDetails.loadTheClass().toString());
+        final CodeBlock recordInsides;
+        try {
+            matcher.matches();
+            recordInsides = CodeBlock.of(matcher.group(2));
+
+        } catch (Exception e) {
+            processingEnv.getMessager().printNote(
+                    "%s %s".formatted(messageTypeMirror.asType().toString(),
+                            classDetails.loadTheClass().toString()));
+
+            processingEnv.getMessager().printNote("%d %s".formatted(matcher.groupCount(),
+                    matcher.group(2)));
+
+            throw e;
+        }
+
         methodBuilder.beginControlFlow("try")
-                .addStatement("return new $L($L)", generatedClassName, classDetails.loadTheClass())
+                .addStatement("return new $L($L)", generatedClassName, recordInsides)
                 .nextControlFlow("catch ($T e)", Exception.class)
                 .addStatement("throw new $T($N)", IllegalStateException.class, "e")
                 .endControlFlow();

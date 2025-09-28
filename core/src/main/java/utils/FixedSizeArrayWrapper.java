@@ -35,7 +35,7 @@ public class FixedSizeArrayWrapper<T> {
     // this.data = getDataFromCollectionAndClass(data, clazz);
     // }
 
-    public final static <T> FixedSizeArrayWrapper<T> getArrayFromSupplier(int len, Supplier<T> supplier,
+    public final static <T> FixedSizeArrayWrapper<T> getArrayFromSupplier(byte len, Supplier<T> supplier,
             Class<T> clazz) {
         final LinkedList<T> collection = new LinkedList<>();
 

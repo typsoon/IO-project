@@ -5,7 +5,6 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -16,15 +15,25 @@ import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.TypeName;
 
 public class GenericTypeUtils {
-    public final static TypeElement typeElementOutOfElement(Element variableElement, Types typeUtils) {
-        TypeMirror typeMirror = variableElement.asType(); // get the type of the variable
-
+    public final static DeclaredType typeElementOutOfTypeMirror(TypeMirror typeMirror, Types typeUtils) {
         if (typeMirror.getKind() == TypeKind.DECLARED) {
             DeclaredType declaredType = (DeclaredType) typeMirror;
-            return (TypeElement) declaredType.asElement(); // returns the TypeElement
+            return declaredType; // returns the TypeElement
         }
 
         throw new IllegalStateException("Primitive type or array encountered here");
+    }
+
+    public final static TypeMirror getTemplateArgTypeMirror(TypeMirror typeMirror, Types typeUtils) {
+        var declared = typeElementOutOfTypeMirror(typeMirror, typeUtils);
+
+        var typeArgs = declared.getTypeArguments();
+
+        if (typeArgs.size() != 1) {
+            throw new IllegalStateException();
+        }
+
+        return typeArgs.getFirst();
     }
 
     public final static TypeMirror getTemplateArgTypeMirror(TypeElement element) {
