@@ -236,6 +236,8 @@ public class AutoMessagesGenerator {
                     .build();
 
             var forEachCodeBlock = CodeBlock.builder()
+                    .add(CodegenConfig.getTypeNameData(TypeName.BYTE).consumerMethod().apply(elAsFieldName + ".size()"))
+                    .add(";\n")
                     .add("$N.$N($L)", elAsFieldName, "forEach",
                             CodeBlock.builder()
                                     .add("arg -> ")
@@ -247,16 +249,25 @@ public class AutoMessagesGenerator {
             // var forEachCodeBlock = CodeBlock.of("$N.forEach(arg -> {\n$L;\n})",
             // elAsFieldName, forEachInsides);
 
+            var loadTheClassCodeBlock = CodeBlock.builder()
+                    // .add(CodegenConfig.getTypeNameData(TypeName.BYTE).producerMethod()
+                    // .apply(elAsFieldName + ".size()"))
+                    // .add(";\n")
+                    .add("$T.$N($L, $L, $T.class)",
+                            typeUtils.erasure(fixedSizeArrayWrapperMirror),
+                            CodegenConfig.getArrayFromSupplierMethodName,
+                            CodegenConfig.getTypeNameData(TypeName.BYTE).producerMethod().apply(elAsFieldName),
+                            supplierLambda,
+                            templateArgTypeMirror)
+                    // .add(";\n")
+                    .build();
+
             return new ClassDetailsRec(
                     0,
                     forEachCodeBlock,
                     Byte.BYTES,
                     accumulateCodeBlock,
-                    CodeBlock.of("$T.$N($L, $L, $T.class)", typeUtils.erasure(fixedSizeArrayWrapperMirror),
-                            CodegenConfig.getArrayFromSupplierMethodName,
-                            CodegenConfig.getTypeNameData(TypeName.BYTE).producerMethod().apply(elAsFieldName),
-                            supplierLambda,
-                            templateArgTypeMirror));
+                    loadTheClassCodeBlock);
         }
 
         var mappedVal = CodegenConfig.getTypeNameData(TypeName.get(element.asType()));

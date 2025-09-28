@@ -114,4 +114,41 @@ public class FixedSizeArrayWrapperTest {
 
         assertEquals(0, counter.get(), "forEach on empty array should not call consumer");
     }
+
+    @Test
+    void testGetArrayFromSupplier() {
+        // given
+        byte len = 5;
+        Supplier<String> supplier = () -> "x";
+
+        // when
+        var wrapper = FixedSizeArrayWrapper.getArrayFromSupplier(len, supplier, String.class);
+
+        // then
+        AtomicInteger counter = new AtomicInteger(0);
+        wrapper.forEach(s -> {
+            assertEquals("x", s);
+            counter.incrementAndGet();
+        });
+        assertEquals(len, counter.get());
+    }
+
+    @Test
+    void testForEach() {
+        var wrapper = FixedSizeArrayWrapper.getArrayFromSupplier((byte) 3, () -> 42, Integer.class);
+
+        AtomicInteger sum = new AtomicInteger();
+        wrapper.forEach(sum::addAndGet);
+
+        assertEquals(42 * 3, sum.get());
+    }
+
+    @Test
+    void testAccumulate() {
+        var wrapper = FixedSizeArrayWrapper.getArrayFromSupplier((byte) 4, () -> 2, Integer.class);
+
+        Integer sum = wrapper.accumulate(0, Integer::sum);
+
+        assertEquals(8, sum); // 4 elements * 2
+    }
 }
