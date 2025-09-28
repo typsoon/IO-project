@@ -5,5 +5,6 @@ import utils.ISendable;
 
 public record SlotInfo(
         int amount,
-        ItemInfo item) implements ISendable {
+        ItemInfo item
+) implements ISendable {
 }

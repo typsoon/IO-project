@@ -1,6 +1,7 @@
 package game.engine.entities.inventory;
 
 import game.engine.entities.items.IItem;
+import game.engine.entities.items.ItemInfo;
 
 public interface ISlot {
     IItem getItem();
@@ -19,7 +20,7 @@ public interface ISlot {
         if (isEmpty()) {
             return new SlotInfo(
                     0,
-                    null
+                    ItemInfo.EMPTY
             );
         }
         return new SlotInfo(

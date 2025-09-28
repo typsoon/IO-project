@@ -12,4 +12,11 @@ public record ItemInfo(
         EntityGroupID spriteID,
         EntityAction action,
         int timer) implements ISendable {
+    public static final ItemInfo EMPTY = new ItemInfo(
+            "",
+            "",
+            EntityGroupID.HUMAN_BASIC,
+            EntityAction.NONE,
+            0
+    );
 }
