@@ -26,7 +26,7 @@ entitygroups/arrow/state_zero
   index: -1
 
 graphicsAtlas3.png
-size: 64, 64
+size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -39,14 +39,14 @@ entitygroups/basic_arrow/state_one
   index: -1
 entitygroups/basic_arrow/state_zero
   rotate: false
-  xy: 2, 2
+  xy: 56, 2
   size: 52, 46
   orig: 52, 46
   offset: 0, 0
   index: -1
 
 graphicsAtlas4.png
-size: 64, 64
+size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -59,14 +59,14 @@ entitygroups/basic_bow/state_one
   index: -1
 entitygroups/basic_bow/state_zero
   rotate: false
-  xy: 2, 2
+  xy: 56, 2
   size: 52, 46
   orig: 52, 46
   offset: 0, 0
   index: -1
 
 graphicsAtlas5.png
-size: 64, 64
+size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -79,7 +79,7 @@ entitygroups/basic_sword/state_one
   index: -1
 entitygroups/basic_sword/state_zero
   rotate: false
-  xy: 2, 2
+  xy: 56, 2
   size: 52, 46
   orig: 52, 46
   offset: 0, 0
