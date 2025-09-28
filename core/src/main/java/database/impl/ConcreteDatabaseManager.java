@@ -32,6 +32,7 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
         addUser("u1", "p1");
         addUser("u2", "p2");
         addUser("u3", "p3");
+        addUser("u", "p");
     }
 
     @Override
@@ -66,7 +67,7 @@ public class ConcreteDatabaseManager implements IDatabaseManager {
     @Override
     public PlayerConfig getPlayerConfig(UserId uId) {
         return users.stream().filter(uData -> uData.userId.equals(uId))
-                .map(uData -> uData.playerConfig())
+                .map(FullUserData::playerConfig)
                 .findFirst()
                 .orElse(null);
     }
