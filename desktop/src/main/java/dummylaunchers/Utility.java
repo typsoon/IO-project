@@ -6,19 +6,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Logger;
 
+import frontend.assetsloading.ITextureManager;
 import game.actions.IAction;
 import game.gamestates.IGameState;
 import game.session.IActionReceiver;
 import game.session.ISubscribablePlayerConnector;
 import network.client.ClientSideSocketWrapper;
-import network.client.DuplexSocketWrapper;
 import network.messages.Message;
+import network.utils.ConnectionData;
 import utils.ISendable;
-import frontend.assetsloading.*;
 import viewmodel.IViewManager;
 
 public class Utility {
-    public static class DummySocketWrapper implements DuplexSocketWrapper {
+    public static class DummySocketWrapper implements ClientSideSocketWrapper {
         private final Collection<ISendable> pendingSendables;
         private final ISubscribablePlayerConnector playerConnector;
         private final IActionReceiver actionReceiver;
@@ -49,6 +49,18 @@ public class Utility {
             } else {
                 Logger.getGlobal().severe("That was not an IAction");
             }
+        }
+
+        @Override
+        public void close() throws Exception {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'close'");
+        }
+
+        @Override
+        public EstablishConnectionResult establishConnection(ConnectionData connectionData) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'establishConnection'");
         }
     }
 

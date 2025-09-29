@@ -58,7 +58,7 @@ class GameLauncher extends Game {
         var texturesProvider = new AtlasLoader();
 
         var gameplayView = new GameplayViewFactory().getGameplayView(this, viewManager, dummySocketWrapper,
-                textureManager, playerConfig, texturesProvider, List.of());
+                textureManager, playerConfig, texturesProvider, List.of(), 5);
 
         gameplayView.display();
     }

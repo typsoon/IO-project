@@ -9,28 +9,30 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import frontend.ViewWithTimedEventLoop;
+import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.TexturesProvider;
 import frontend.concreteviews.gameplayview.gameplaymanager.GameplayManagerFactory;
+import frontend.concreteviews.gameplayview.listeners.ExitTheGameEventListener;
 import frontend.concreteviews.gameplayview.processors.ProcessorFactoriesCreator;
 import frontend.gamestate.DisplayableGameState;
 import game.engine.PlayerConfig;
 import game.gamestates.IGameState;
-import network.client.DuplexSocketWrapper;
+import game.session.ISendableConsumer;
+import network.client.ClientSideSocketWrapper;
 import network.client.DuplexSocketWrapper.ConnectionEndedException;
 import network.messages.defaultmessage.ConcreteObjectDecoder;
 import network.messages.defaultmessage.ObjectToMessageDecoder;
 import utility.IActionSender;
 import utility.ICycleTimedPerformer;
 import utils.ObserverWithATwist.ObserverImpl;
-import frontend.assetsloading.*;
 import viewmodel.IView;
 import viewmodel.IViewManager;
 
 public class GameplayViewFactory {
     public IView getGameplayView(
-            final Game game, final IViewManager viewManager, final DuplexSocketWrapper clientSideSocketWrapper,
+            final Game game, final IViewManager viewManager, final ClientSideSocketWrapper clientSideSocketWrapper,
             final ITextureManager textureManager, final PlayerConfig playerConfig,
-            final TexturesProvider texturesProvider, Collection<IGameState> initialGameStates) {
+            final TexturesProvider texturesProvider, Collection<IGameState> initialGameStates, int id) {
 
         final DisplayableGameState gameState = new DisplayableGameState();
 
@@ -45,10 +47,9 @@ public class GameplayViewFactory {
         };
 
         // see other screens (Login, GameClient) for clues about how these work
-        final var listeners = new ArrayList<EventListener>();
 
         final ObjectToMessageDecoder objectDecoder = new ConcreteObjectDecoder();
-        final IActionSender actionSender = action -> {
+        final ISendableConsumer sendableConsumer = action -> {
             try {
                 final var msg = objectDecoder.decodeFromRecord(action);
 
@@ -65,6 +66,12 @@ public class GameplayViewFactory {
                 Logger.getGlobal().severe("Throwable caught here %s".formatted(e));
             }
         };
+
+        final var listeners = new ArrayList<EventListener>();
+        listeners.add(new ExitTheGameEventListener(() -> viewManager.moveToGameClient(clientSideSocketWrapper, id),
+                sendableConsumer));
+
+        final IActionSender actionSender = action -> sendableConsumer.processSendable(action);
 
         // see libgdx docs
         final var processorsFactories = new ProcessorFactoriesCreator(actionSender).getProcessorsFactories(gameState);

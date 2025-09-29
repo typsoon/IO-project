@@ -1,12 +1,10 @@
 package frontend.gamestate;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import frontend.gamestate.overlays.ChestOverlayData;
 import frontend.gamestate.overlays.DeathOverlayData;
 
-//TODO: copy fields defensively in getters
 public class OverlaysData implements IReadOnlyOverlaysData {
     private Optional<ChestOverlayData> chestOverlayData;
     private Optional<DeathOverlayData> deathOverlayData;
@@ -35,7 +33,6 @@ public class OverlaysData implements IReadOnlyOverlaysData {
     }
 
     public void setDeathOverlayData(Optional<DeathOverlayData> deathOverlayData) {
-        // Logger.getGlobal().info("I was set");
         this.deathOverlayData = deathOverlayData;
     }
 }

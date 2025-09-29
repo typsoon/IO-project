@@ -24,5 +24,6 @@
 | 19  | PingRoomMember    |  |
 | 20  | FindGameMessage    |  |
 | 21  | PlayerDeathMessage    |  |
+| 22  | ExitTheGameMessage    |  |
 <!-- | 19  | RoomMembersListRequest    |  | -->
 <!-- | 16  | ReadyForDataMessage    |  | -->

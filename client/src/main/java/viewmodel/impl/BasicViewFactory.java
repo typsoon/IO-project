@@ -64,6 +64,6 @@ public class BasicViewFactory implements IViewFactory {
                 viewManager,
                 clientSideSocketWrapper,
                 viewManager.getTextureManager(),
-                new PlayerConfig(), new AtlasLoader(), initialGameStates);
+                new PlayerConfig(), new AtlasLoader(), initialGameStates, id);
     }
 }

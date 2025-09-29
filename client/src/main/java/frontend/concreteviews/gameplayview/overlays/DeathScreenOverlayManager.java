@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.TexturesProvider;
+import frontend.concreteviews.gameplayview.events.GameplayEvents.ExitTheGameEvent;
 import frontend.gamestate.overlays.DeathOverlayData;
 
 public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
@@ -31,6 +32,7 @@ public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
         TextButton backButton = textureManager.getTextButton("Go Back to Main Menu");
         backButton.addListener(event -> {
             if (backButton.isPressed()) {
+                backButton.fire(new ExitTheGameEvent());
                 return true;
             }
             return false;
