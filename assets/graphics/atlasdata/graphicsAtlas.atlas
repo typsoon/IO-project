@@ -1,18 +1,5 @@
 
 graphicsAtlas.png
-size: 1024, 1024
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-background/map
-  rotate: false
-  xy: 2, 2
-  size: 600, 600
-  orig: 600, 600
-  offset: 0, 0
-  index: -1
-
-graphicsAtlas2.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -25,7 +12,7 @@ entitygroups/arrow/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas3.png
+graphicsAtlas2.png
 size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -45,7 +32,7 @@ entitygroups/basic_arrow/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas4.png
+graphicsAtlas3.png
 size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -65,27 +52,62 @@ entitygroups/basic_bow/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas5.png
-size: 128, 64
+graphicsAtlas4.png
+size: 1024, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 entitygroups/basic_sword/state_one
+  rotate: false
+  xy: 2, 50
+  size: 126, 150
+  orig: 126, 150
+  offset: 0, 0
+  index: 1
+entitygroups/basic_sword/state_one
+  rotate: false
+  xy: 130, 50
+  size: 126, 150
+  orig: 126, 150
+  offset: 0, 0
+  index: 4
+entitygroups/basic_sword/state_one
+  rotate: false
+  xy: 258, 50
+  size: 125, 150
+  orig: 125, 150
+  offset: 0, 0
+  index: 3
+entitygroups/basic_sword/state_one
+  rotate: false
+  xy: 385, 50
+  size: 125, 150
+  orig: 125, 150
+  offset: 0, 0
+  index: 6
+entitygroups/basic_sword/state_one
+  rotate: false
+  xy: 512, 50
+  size: 124, 150
+  orig: 124, 150
+  offset: 0, 0
+  index: 2
+entitygroups/basic_sword/state_one
+  rotate: false
+  xy: 638, 50
+  size: 124, 150
+  orig: 124, 150
+  offset: 0, 0
+  index: 5
+entitygroups/basic_sword/state_zero
   rotate: false
   xy: 2, 2
   size: 52, 46
   orig: 52, 46
   offset: 0, 0
   index: -1
-entitygroups/basic_sword/state_zero
-  rotate: false
-  xy: 56, 2
-  size: 52, 46
-  orig: 52, 46
-  offset: 0, 0
-  index: -1
 
-graphicsAtlas6.png
+graphicsAtlas5.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -98,7 +120,7 @@ entitygroups/border/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas7.png
+graphicsAtlas6.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -111,7 +133,7 @@ entitygroups/chicken/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas8.png
+graphicsAtlas7.png
 size: 128, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -131,7 +153,7 @@ entitygroups/human_basic/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas9.png
+graphicsAtlas8.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -144,7 +166,7 @@ entitygroups/rock/state_zero
   offset: 0, 0
   index: -1
 
-graphicsAtlas10.png
+graphicsAtlas9.png
 size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
@@ -154,5 +176,18 @@ entitygroups/stump/state_zero
   xy: 2, 2
   size: 52, 46
   orig: 52, 46
+  offset: 0, 0
+  index: -1
+
+graphicsAtlas10.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+background/map
+  rotate: false
+  xy: 2, 2
+  size: 600, 600
+  orig: 600, 600
   offset: 0, 0
   index: -1
