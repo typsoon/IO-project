@@ -1,13 +1,13 @@
 package frontend.gamestate;
 
-import viewmodel.game.IPlayerData;
-
 import java.util.Collection;
+
+import viewmodel.game.IPlayerData;
 
 public interface IReadOnlyDisplayableGameState {
     Collection<DrawableInfo> getSpritesReadonly();
 
     Collection<IPlayerData> getPlayerData();
 
-    OverlaysData getOverlaysData();
+    IReadOnlyOverlaysData getOverlaysData();
 }
