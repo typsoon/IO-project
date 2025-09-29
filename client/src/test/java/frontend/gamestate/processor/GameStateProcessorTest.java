@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import viewmodel.game.RenderableObjectFactory;
 import viewmodel.game.RenderablePlayer;
-import viewmodel.game.TimedRenderableObject;
+import viewmodel.game.TimedRenderableObjectWithItem;
 
 import java.util.List;
 
@@ -107,11 +107,14 @@ class GameStateProcessorTest {
         when(es.entityId()).thenReturn(1);
         when(es.action()).thenReturn(EntityAction.NONE);
         when(es.actionProgress()).thenReturn(0.1f);
+        when(es.holdingItemGroupId()).thenReturn(EntityGroupID.HUMAN_BASIC); // no item
+        when(es.itemAction()).thenReturn(EntityAction.NONE);
+        when(es.itemActionProgress()).thenReturn(0f);
 
-        TimedRenderableObject tro = mock(TimedRenderableObject.class);
+        TimedRenderableObjectWithItem tro = mock(TimedRenderableObjectWithItem.class);
         DrawableInfo drawable = mock(DrawableInfo.class);
         when(tro.getDrawable()).thenReturn(drawable);
-        when(objectFactory.createRenderableObject(es)).thenReturn(tro);
+        when(objectFactory.createRenderableObjectWithItem(es)).thenReturn(tro);
 
         processor.processGameStates(List.of(es), 0f);
 
@@ -128,21 +131,25 @@ class GameStateProcessorTest {
         when(es.entityId()).thenReturn(1);
         when(es.action()).thenReturn(EntityAction.NONE);
         when(es.actionProgress()).thenReturn(0f);
+        when(es.holdingItemGroupId()).thenReturn(EntityGroupID.HUMAN_BASIC); // no item
+        when(es.itemAction()).thenReturn(EntityAction.NONE);
+        when(es.itemActionProgress()).thenReturn(0f);
 
-        TimedRenderableObject tro = mock(TimedRenderableObject.class);
+        TimedRenderableObjectWithItem tro = mock(TimedRenderableObjectWithItem.class);
         DrawableInfo drawable = mock(DrawableInfo.class);
         when(tro.getDrawable()).thenReturn(drawable);
-        when(objectFactory.createRenderableObject(es)).thenReturn(tro);
+        when(objectFactory.createRenderableObjectWithItem(es)).thenReturn(tro);
 
-        // Najpierw dodanie encji
+        // Add entity
         processor.processGameStates(List.of(es), 0f);
 
-        // Potem upływ czasu większego niż threshold (0.5f)
+        // Simulate time passing
         processor.processGameStates(List.of(), 1f);
 
         verify(displayableGameState).removeDrawable(drawable);
         verify(tro).dispose();
     }
+
 
     @Test
     void testGeometryModuleCycleIsCalledAccordingToDeltaTime() {

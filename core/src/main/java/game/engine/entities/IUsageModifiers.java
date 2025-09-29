@@ -1,5 +1,6 @@
 package game.engine.entities;
 
+import game.engine.IWorldView;
 import game.engine.entities.items.attacks.DamageModifier;
 import game.engine.entities.items.attacks.DamageType;
 
@@ -15,4 +16,6 @@ public interface IUsageModifiers {
     void addOnHitEffect(Collection<DamageType> types, IDamageEffect effect);
 
     void addOnDamagedEffect(Collection<DamageType> types, IDamageEffect effect);
+
+    void setWorldView(IWorldView view);
 }

@@ -11,6 +11,7 @@ import game.engine.modules.ICollisionSubscriber;
 import game.engine.modules.IGeometryModule;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
+import game.gamestates.PlayerDeathState;
 import game.session.IPlayerGamesStateSender;
 import utils.IDisposable;
 
@@ -49,19 +50,12 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
                 }
             }
         }
-        Collection<IAIEntity> thinkersCopy = new java.util.ArrayList<>(thinkers);
-        thinkersCopy.forEach(thinker -> thinker.think(this));
+        gameLoop();
 
-        geometryModule.cycle();
-        toDispose.forEach(deathData -> {
-            IEntity entity = deathData.entity();
-            if (entity instanceof IAIEntity iaiEntity) {
-                thinkers.remove(iaiEntity);
-            }
-            entities.remove(entity.geometryRepresentation());
-            deathData.geometryRepresentation().dispose();
-        });
+        sendGameStates();
+    }
 
+    private void sendGameStates() {
         for (Map.Entry<IPlayerGamesStateSender, Player> entry : players.entrySet()) {
             IPlayerGamesStateSender sender = entry.getKey();
             Player player = entry.getValue();
@@ -82,6 +76,33 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
                 sender.sendGameState(player.getUpgradeTreeState());
             }
         }
+    }
+
+    private void gameLoop() {
+        Collection<IAIEntity> thinkersCopy = new java.util.ArrayList<>(thinkers);
+        thinkersCopy.forEach(thinker -> thinker.think(this));
+
+        geometryModule.cycle();
+
+        toDispose.forEach(deathData -> {
+            IEntity entity = deathData.entity();
+            if (entity instanceof IAIEntity iaiEntity) {
+                thinkers.remove(iaiEntity);
+            }
+            if (entity instanceof Player player) {
+                var it = players.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<IPlayerGamesStateSender, Player> entry = it.next();
+                    if (entry.getValue() == player) {
+                        entry.getKey().sendGameState(new PlayerDeathState());
+                        it.remove();
+                        break;
+                    }
+                }
+            }
+            entities.remove(entity.geometryRepresentation());
+            deathData.geometryRepresentation().dispose();
+        });
     }
 
     public Collection<IEntity> getEntitiesInArea(float x, float y, float width, float height) {
@@ -111,7 +132,10 @@ public class GameEngine implements IGameEngine, IWorldView, ICollisionSubscriber
             this.players.put(playerData.playerGamesStateSender(), player);
         }
 
+        createEnvironment();
+    }
 
+    private void createEnvironment() {
         int count = 10;
         while (count-- > 0) {
             entityFactory.createChicken(0, 0);

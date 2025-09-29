@@ -5,10 +5,12 @@ import game.engine.entities.behaviours.Wandering;
 import game.engine.entities.concreteentities.*;
 import game.engine.entities.geometry.EntityGeometryConfigFactory;
 import game.engine.entities.geometry.GeometryConfigID;
+import game.engine.entities.inventory.Inventory;
 import game.engine.entities.inventory.Resource;
 import game.engine.entities.inventory.ResourceInfo;
 import game.engine.entities.items.items.BasicArrow;
 import game.engine.entities.items.items.BasicBow;
+import game.engine.entities.items.items.BasicSword;
 import game.engine.modules.IGeometryFactory;
 import game.engine.modules.IManagingGeometryRepresentation;
 import game.utility.Point2F;
@@ -40,7 +42,8 @@ public class EntityFactory {
     public Player createPlayer(PlayerConfig playerConfig, float startingX, float startingY) {
         Player player = new Player(playerConfig, geometryFactory.createGeometryRepresentation(
                 EntityGeometryConfigFactory.createEntityGeometryConfig(GeometryConfigID.HUMAN),
-                startingX, startingY), entityId.next(), onDeath);
+                startingX, startingY), entityId.next(), onDeath, new Inventory(3));
+        player.setUsageModifiers(new BasicUsageModifiers(player));
         player.getInventory().getSlot(1).addItems(1, new BasicBow());
         player.getInventory().getSlot(2).addItems(15, new BasicArrow(
                 (user, modifiers) -> {
@@ -58,6 +61,8 @@ public class EntityFactory {
                     geometry.setVelocity(new Vector2F(10f, 0f).rotate(user.geometryRepresentation().getRotation()));
                 }
         ));
+        player.getInventory().getSlot(0).addItems(1, new BasicSword());
+
         entityCallback.accept(player);
         entityAICallback.accept(player);
         return player;

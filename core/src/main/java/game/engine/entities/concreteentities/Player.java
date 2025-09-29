@@ -10,10 +10,8 @@ import game.engine.entities.*;
 import game.engine.entities.geometry.GeometryConfigID;
 import game.engine.entities.inventory.IHaveInventory;
 import game.engine.entities.inventory.IInventory;
-import game.engine.entities.inventory.Inventory;
 import game.engine.entities.items.attacks.Damage;
 import game.engine.entities.items.attacks.IDamageable;
-import game.engine.entities.items.items.BasicSword;
 import game.engine.entities.upgradetree.IUpgradeTree;
 import game.engine.modules.IGeometryRepresentation;
 import game.engine.modules.IManagingGeometryRepresentation;
@@ -35,7 +33,7 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
     private final MoveSet moveset = new MoveSet();
 
     private final IInventory inventory;
-    private final BasicUsageModifiers modifiers;
+    private IUsageModifiers modifiers;
     private final Consumer<DeathData> onDeath;
 
     // should be from file or config
@@ -49,14 +47,13 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     private IUpgradeTree upgradeTree;
 
-    public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<DeathData> onDeath) {
+    public Player(PlayerConfig config, IManagingGeometryRepresentation geometryRepresentation, int entityId, Consumer<DeathData> onDeath,
+                  IInventory inventory) {
         this.geometryRepresentation = geometryRepresentation;
         this.entityId = entityId;
         this.geometryConfigID = config.geometryConfigID();
         this.entityGroupID = config.entityGroupID();
-        this.inventory = new Inventory(3);
-        inventory.getSlot(0).addItems(1, new BasicSword());
-        this.modifiers = new BasicUsageModifiers(this);
+        this.inventory = inventory;
         this.onDeath = onDeath;
     }
 
@@ -70,6 +67,10 @@ public class Player implements IAIEntity, IHaveInventory, IDamageable {
 
     public IInteractable getCurrentInteraction() {
         return currentInteraction;
+    }
+
+    public void setUsageModifiers(IUsageModifiers usageModifiers) {
+        this.modifiers = usageModifiers;
     }
 
     @Override
