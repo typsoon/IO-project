@@ -50,14 +50,7 @@ public class RenderableObjectFactory {
     }
 
     private static TimedRenderableObjectWithItem getTimedRenderableObjectWithItem(EntityState entityState, IManagingGeometryRepresentation geometryRepresentation, DrawableInfo drawableInfo) {
-        DrawableInfo itemInfo;
-        if (entityState.holdingItemGroupId() != EntityGroupID.HUMAN_BASIC) {
-            itemInfo = new DrawableInfo(entityState.holdingItemGroupId(), EntityVisibleState.STATE_ZERO);
-        } else {
-            itemInfo = null;
-        }
-
-        TimedRenderableObjectWithItem renderableObject = new TimedRenderableObjectWithItem(geometryRepresentation, drawableInfo, itemInfo);
+        TimedRenderableObjectWithItem renderableObject = new TimedRenderableObjectWithItem(geometryRepresentation, drawableInfo);
         renderableObject.setPosition(entityState.position());
         renderableObject.setRotation(entityState.rotation());
         renderableObject.setVelocity(entityState.velocity());
