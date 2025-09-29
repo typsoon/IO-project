@@ -27,7 +27,7 @@ public class GameplayHud extends Overlay<IGameplayInfoProvider> {
 
     public GameplayHud(IGameplayInfoProvider gameplayInfoProvider, InputMultiplexer multiplexer,
             ITextureManager textureManager, TexturesProvider texturesProvider, Viewport viewport) {
-        super(texturesProvider, Optional.of(gameplayInfoProvider), textureManager, viewport);
+        super(texturesProvider, () -> Optional.of(gameplayInfoProvider), textureManager, viewport);
 
         this.gameplayInfoProvider = gameplayInfoProvider;
         this.textureManager = textureManager;
@@ -37,7 +37,6 @@ public class GameplayHud extends Overlay<IGameplayInfoProvider> {
     private void createHud() {
         hpBar = textureManager.getProgressBar(0, 100, 1, false);
         hpBar.setColor(Color.RED);
-        hpBar.setValue(100);
         hpBar.setWidth(200);
         hpLabel = textureManager.getHeading("HP: 100/100");
         hpLabel.setAlignment(Align.center);

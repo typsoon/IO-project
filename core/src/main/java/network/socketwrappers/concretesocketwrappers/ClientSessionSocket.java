@@ -39,7 +39,7 @@ public class ClientSessionSocket<T extends Message> implements DuplexSocket<T> {
 
             message.encodeAndWrite(out);
 
-            logger.finer("Written %s".formatted(message.getSendable()));
+            logger.finest("Written %s".formatted(message.getSendable()));
         } catch (IOException e) {
             logger.log(Level.OFF, String.format("An error occured: %s", e));
         } catch (Exception e) {

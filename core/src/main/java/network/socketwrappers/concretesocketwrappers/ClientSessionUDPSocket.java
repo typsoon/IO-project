@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.nio.ByteBuffer;
-import java.util.logging.Logger;
 
 import network.messages.Message;
 import network.messages.Message.UDPMessage;
@@ -54,7 +53,8 @@ public class ClientSessionUDPSocket implements DuplexSocket<UDPMessage> {
 
         consumer.putInt(tokenHolder.getToken());
 
-        Logger.getGlobal().finer("Put token bytes in %d".formatted(tokenHolder.getToken()));
+        // Logger.getGlobal().finer("Put token bytes in
+        // %d".formatted(tokenHolder.getToken()));
 
         message.encodeAndWrite(consumer);
 

@@ -137,7 +137,7 @@ public class GameClientView extends ScreenAdapter implements ISendableConsumer, 
             @Override
             public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
                     final int button) {
-                findGameButton.fire(new FindGameEvent(new MatchmakingParameters(3)));
+                findGameButton.fire(new FindGameEvent(new MatchmakingParameters(2)));
                 return true;
             }
         });

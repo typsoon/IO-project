@@ -23,5 +23,6 @@
 | 18  | InventoryStateMessage    |  |
 | 19  | PingRoomMember    |  |
 | 20  | FindGameMessage    |  |
+| 21  | PlayerDeathMessage    |  |
 <!-- | 19  | RoomMembersListRequest    |  | -->
 <!-- | 16  | ReadyForDataMessage    |  | -->

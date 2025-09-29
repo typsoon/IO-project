@@ -22,7 +22,7 @@ public class DesktopLauncher {
         Handler systemOut = new ConsoleHandler();
         // var level = Level.FINEST;
         // var level = Level.INFO;
-        var level = Level.FINER;
+        var level = Level.INFO;
         systemOut.setLevel(level);
         applog.addHandler(systemOut);
         applog.setLevel(level);

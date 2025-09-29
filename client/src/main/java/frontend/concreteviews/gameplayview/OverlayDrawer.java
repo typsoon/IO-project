@@ -29,10 +29,10 @@ public class OverlayDrawer {
         this.gameplayHud = new GameplayHud(gameplayInfoProvider, multiplexer, textureManager, texturesProvider,
                 viewport);
 
-        this.chestOverlayManager = new ChestOverlayManager(texturesProvider, overlaysData.getChestOverlayData(),
+        this.chestOverlayManager = new ChestOverlayManager(texturesProvider, overlaysData::getChestOverlayData,
                 textureManager, viewport);
         this.deathScreenOverlayManager = new DeathScreenOverlayManager(texturesProvider,
-                overlaysData.getDeathOverlayData(),
+                overlaysData::getDeathOverlayData,
                 textureManager, viewport);
 
         multiplexer.addProcessor(activeProcessor);
@@ -46,6 +46,5 @@ public class OverlayDrawer {
 
     private final void setActiveProcessor(InputProcessor activeProcessor) {
         this.activeProcessor = activeProcessor;
-        // Logger.getGlobal().info(activeProcessor.toString());
     }
 }

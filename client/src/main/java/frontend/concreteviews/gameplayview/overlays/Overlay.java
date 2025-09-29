@@ -1,7 +1,7 @@
 package frontend.concreteviews.gameplayview.overlays;
 
 import java.util.Optional;
-import java.util.logging.Logger;
+import java.util.function.Supplier;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,15 +12,15 @@ import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.TexturesProvider;
 
 abstract class Overlay<T> implements Disposable {
-    protected final Optional<T> overlayData;
+    protected final Supplier<Optional<T>> overlayDataSupplier;
     protected final ITextureManager textureManager;
     protected final TexturesProvider texturesProvider;
     protected final Stage stage;
 
-    public Overlay(TexturesProvider texturesProvider, Optional<T> chestOverlayData,
+    public Overlay(TexturesProvider texturesProvider, Supplier<Optional<T>> chestOverlayData,
             ITextureManager textureManager, Viewport viewport) {
         this.texturesProvider = texturesProvider;
-        this.overlayData = chestOverlayData;
+        this.overlayDataSupplier = chestOverlayData;
         this.textureManager = textureManager;
 
         this.stage = new Stage(viewport);
@@ -29,6 +29,7 @@ abstract class Overlay<T> implements Disposable {
     abstract void updateTheStage(T data);
 
     public final Optional<InputProcessor> tryRender(float deltaTime) {
+        var overlayData = overlayDataSupplier.get();
         if (overlayData.isEmpty()) {
             return Optional.empty();
         }
@@ -37,7 +38,6 @@ abstract class Overlay<T> implements Disposable {
 
         stage.act(deltaTime);
         stage.draw();
-        Logger.getGlobal().info(this.getClass().toString());
         return Optional.of(stage);
     }
 

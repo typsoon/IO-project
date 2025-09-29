@@ -2,6 +2,7 @@ package frontend.concreteviews.gameplayview.overlays;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,7 +18,7 @@ public class ChestOverlayManager extends Overlay<ChestOverlayData> {
     private static final int SLOT_SIZE = 64; // size of each inventory slot
     private static final int COLUMNS = 9; // how many items per row (like Minecraft chest row)
 
-    public ChestOverlayManager(TexturesProvider texturesProvider, Optional<ChestOverlayData> chestOverlayData,
+    public ChestOverlayManager(TexturesProvider texturesProvider, Supplier<Optional<ChestOverlayData>> chestOverlayData,
             ITextureManager textureManager, Viewport viewport) {
         super(texturesProvider, chestOverlayData, textureManager, viewport);
     }

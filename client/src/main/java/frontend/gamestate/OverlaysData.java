@@ -1,6 +1,7 @@
 package frontend.gamestate;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import frontend.gamestate.overlays.ChestOverlayData;
 import frontend.gamestate.overlays.DeathOverlayData;
@@ -34,6 +35,7 @@ public class OverlaysData implements IReadOnlyOverlaysData {
     }
 
     public void setDeathOverlayData(Optional<DeathOverlayData> deathOverlayData) {
+        // Logger.getGlobal().info("I was set");
         this.deathOverlayData = deathOverlayData;
     }
 }

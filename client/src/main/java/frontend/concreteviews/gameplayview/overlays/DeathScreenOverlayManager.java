@@ -1,6 +1,8 @@
 package frontend.concreteviews.gameplayview.overlays;
 
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -11,13 +13,18 @@ import frontend.assetsloading.TexturesProvider;
 import frontend.gamestate.overlays.DeathOverlayData;
 
 public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
-    public DeathScreenOverlayManager(TexturesProvider texturesProvider, Optional<DeathOverlayData> chestOverlayData,
+    private final Table table;
+
+    public DeathScreenOverlayManager(TexturesProvider texturesProvider,
+            Supplier<Optional<DeathOverlayData>> chestOverlayData,
             ITextureManager textureManager, Viewport viewport) {
         super(texturesProvider, chestOverlayData, textureManager, viewport);
+
+        table = textureManager.getTable();
+        createTheView();
     }
 
-    void updateTheStage(DeathOverlayData data) {
-        Table table = new Table();
+    private void createTheView() {
         table.setFillParent(true);
         table.center();
 
@@ -32,6 +39,10 @@ public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
         table.add(backButton).pad(10).width(250).height(60);
 
         stage.addActor(table);
+    }
+
+    void updateTheStage(DeathOverlayData data) {
+        Logger.getGlobal().info("I am here");
     }
 
 }
