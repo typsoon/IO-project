@@ -1,70 +1,40 @@
-package frontend.concreteviews.gameplayview;
+package frontend.concreteviews.gameplayview.overlays;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import frontend.assetsloading.ITextureManager;
+import frontend.assetsloading.TexturesProvider;
+import frontend.concreteviews.gameplayview.IGameplayInfoProvider;
 
-public class GameplayHud implements IGameplayHud {
-
+public class GameplayHud extends Overlay<IGameplayInfoProvider> {
     private final IGameplayInfoProvider gameplayInfoProvider;
     private final ITextureManager textureManager;
 
-    private Stage hudStage;
     private Label hpLabel;
     private ProgressBar hpBar;
     ArrayList<TextButton> hotbarSlots = new ArrayList<>();
     ArrayList<Label> resourceLabels = new ArrayList<>();
 
     public GameplayHud(IGameplayInfoProvider gameplayInfoProvider, InputMultiplexer multiplexer,
-            ITextureManager textureManager) {
+            ITextureManager textureManager, TexturesProvider texturesProvider, Viewport viewport) {
+        super(texturesProvider, Optional.of(gameplayInfoProvider), textureManager, viewport);
+
         this.gameplayInfoProvider = gameplayInfoProvider;
         this.textureManager = textureManager;
         createHud();
-        multiplexer.addProcessor(hudStage);
-    }
-
-    @Override
-    public void render(final float delta) {
-        hpBar.setValue((float) gameplayInfoProvider.getHpValue() / (gameplayInfoProvider.getMaxHpValue()) * 100);
-        hpLabel.setText(String.format("HP: %3d out of %3d", gameplayInfoProvider.getHpValue(),
-                gameplayInfoProvider.getMaxHpValue()));
-        for (int i = 0; i < gameplayInfoProvider.getInventoryInfo().slotNum(); i++) {
-            if (i < gameplayInfoProvider.getInventoryInfo().slots().getData().length) {
-                hotbarSlots.get(i).setColor(Color.GRAY);
-                if (gameplayInfoProvider.getInventoryInfo().slots().getData()[i].amount() > 0) {
-                    hotbarSlots.get(i)
-                            .setText(gameplayInfoProvider.getInventoryInfo().slots().getData()[i].item().name());
-                } else {
-                    hotbarSlots.get(i).setText("");
-                }
-            } else {
-                hotbarSlots.get(i).setColor(Color.BLACK);
-                hotbarSlots.get(i).setText("");
-            }
-        }
-
-        for (int i = 0; i < gameplayInfoProvider.getInventoryInfo().resources().getData().length; i++) {
-            resourceLabels.get(i)
-                    .setText(gameplayInfoProvider.getInventoryInfo().resources().getData()[i].amount() + " x " +
-                            gameplayInfoProvider.getInventoryInfo().resources().getData()[i].resource().name());
-        }
-
-        hudStage.act(delta);
-        hudStage.draw();
     }
 
     private void createHud() {
-        hudStage = new Stage();
-
         hpBar = textureManager.getProgressBar(0, 100, 1, false);
         hpBar.setColor(Color.RED);
         hpBar.setValue(100);
@@ -100,7 +70,7 @@ public class GameplayHud implements IGameplayHud {
         resourcesTable.setFillParent(true);
 
         int resourceCount = 10; // this should be from file or server
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < resourceCount; i++) {
             Label resourceLabel = textureManager.getHeading("");
             resourceLabel.setAlignment(Align.right);
             resourceLabel.setFontScale(0.3f);
@@ -109,8 +79,35 @@ public class GameplayHud implements IGameplayHud {
             resourcesTable.row();
         }
 
-        hudStage.addActor(hudTable);
-        hudStage.addActor(hotbarTable);
-        hudStage.addActor(resourcesTable);
+        stage.addActor(hudTable);
+        stage.addActor(hotbarTable);
+        stage.addActor(resourcesTable);
+    }
+
+    @Override
+    void updateTheStage(IGameplayInfoProvider data) {
+        hpBar.setValue((float) gameplayInfoProvider.getHpValue() / (gameplayInfoProvider.getMaxHpValue()) * 100);
+        hpLabel.setText(String.format("HP: %3d out of %3d", gameplayInfoProvider.getHpValue(),
+                gameplayInfoProvider.getMaxHpValue()));
+        for (int i = 0; i < gameplayInfoProvider.getInventoryInfo().slotNum(); i++) {
+            if (i < gameplayInfoProvider.getInventoryInfo().slots().getData().length) {
+                hotbarSlots.get(i).setColor(Color.GRAY);
+                if (gameplayInfoProvider.getInventoryInfo().slots().getData()[i].amount() > 0) {
+                    hotbarSlots.get(i)
+                            .setText(gameplayInfoProvider.getInventoryInfo().slots().getData()[i].item().name());
+                } else {
+                    hotbarSlots.get(i).setText("");
+                }
+            } else {
+                hotbarSlots.get(i).setColor(Color.BLACK);
+                hotbarSlots.get(i).setText("");
+            }
+        }
+
+        for (int i = 0; i < gameplayInfoProvider.getInventoryInfo().resources().getData().length; i++) {
+            resourceLabels.get(i)
+                    .setText(gameplayInfoProvider.getInventoryInfo().resources().getData()[i].amount() + " x " +
+                            gameplayInfoProvider.getInventoryInfo().resources().getData()[i].resource().name());
+        }
     }
 }

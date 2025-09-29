@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.TexturesProvider;
@@ -11,8 +12,8 @@ import frontend.gamestate.overlays.DeathOverlayData;
 
 public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
     public DeathScreenOverlayManager(TexturesProvider texturesProvider, Optional<DeathOverlayData> chestOverlayData,
-            ITextureManager textureManager) {
-        super(texturesProvider, chestOverlayData, textureManager);
+            ITextureManager textureManager, Viewport viewport) {
+        super(texturesProvider, chestOverlayData, textureManager, viewport);
     }
 
     void updateTheStage(DeathOverlayData data) {
@@ -33,8 +34,4 @@ public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
         stage.addActor(table);
     }
 
-    @Override
-    public void dispose() {
-        stage.dispose();
-    }
 }

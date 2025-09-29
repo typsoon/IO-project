@@ -22,8 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import frontend.assetsloading.ITextureManager;
 import frontend.assetsloading.TexturesProvider;
@@ -62,13 +65,13 @@ public class GameplayView extends ScreenAdapter {
     private final Subscribable gameCycles;
 
     private EntitiesDrawer entitiesDrawer;
+    private OverlayDrawer overlayDrawer;
 
     private Stage stage;
     private OrthographicCamera gameCamera;
     private FitViewport viewport;
+    private Viewport overlaysViewport;
     private IGameplayInfoProvider gameplayInfoProvider;
-
-    private IGameplayHud gameplayHud;
 
     private Stage hudStage;
     private Label hpLabel;
@@ -177,7 +180,7 @@ public class GameplayView extends ScreenAdapter {
         var drawableInfos = gameState.getSpritesReadonly();
         entitiesDrawer.drawEntities(drawableInfos);
 
-        gameplayHud.render(delta);
+        overlayDrawer.render(delta);
     }
 
     @Override
@@ -207,9 +210,10 @@ public class GameplayView extends ScreenAdapter {
         final Table table = textureManager.getTable();
         stage.addActor(table);
 
-        hudStage = new Stage();
+        overlaysViewport = new ScalingViewport(Scaling.stretch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                new OrthographicCamera());
 
-        var multiplexer = new InputMultiplexer(hudStage);
+        var multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
             multiplexer
@@ -217,8 +221,8 @@ public class GameplayView extends ScreenAdapter {
         }
         Gdx.input.setInputProcessor(multiplexer);
 
-        gameplayHud = new GameplayHud(gameplayInfoProvider, multiplexer,
-                textureManager);
+        overlayDrawer = new OverlayDrawer(texturesProvider, textureManager, overlaysViewport,
+                gameState.getOverlaysData(), multiplexer, gameplayInfoProvider);
 
         // this should be last because it calls render() on windows
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
