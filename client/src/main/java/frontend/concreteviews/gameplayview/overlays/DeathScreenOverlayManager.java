@@ -4,6 +4,9 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,8 +21,8 @@ public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
 
     public DeathScreenOverlayManager(TexturesProvider texturesProvider,
             Supplier<Optional<DeathOverlayData>> chestOverlayData,
-            ITextureManager textureManager, Viewport viewport) {
-        super(texturesProvider, chestOverlayData, textureManager, viewport);
+            ITextureManager textureManager, Viewport viewport, EventListener listener) {
+        super(texturesProvider, chestOverlayData, textureManager, viewport, listener);
 
         table = textureManager.getTable();
         createTheView();
@@ -30,12 +33,15 @@ public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
         table.center();
 
         TextButton backButton = textureManager.getTextButton("Go Back to Main Menu");
-        backButton.addListener(event -> {
-            if (backButton.isPressed()) {
+
+        backButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(final InputEvent event, final float x, final float y, final int pointer,
+                    final int button) {
+                Logger.getGlobal().info("Trying to go back to mainMenu");
                 backButton.fire(new ExitTheGameEvent());
                 return true;
             }
-            return false;
         });
 
         table.add(backButton).pad(10).width(250).height(60);
@@ -44,7 +50,7 @@ public class DeathScreenOverlayManager extends Overlay<DeathOverlayData> {
     }
 
     void updateTheStage(DeathOverlayData data) {
-        Logger.getGlobal().info("I am here");
+        // Logger.getGlobal().info("I am here");
     }
 
 }

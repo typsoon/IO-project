@@ -1,7 +1,5 @@
 package frontend.concreteviews.gameplayview.listeners;
 
-import java.util.logging.Logger;
-
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
@@ -22,7 +20,7 @@ public class ExitTheGameEventListener implements EventListener {
     public boolean handle(Event event) {
         switch (event) {
             case ExitTheGameEvent exitTheGameEvent -> {
-                Logger.getGlobal().info("I am herrr");
+                // Logger.getGlobal().info("I am herrr");
                 sendableConsumer.processSendable(new ExitTheGameMessage.Payload());
 
                 moveBack.run();

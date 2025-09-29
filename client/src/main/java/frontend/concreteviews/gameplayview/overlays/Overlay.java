@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,12 +19,13 @@ abstract class Overlay<T> implements Disposable {
     protected final Stage stage;
 
     public Overlay(TexturesProvider texturesProvider, Supplier<Optional<T>> chestOverlayData,
-            ITextureManager textureManager, Viewport viewport) {
+            ITextureManager textureManager, Viewport viewport, EventListener listener) {
         this.texturesProvider = texturesProvider;
         this.overlayDataSupplier = chestOverlayData;
         this.textureManager = textureManager;
 
         this.stage = new Stage(viewport);
+        stage.addListener(listener);
     }
 
     abstract void updateTheStage(T data);

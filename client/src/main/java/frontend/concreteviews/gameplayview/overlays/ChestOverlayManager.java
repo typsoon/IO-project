@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -19,8 +20,8 @@ public class ChestOverlayManager extends Overlay<ChestOverlayData> {
     private static final int COLUMNS = 9; // how many items per row (like Minecraft chest row)
 
     public ChestOverlayManager(TexturesProvider texturesProvider, Supplier<Optional<ChestOverlayData>> chestOverlayData,
-            ITextureManager textureManager, Viewport viewport) {
-        super(texturesProvider, chestOverlayData, textureManager, viewport);
+            ITextureManager textureManager, Viewport viewport, EventListener listener) {
+        super(texturesProvider, chestOverlayData, textureManager, viewport, listener);
     }
 
     void updateTheStage(ChestOverlayData chestOverlayData) {

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -26,8 +27,9 @@ public class GameplayHud extends Overlay<IGameplayInfoProvider> {
     ArrayList<Label> resourceLabels = new ArrayList<>();
 
     public GameplayHud(IGameplayInfoProvider gameplayInfoProvider, InputMultiplexer multiplexer,
-            ITextureManager textureManager, TexturesProvider texturesProvider, Viewport viewport) {
-        super(texturesProvider, () -> Optional.of(gameplayInfoProvider), textureManager, viewport);
+            ITextureManager textureManager, TexturesProvider texturesProvider, Viewport viewport,
+            EventListener listener) {
+        super(texturesProvider, () -> Optional.of(gameplayInfoProvider), textureManager, viewport, listener);
 
         this.gameplayInfoProvider = gameplayInfoProvider;
         this.textureManager = textureManager;

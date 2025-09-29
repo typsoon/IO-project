@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -35,6 +34,7 @@ import frontend.concreteviews.gameplayview.impl.GameplayInfoProviderImpl;
 import frontend.concreteviews.gameplayview.processors.ProcessorFactoriesCreator.DataNeededForCreation;
 import frontend.concreteviews.loginview.LoginView;
 import frontend.gamestate.IReadOnlyDisplayableGameState;
+import frontend.utils.MultiplexListener;
 import game.utility.Point2F;
 import game.utility.Vector2F;
 import utils.ObserverWithATwist.Subscribable;
@@ -67,7 +67,7 @@ public class GameplayView extends ScreenAdapter {
     private EntitiesDrawer entitiesDrawer;
     private OverlayDrawer overlayDrawer;
 
-    private Stage stage;
+    private Stage mainInputStage;
     private OrthographicCamera gameCamera;
     private FitViewport viewport;
     private Viewport overlaysViewport;
@@ -166,8 +166,8 @@ public class GameplayView extends ScreenAdapter {
     public void render(final float delta) {
         ScreenUtils.clear(0, 0, 0, 0);
 
-        stage.act(delta);
-        stage.draw();
+        mainInputStage.act(delta);
+        mainInputStage.draw();
 
         var cameraPos = getCameraPosition();
         gameCamera.position.set(cameraPos.x(), cameraPos.y(), 0);
@@ -198,23 +198,23 @@ public class GameplayView extends ScreenAdapter {
                 gameState.getPlayerData().iterator().next()::getHpValue,
                 gameState.getPlayerData().iterator().next()::getMaxHpValue);
         entitiesDrawer = new EntitiesDrawer(texturesProvider, viewport);
-        stage = new Stage();
+        mainInputStage = new Stage();
 
         final var rangeOfView = getVisibilityRange();
         viewport.setWorldSize(rangeOfView.x() + eps, rangeOfView.y() + eps);
         viewport.apply();
 
+        final MultiplexListener eventMultiplexer = new MultiplexListener();
         for (EventListener eventListener : gameplayViewEventListeners) {
-            stage.addListener(eventListener);
+            eventMultiplexer.add(eventListener);
+            mainInputStage.addListener(eventListener);
         }
-        final Table table = textureManager.getTable();
-        stage.addActor(table);
 
         overlaysViewport = new ScalingViewport(Scaling.stretch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
                 new OrthographicCamera());
 
         var multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(mainInputStage);
         for (var processorFactory : gameplayViewInputProcessorsFactories) {
             multiplexer
                     .addProcessor(processorFactory.apply(new DataNeededForCreation(gameplayInfoProvider, gameCycles)));
@@ -222,7 +222,7 @@ public class GameplayView extends ScreenAdapter {
         Gdx.input.setInputProcessor(multiplexer);
 
         overlayDrawer = new OverlayDrawer(texturesProvider, textureManager, overlaysViewport,
-                gameState.getOverlaysData(), multiplexer, gameplayInfoProvider);
+                gameState.getOverlaysData(), multiplexer, gameplayInfoProvider, eventMultiplexer);
 
         // this should be last because it calls render() on windows
         Gdx.graphics.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -230,6 +230,6 @@ public class GameplayView extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        stage.dispose();
+        mainInputStage.dispose();
     }
 }

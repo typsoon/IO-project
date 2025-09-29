@@ -3,6 +3,7 @@ package frontend.concreteviews.gameplayview;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import frontend.assetsloading.ITextureManager;
@@ -23,17 +24,17 @@ public class OverlayDrawer {
 
     public OverlayDrawer(TexturesProvider texturesProvider,
             ITextureManager textureManager, Viewport viewport, IReadOnlyOverlaysData overlaysData,
-            InputMultiplexer multiplexer, IGameplayInfoProvider gameplayInfoProvider) {
+            InputMultiplexer multiplexer, IGameplayInfoProvider gameplayInfoProvider, EventListener listener) {
         this.overlaysData = overlaysData;
 
         this.gameplayHud = new GameplayHud(gameplayInfoProvider, multiplexer, textureManager, texturesProvider,
-                viewport);
+                viewport, listener);
 
         this.chestOverlayManager = new ChestOverlayManager(texturesProvider, overlaysData::getChestOverlayData,
-                textureManager, viewport);
+                textureManager, viewport, listener);
         this.deathScreenOverlayManager = new DeathScreenOverlayManager(texturesProvider,
                 overlaysData::getDeathOverlayData,
-                textureManager, viewport);
+                textureManager, viewport, listener);
 
         multiplexer.addProcessor(activeProcessor);
     }
